@@ -1,0 +1,143 @@
+* {
+	max-width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background: #fff;
+	font-family: 'Segoe UI', Arial, sans-serif;
+	color: #444;
+}
+
+body > div {
+	background: #fefeff;
+	margin: .5em 2em;
+	padding: .25em;
+	border: 1px solid #eee;
+	border-radius: 2px;
+}
+	body > div:before {
+		position: absolute;
+		left: .75em;
+		margin-top: -.25em;
+	}
+
+ul {
+	display: none;
+	margin: 0;
+	list-style: none;
+	padding-left: 1.25em;
+}
+
+li:before { padding-right: .25em }
+
+#controls { margin-top: .25em }
+
+#controls > div, #options > div {
+	display: inline-block;
+	cursor: pointer;
+	padding: .5em;
+	border: 1px solid #fafafa;
+	border-radius: 3px;
+}
+	#controls > div:before { margin: .25em }
+	#controls > div:hover, #options > div:hover { background: #eceff1 }
+
+#options > div { padding: .25em }
+	#options > div:before { margin-right: .25em }
+
+#cover, #current {
+	display: inline-block;
+	vertical-align: middle;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+#cover {
+	width: 7.5em;
+	height: 7.5em;
+	margin-right: 1em;
+	border: 1px solid #fafafa;
+	border-radius: 3px;
+	cursor: zoom-in;
+}
+	#cover.zoomed {
+		width: auto;
+		height: auto;
+		margin: 0 auto;
+		cursor: zoom-out;
+	}
+
+#folder, #song { cursor: alias }
+
+#song { font-weight: bold }
+
+#playlist {
+	min-height: 1.5em;
+	max-height: 10em;
+	overflow-y: auto;
+}
+	#playlist > li {
+		list-style: none;
+		cursor: alias;
+	}
+
+#filterdiv { white-space: nowrap }
+
+#filter {
+	width: 20em;
+	max-width: 92%;
+	margin-bottom: .25em;
+	padding: .1em;
+	border: none;
+	border-bottom: 1px solid #444;
+}
+
+#tree {
+	padding: 0;
+	list-style: none;
+}
+	#tree li { cursor: pointer }
+	#tree li:not(.open):hover { color: #ef6c00 /*#607d8b*/ }
+	#tree li.open > ul { display: block }
+
+.dim { opacity: .5 }
+
+@media screen and (max-width: 480px) {
+	body > div { margin: .1em }
+	body > div:before { display: none }
+}
+
+@font-face {
+	font-family: "Foundation";
+	src: url("music.woff") format('woff');
+}
+
+*:before, *:after {
+	display: inline-block;
+	width: 1em;
+	font-family: Foundation;
+	text-align: center;
+}
+
+#clear:before { content: "\f204" }
+#enqueue:before { content: "\f17f" }
+#library:before { content: "\f17b" }
+#next:before { content: "\f17c" }
+#options:before { content: "\f214" }
+#player:before { content: "\f153" }
+#playlist:before { content: "\f103" }
+#playpause:before { content: "\f198" }
+	#playpause.playing:before { content: "\f191" !important }
+#previous:before { content: "\f19c" }
+#filterdiv:after { content: "\f14b"; cursor: pointer; }
+#shuffle:before { content: "\f13a" }
+#stop:before { content: "\f1ef" }
+
+.folder:before { content: "\f150" }
+.folder.open:before { content: "\f14e" }
+.on:before { content: "\f126" !important }
+.playing:before { content: "\f198" }
+.song:before { content: "\f17b"; opacity: .6 }

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="music.css" type="text/css" rel="stylesheet"/>
+		<link href="music.png" type="image/png" rel="shortcut icon">
+		<script src="music.js" type="application/javascript" charset="UTF-8"></script>
+		<script src="music.php" type="application/javascript" charset="UTF-8"></script>
+		<title id="title"></title>
+</head>
+<body onload="init()">
+	<div id="player">
+		<img id="cover" src="music.png" onclick="zoom()"/>
+		<div id="current">
+			<div id="folder" class="dim" onclick="setFilter(event)">Album Title</div>
+			<div id="song" class="dim" onclick="setFilter(event)">Track Title</div>
+			<div id="time" class="dim">00:00</div>
+			<div id="controls">
+				<div id="stop" title="Stop playback (0)" onclick="stop()"></div>
+				<div id="playpause" title="Play or pause (space)" onclick="playPause()"></div>
+				<div id="previous" title="Play previous (-)" onclick="previous()"></div>
+				<div id="next" title="Play next (=)" onclick="next()"></div>
+				<audio id="audio">HTML5 not supported</audio>
+			</div>
+		</div>
+		<img id="zoom" onclick="zoom()"/>
+	</div>
+	<div id="options">
+		<div id="enqueue" title="Enqueue songs on click, instead of direct playback (e)" onclick="toggle(event)">Enqueue</div>
+		<div id="shuffle" title="Play random songs when no items are left in the playlist (s)" onclick="toggle(event)">Shuffle</div>
+		<div id="clear" title="Clear the playlist (c)" onclick="clearPlaylist()">Clear</div>
+	</div>
+	<div id="playlist"></div>
+	<div id="library">
+		<div id="filterdiv">
+			<input id="filter" title="Apply filter to library (f)" placeholder="Filter..." onchange="filter()"/>
+		</div>
+		<div id="tree"></div>
+	</div>
+</body>
+</html>
