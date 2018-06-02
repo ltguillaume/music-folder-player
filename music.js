@@ -54,6 +54,11 @@ function init() {
 		dom.time.textContent = timeTxt(~~audio.currentTime) +" / "+ timeTxt(~~audio.duration);
 	}
 	
+	audio.onerror = function() {
+		dom.playlist.childNodes[cfg.index].style.color = 'red';
+		next();
+	};
+
 	buildLibrary(dir, library, tree);
 	buildPlaylist();
 }
@@ -319,11 +324,11 @@ function start(index) {
 	var c = cfg.playlist[index].cover;
 
 	cfg.index = index;
-	audio.src = encodeURIComponent(path);
+	audio.src = escape(path);
 	audio.play();
 
 	if (c)
-		dom.cover.src = encodeURIComponent(path.substr(0, path.lastIndexOf('/') + 1) + c);
+		dom.cover.src = escape(path.substr(0, path.lastIndexOf('/') + 1) + c);
 	else
 		dom.cover.src = defcover;
 	dom.folder.textContent = getFolder(path);
