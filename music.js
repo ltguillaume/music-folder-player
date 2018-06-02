@@ -143,7 +143,7 @@ function buildLibrary(root, folder, element) {
 						if (cfg.enqueue)
 							add(this.id);
 						else
-							play(this.id);
+							open(this.id);
 						this.className += ' dim';
 					};
 				songs.push(li);
@@ -226,7 +226,7 @@ function stop() {
 
 function playPause() {
 	if (!audio.src)
-		start(cfg.index);
+		play(cfg.index);
 	else if (audio.paused)
 		audio.play();
 	else
@@ -235,14 +235,14 @@ function playPause() {
 
 function previous() {
 	if (cfg.index > 0)
-		start(cfg.index - 1);
+		play(cfg.index - 1);
 	else
 		log('No previous item in playlist');
 }
 
 function next() {
 	if (cfg.playlist.length > cfg.index + 1)
-		start(cfg.index + 1);
+		play(cfg.index + 1);
 	else if (cfg.shuffle) {
 		var next = null;
 		var found = false;
@@ -256,19 +256,19 @@ function next() {
 				}
 		} while (found);
 		if (next)
-			play(next.id);
+			open(next.id);
 	} else if (cfg.index != -1)	{
 		var next = parseInt(cfg.playlist[cfg.index].id) + 1;
 		if (songs[next].id)
-			play(songs[next].id);
+			open(songs[next].id);
 		else
 			log('End of library');
 	}
 }
 
-function play(id) {
+function open(id) {
 	add(id, true);
-	start(cfg.index + 1);
+	play(cfg.index + 1);
 }
 
 function add(id, next) {
@@ -318,7 +318,7 @@ function add(id, next) {
 	log('Added to playlist: '+ item.path);
 }
 
-function start(index) {
+function play(index) {
 	if (index == -1) return next();
 	var path = cfg.playlist[index].path;
 	var c = cfg.playlist[index].cover;
@@ -334,6 +334,10 @@ function start(index) {
 	dom.folder.textContent = getFolder(path);
 	dom.song.textContent = getSong(path);
 	title.textContent = dom.song.textContent +' - '+ deftitle;
+}
+
+function escape(s) {
+	return s.replace('#', '%23').replace('?', '%3F');
 }
 
 function toggle(e) {
