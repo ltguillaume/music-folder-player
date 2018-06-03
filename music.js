@@ -10,7 +10,7 @@ var
 	songs = Array();
 
 function init() {
-	var get = function(id) { return document.getElementById(id); };
+	var get = function(id) { return document.getElementById(id) };
 	audio = get('audio');
 	dom = {
 		'player': get('player'),
@@ -337,7 +337,7 @@ function play(index) {
 }
 
 function escape(s) {
-	return s.replace('#', '%23').replace('?', '%3F');
+	return s.split('#').join('%23').split('?').join('%3F');
 }
 
 function toggle(e) {
