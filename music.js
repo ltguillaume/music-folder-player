@@ -126,9 +126,9 @@ function buildLibrary(root, folder, element) {
 		} else {
 			for (f in folder[i]) {
 				if (f.toLowerCase().endsWith('.jpg') || f.toLowerCase().endsWith('.png')) {
-					cover = f;
+					if (!cover)
+						cover = f;
 					delete(folder[i][f]);
-					break;
 				}
 			}
 			for (f in folder[i]) {
