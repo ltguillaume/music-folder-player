@@ -6,7 +6,7 @@
 
 body {
 	background: #fff;
-	font-family: 'Segoe UI', Arial, sans-serif;
+	font-family: "Segoe UI", Arial, sans-serif;
 	color: #444;
 }
 
@@ -23,6 +23,29 @@ body > div {
 		margin-top: -.25em;
 	}
 
+button {
+	display: inline-block;
+	padding: .5em;
+	background: transparent;
+	font-size: .97em;
+	border: none;
+	border-radius: 3px;
+}
+	button:hover {
+		background: #e7ecf1;
+		cursor: pointer;
+	}
+	button:active, button:focus { outline: none }
+	button::-moz-focus-inner { border: none }
+
+input {
+	width: 20em;
+	max-width: calc(100% - 7em);
+	padding: .1em;
+	border: none;
+	border-bottom: 1px solid #444;
+}
+
 ul {
 	display: none;
 	margin: 0;
@@ -32,32 +55,26 @@ ul {
 
 li:before { padding-right: .25em }
 
-#controls { margin-top: .25em }
-
-#controls > div, #options > div {
-	display: inline-block;
-	cursor: pointer;
-	padding: .5em;
-	border: 1px solid #fafafa;
-	border-radius: 3px;
+#player {
+	white-space: nowrap;
+	overflow: hidden;
 }
-	#controls > div:before { margin: .25em }
-	#controls > div:hover, #options > div:hover { background: #eceff1 }
-
-#options > div { padding: .25em }
-	#options > div:before { margin-right: .25em }
 
 #cover, #current {
 	display: inline-block;
 	vertical-align: middle;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }
 
+#current { max-width: calc(100% - 8.5em)}
+	#current > div {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
 #cover {
-	width: 7.5em;
-	height: 7.5em;
+	width: 7.25em;
+	height: 7.25em;
 	margin-right: 1em;
 	border: 1px solid #fafafa;
 	border-radius: 3px;
@@ -74,6 +91,14 @@ li:before { padding-right: .25em }
 
 #song { font-weight: bold }
 
+#controls { margin-top: .25em }
+	#controls > button:before { margin: .25em }
+
+#options > .sharediv { white-space: nowrap }
+	#options > button:before { margin-right: .25em }
+
+#shares input { direction: rtl }
+
 #playlist {
 	min-height: 1.5em;
 	max-height: 10em;
@@ -85,15 +110,7 @@ li:before { padding-right: .25em }
 	}
 
 #filterdiv { white-space: nowrap }
-
-#filter {
-	width: 20em;
-	max-width: 92%;
-	margin-bottom: .25em;
-	padding: .1em;
-	border: none;
-	border-bottom: 1px solid #444;
-}
+	#filterdiv input { max-width: calc(100% - 3em) }
 
 #tree {
 	padding: 0;
@@ -104,15 +121,30 @@ li:before { padding-right: .25em }
 	#tree li.open > ul { display: block }
 
 .dim { opacity: .5 }
+.hide { display: none }
 
 @media screen and (max-width: 480px) {
 	body > div { margin: .1em }
 	body > div:before { display: none }
 }
 
+@media screen and (max-width: 570px) {
+	#cover {
+		width: initial;
+		height: initial;
+		max-height: 10em;
+	}
+	#cover, #current, #current > div {
+		display: block;
+		max-width: 100%;
+		margin: 0 auto;
+		text-align: center;
+	}
+}
+
 @font-face {
 	font-family: "Foundation";
-	src: url("music.woff") format('woff');
+	src: url("music.woff") format("woff");
 }
 
 *:before, *:after {
@@ -132,12 +164,16 @@ li:before { padding-right: .25em }
 #playpause:before { content: "\f198" }
 	#playpause.playing:before { content: "\f191" !important }
 #previous:before { content: "\f19c" }
-#filterdiv:after { content: "\f14b"; cursor: pointer; }
-#shuffle:before { content: "\f13a" }
+#setfilter:after { content: "\f14b" }
+#random:before { content: "\f13a" }
+#share:before { content: "\f1ad" }
 #stop:before { content: "\f1ef" }
 
+.copied:before { content: "\f129" }
+.download:before { content: "\f143" }
 .folder:before { content: "\f150" }
 .folder.open:before { content: "\f14e" }
 .on:before { content: "\f126" !important }
 .playing:before { content: "\f198" }
+.share:before { content: "\f1ad" }
 .song:before { content: "\f17b"; opacity: .6 }
