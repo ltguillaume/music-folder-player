@@ -39,7 +39,7 @@ button {
 	button::-moz-focus-inner { border: none }
 
 input {
-	width: 20em;
+	width: 19em;
 	max-width: calc(100% - 7em);
 	padding: .1em;
 	border: none;
@@ -110,7 +110,10 @@ li:before { padding-right: .25em }
 	}
 
 #filterdiv { white-space: nowrap }
-	#filterdiv input { max-width: calc(100% - 3em) }
+	#filterdiv input {
+	width: 20.5em;
+	max-width: calc(100% - 3em)
+}
 
 #tree {
 	padding: 0;
@@ -175,5 +178,6 @@ li:before { padding-right: .25em }
 .folder.open:before { content: "\f14e" }
 .on:before { content: "\f126" !important }
 .playing:before { content: "\f198" }
-.share:before { content: "\f1ad" }
+.link:before { content: "\f165" }
 .song:before { content: "\f17b"; opacity: .6 }
+.whatsapp:before { content: "\f1a6" }

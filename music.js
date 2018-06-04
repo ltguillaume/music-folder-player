@@ -29,6 +29,8 @@ function init() {
 		'shares': get('shares'),
 		'folderuri': get('folderuri'),
 		'songuri': get('songuri'),
+		'folderwhatsapp': get('folderwhatsapp'),
+		'songwhatsapp': get('songwhatsapp'),
 		'download': get('download'),
 		'playlist': get('playlist'),
 		'filter': get('filter'),
@@ -39,6 +41,13 @@ function init() {
 	title.textContent = deftitle;
 	if (cfg.enqueue) dom.enqueue.className = 'on';
 	if (cfg.random) dom.random.className = 'on';
+	
+	if (whatsapp) {
+		dom.folderwhatsapp.style.display =
+		dom.songwhatsapp.style.display = 'inline-block';
+		dom.folderuri.style.maxWidth =
+		dom.songuri.style.maxWidth = 'calc(100% - 9.5em)';
+	}
 
 	audio.onplay = function() {
 		dom.playpause.className = 'playing';
@@ -310,6 +319,7 @@ function next() {
 }
 
 function download(type) {
+	if (cfg.index == -1) return;
 	var path = cfg.playlist[cfg.index].path;
 	var uri = dir + (type == 'f' ? path.substring(0, path.lastIndexOf('/')) : path);
 	dom.download.href = 'music.php?dl='+ esc(uri);
@@ -318,21 +328,19 @@ function download(type) {
 
 function share(type) {
 	var share = (type == 'f' ? dom.folderuri : dom.songuri);
-	if (!share.value)
-		return;
-
-	if (whatsapp) {
-		dom.download.href = 'whatsapp://send?text='+
-			esc('Have a listen to '+ (type == 'f' ? dom.folder.value : dom.song.value));
-		dom.download.click();
-	}
-
+	if (!share.value) return;
 	share.select();
 	document.execCommand('copy');
 	share.nextElementSibling.nextElementSibling.className = 'copied';
 	setTimeout(function() {
-		share.nextElementSibling.nextElementSibling.className = 'share';
+		share.nextElementSibling.nextElementSibling.className = 'link';
 	}, 1500);
+}
+
+function shareWhatsApp(type) {
+	var share = (type == 'f' ? dom.folderuri : dom.songuri);
+	if (share.value)
+		window.open('https://api.whatsapp.com/send?text=Have a listen to '+ encodeURIComponent(share.value));
 }
 
 function load(id) {

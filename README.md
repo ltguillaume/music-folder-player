@@ -14,7 +14,7 @@ An elegant HTML5 web folder player for parties and/or private music collections
 - Click on song or folder name to find in library
 - Download a song or zipped folder (only tested on ArchLinux)
 - Share a song or folder link
-- Try sharing link directly to WhatsApp on mobile devices (optional)
+- Share links directly to WhatsApp (optional)
 - Save playlist and configuration to browser's Local Storage
 - Design should be fully responsive on CSS3-compatible browser
 
