@@ -132,7 +132,7 @@ li:before { padding-right: .25em }
 }
 
 @media screen and (max-width: 570px) {
-	#cover {
+	#cover:not(.zoomed) {
 		width: initial;
 		height: initial;
 		max-height: 10em;
