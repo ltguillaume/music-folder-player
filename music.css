@@ -4,7 +4,7 @@
 	padding: 0;
 }
 
-body {
+body, button {
 	background: #fff;
 	font-family: "Segoe UI", Arial, sans-serif;
 	color: #444;
