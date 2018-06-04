@@ -33,12 +33,14 @@
 			<div class="folder sharediv">
 				<input id="folderuri" onclick="this.select()" readonly>
 				<button id="folderdownload" class="download" title="Download album/folder" onclick="download('f')"/>
-				<button id="foldershare" class="share" title="Share link to album/folder"onclick="share('f')"/>
+				<button id="foldershare" class="link" title="Share link to album/folder"onclick="share('f')"/>
+				<button id="folderwhatsapp" class="whatsapp hide" title="Share folder link via WhatsApp"onclick="shareWhatsApp('f')"/>
 			</div>
 			<div class="song sharediv">
 				<input id="songuri" onclick="this.select()" readonly>
 				<button id="songdownload" class="download" title="Download song" onclick="download('s')"/>
-				<button id="songshare" class="share" title="Share link to song" onclick="share('s')"/>
+				<button id="songshare" class="link" title="Share link to song" onclick="share('s')"/>
+				<button id="songwhatsapp" class="whatsapp hide" title="Share song link via WhatsApp" onclick="shareWhatsApp('s')"/>
 			</div>
 			<a id="download" class="hide"></a>
 		</div>
