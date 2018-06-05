@@ -4,11 +4,12 @@ An elegant HTML5 web folder player for parties and/or private music collections
 ## Overview
 - Rebuilds the tree of known music files for a specified folder
 - Click to play directly, while keeping the playlist intact
-- Enable "Enqueue" mode and click to add to bottom of playlist
+- Enable "Enqueue" mode to add songs to the bottom of the playlist
+- Automatically continue playing when playlist is exhausted (continue from last song, or random)
+- Random playback will prevent choosing already played songs
+- (Password) lock the playlist and playlist controls for parties (only enqueue and play/pause work)
 - Filter the library to quickly find songs
-- Automatically continue playing when playlist is exhausted (continue from last song, or shuffle)
-- Shuffle without repeating already played songs
-- Do not add the same song twice
+- Prevent adding a song if it's already queued up
 - Do not add already played songs to playlist (optional)
 - Click on cover image to zoom
 - Click on song or folder name to find in library
@@ -28,6 +29,7 @@ Space | Play/pause
 E | Toggle enqueue
 R | Toggle random
 S | Toggle share dialog
+L | Lock playlist and playback controls
 C | Clear playlist
 F | Focus library filter
 Esc | Reset library filter

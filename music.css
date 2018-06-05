@@ -26,7 +26,7 @@ body > div {
 button {
 	display: inline-block;
 	padding: .5em;
-	background: transparent;
+	background: #fefeff;
 	font-size: .97em;
 	border: none;
 	border-radius: 3px;
@@ -54,6 +54,7 @@ ul {
 }
 
 li:before { padding-right: .25em }
+li:not(.open):hover { color: #e96900 /*#607d8b*/ }
 
 #player {
 	white-space: nowrap;
@@ -66,11 +67,12 @@ li:before { padding-right: .25em }
 }
 
 #current { max-width: calc(100% - 8.5em)}
-	#current > div {
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
+
+#current > div {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 
 #cover {
 	width: 7.25em;
@@ -92,26 +94,51 @@ li:before { padding-right: .25em }
 #song { font-weight: bold }
 
 #controls { margin-top: .25em }
-	#controls > button:before { margin: .25em }
+
+#controls > button:before { margin: .25em }
 
 #options > .sharediv { white-space: nowrap }
-	#options > button:before { margin-right: .25em }
+
+#options > button:before { margin-right: .25em }
+
+#options.whatsapp #folderwhatsapp, #options.whatsapp #songwhatsapp { display: inline-block }
+
+#options.whatsapp #folderuri, #options.whatsapp #songuri { max-width: calc(100% - 9.5em) }
 
 #shares input { direction: rtl }
 
+#playlistdiv > div {	position: relative }
+
+#clear {
+	display: none;
+	position: absolute;
+	top: .0;
+	right: 0;
+	box-shadow: 0 0 2px 2px #fefeff;
+}
+	body.locked #playlistdiv #clear { display: none !important }
+	body:not(.locked) #playlistdiv:hover #clear { display: initial }
+
 #playlist {
-	min-height: 1.5em;
+	min-height: 2.25em;
 	max-height: 10em;
 	overflow-y: auto;
 }
-	#playlist > li {
-		list-style: none;
-		cursor: alias;
+	#playlist.resize {
+		min-height: 4.5em;
+		max-height: initial;
+		resize: vertical;
 	}
 
+#playlist > li {
+	list-style: none;
+	cursor: alias;
+}
+
 #filterdiv { white-space: nowrap }
-	#filterdiv input {
-	width: 20.5em;
+
+#filterdiv input {
+	width: 20em;
 	max-width: calc(100% - 3em)
 }
 
@@ -119,12 +146,20 @@ li:before { padding-right: .25em }
 	padding: 0;
 	list-style: none;
 }
-	#tree li { cursor: pointer }
-	#tree li:not(.open):hover { color: #ef6c00 /*#607d8b*/ }
-	#tree li.open > ul { display: block }
+
+#tree li { cursor: pointer }
+
+#tree li.open > ul { display: block }
 
 .dim { opacity: .5 }
+
 .hide { display: none }
+
+body.locked #stop, body.locked #previous, body.locked #next,
+body.locked #enqueue, body.locked #random {
+	opacity: .5;
+	cursor: arrow;
+}
 
 @media screen and (max-width: 480px) {
 	body > div { margin: .1em }
@@ -132,17 +167,19 @@ li:before { padding-right: .25em }
 }
 
 @media screen and (max-width: 570px) {
-	#cover:not(.zoomed) {
-		width: initial;
-		height: initial;
-		max-height: 10em;
-	}
 	#cover, #current, #current > div {
 		display: block;
 		max-width: 100%;
 		margin: 0 auto;
 		text-align: center;
 	}
+		#cover:not(.zoomed) {
+			width: initial;
+			height: initial;
+			max-height: 10em;
+		}
+	
+	#options { text-align: center }
 }
 
 @font-face {
@@ -160,12 +197,14 @@ li:before { padding-right: .25em }
 #clear:before { content: "\f204" }
 #enqueue:before { content: "\f17f" }
 #library:before { content: "\f17b" }
+#lock:before, body.locked #enqueue:before, body.locked #random:before { content: "\f16a" !important }
+	#lock.on:before { content: "\f20a" !important }
 #next:before { content: "\f17c" }
 #options:before { content: "\f214" }
 #player:before { content: "\f153" }
-#playlist:before { content: "\f103" }
+#playlistdiv:before { content: "\f103" }
 #playpause:before { content: "\f198" }
-	#playpause.playing:before { content: "\f191" !important }
+	#playpause.playing:before { content: "\f191" }
 #previous:before { content: "\f19c" }
 #setfilter:after { content: "\f14b" }
 #random:before { content: "\f13a" }
@@ -180,4 +219,4 @@ li:before { padding-right: .25em }
 .playing:before { content: "\f198" }
 .link:before { content: "\f165" }
 .song:before { content: "\f17b"; opacity: .6 }
-.whatsapp:before { content: "\f1a6" }
+button.whatsapp:before { content: "\f1a6" }

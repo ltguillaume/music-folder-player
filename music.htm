@@ -25,10 +25,10 @@
 		</div>
 	</div>
 	<div id="options">
-		<button id="enqueue" title="Enqueue songs on click, instead of direct playback (e)" onclick="toggle(event)">Enqueue</button>
-		<button id="random" title="Play random songs when no items are left in the playlist (r)" onclick="toggle(event)">Random</button>
+		<button id="enqueue" title="Enqueue songs on click (e)" onclick="toggle(event)">Enqueue</button>
+		<button id="random" title="Play random songs after playlist items (r)" onclick="toggle(event)">Random</button>
 		<button id="share" title="Share or download current song or folder (s)" onclick="toggle(event)">Share</button>
-		<button id="clear" title="Clear the playlist (c)" onclick="clearPlaylist()">Clear</button>
+		<button id="lock" title="Lock playlist and playback controls (l)" onclick="toggleLock()">Lock</button>
 		<div id="shares" class="hide">
 			<div class="folder sharediv">
 				<input id="folderuri" onclick="this.select()" readonly>
@@ -44,8 +44,13 @@
 			</div>
 			<a id="download" class="hide"></a>
 		</div>
+	</div>	
+	<div id="playlistdiv">
+		<div>
+			<button id="clear" title="Clear the playlist (c)" onclick="clearPlaylist()">Clear</button>
+			<div id="playlist"></div>
+		</div>
 	</div>
-	<div id="playlist"></div>
 	<div id="library">
 		<div id="filterdiv">
 			<input id="filter" title="Filter library (f)" placeholder="Filter..." onchange="filter()"/>
