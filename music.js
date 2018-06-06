@@ -106,7 +106,7 @@ function ls() {
 	var def = {
 		'volume': 1,
 		'enqueue': false,
-		'random': (url.length == 1 ? true : false),
+		'random': false,	// (url.length == 1 ? true : false)
 		'locked': false,
 		'password': false,
 		'playlist': [],
@@ -455,7 +455,7 @@ function password() {
 
 	var pass = 0;
 	for (var i = 0; i < p.length; i++)
-		pass = pass * 31 + p.charCodeAt(i);
+		pass = pass * 7 + p.charCodeAt(i);
 	
 	if (cfg.locked && cfg.password != pass) {
 		alert('Intruder alert!');
