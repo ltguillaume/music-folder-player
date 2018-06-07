@@ -47,8 +47,8 @@
 	</div>	
 	<div id="playlistdiv">
 		<div>
-			<button id="clear" title="Clear the playlist (c)" onclick="clearPlaylist()">Clear</button>
-			<div id="playlist"></div>
+			<button id="clear" title="Clear the playlist (c)" onclick="clearPlaylist()" ondragover="allowDrop(event)" ondrop="removeItem(event)">Clear</button>
+			<div id="playlist" onmouseover="onplaylist=true" onmouseout="onplaylist=false"></div>
 		</div>
 	</div>
 	<div id="library">

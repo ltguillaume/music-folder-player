@@ -3,12 +3,15 @@ var
 	defcover = 'music.png',	// Default cover image if none found
 	deftitle = 'Music',	// Default page title
 	nodupes = true,		// Don't add already played songs to playlist
-	whatsapp = false,	// On mobile, try sharing directly to WhatsApp
+	whatsapp = false,	// Add button to share directly to WhatsApp
+	whatsappmsg = 'Have a listen to',	// Default WhatsApp message
 	audio,
 	cfg,
 	dom,
+	drag,
 	library,
 	ls,
+	onplaylist,
 	url,
 	songs = Array();
 
@@ -53,12 +56,15 @@ function init() {
 	audio.onplay = function() {
 		dom.playpause.className = 'playing';
 		dom.folder.className = dom.song.className = '';
-		if (cfg.index > 0)
-			dom.playlist.childNodes[cfg.index - 1].className = 'song';
-		if (cfg.index < cfg.playlist.length - 1)
-			dom.playlist.childNodes[cfg.index + 1].className = 'song';
-		dom.playlist.childNodes[cfg.index].className = 'playing';
-		dom.playlist.scrollTop = dom.playlist.childNodes[cfg.index].offsetTop - dom.playlist.offsetTop;
+		if (cfg.index != -1) {
+			if (cfg.index > 0)
+				dom.playlist.childNodes[cfg.index - 1].className = 'song';
+			if (cfg.index < cfg.playlist.length - 1)
+				dom.playlist.childNodes[cfg.index + 1].className = 'song';
+			dom.playlist.childNodes[cfg.index].className = 'playing';
+			if (!onplaylist)
+				dom.playlist.scrollTop = dom.playlist.childNodes[cfg.index].offsetTop - dom.playlist.offsetTop;
+		}
 	}
 	
 	audio.onpause = function() {
@@ -80,10 +86,14 @@ function init() {
 	};
 	
 	window.addEventListener('touchstart', function onFirstTouch() {
+		document.documentElement.className = 'touch';
 		dom.clear.style.display = 'initial';
+		window.addEventListener('touchmove', function(e) {
+			onplaylist = dom.playlist.contains(e.targetTouches[0].target);
+		}, false);
 		window.removeEventListener('touchstart', onFirstTouch, false);
 	}, false);
-		
+	
 	window.onunload = function() {
 		if (ls) {
 			localStorage.setItem("asymm_music", JSON.stringify(cfg));
@@ -96,15 +106,13 @@ function init() {
 	log('PHP request = '+ lib.src);
 	lib.onload = function() {
 		buildLibrary('', library, tree);
-		if (url.length == 1)
-			buildPlaylist();	// Only rebuild saved playlist for main library
+		buildPlaylist();
 	};
 	document.body.appendChild(lib);
 }
 
 function ls() {
 	var def = {
-		'volume': 1,
 		'enqueue': false,
 		'random': false,	// (url.length == 1 ? true : false)
 		'locked': false,
@@ -123,7 +131,7 @@ function ls() {
 		if (sav != null) {
 			cfg = JSON.parse(sav);
 			for (c in def)
-				if (cfg[c] === 'undefined') cfg[c] = def[c];
+				if (cfg[c] == undefined) cfg[c] = def[c];
 			return true;
 		}
 		cfg = def;
@@ -162,7 +170,7 @@ function buildLibrary(root, folder, element) {
 		} else {
 			for (f in folder[i]) {
 				if (f.toLowerCase().endsWith('.jpg') || f.toLowerCase().endsWith('.png')) {
-					if (!cover)
+					if (!cover || f.toLowerCase().startsWith('folder'))
 						cover = f;
 					delete(folder[i][f]);
 				}
@@ -206,17 +214,16 @@ function songClick(e) {
 }
 
 function buildPlaylist() {
-	if (cfg.playlist.length == 0) return;
+	if (cfg.playlist.length == 0 || url.length > 1) return;	// Only rebuild saved playlist for main library
+	cfg.index = Math.min(cfg.index, cfg.playlist.length - 1);
 
 	var i, li;
 	for (i in cfg.playlist) {
-		var path = cfg.playlist[i].path;
-		li = document.createElement('li');
+		li = playlistElement(cfg.playlist[i]);
 		li.className = (i == cfg.index ? 'playing' : 'song');
-		li.textContent = getSong(path);
-		li.onclick = function() { setFilter(this.textContent) };
 		dom.playlist.appendChild(li);
 		if (i == cfg.index) {
+			var path = cfg.playlist[i].path;
 			dom.folder.textContent = getFolder(path);
 			dom.song.textContent = getSong(path);
 		}
@@ -238,6 +245,86 @@ function buildPlaylist() {
 			break;
 		}
 	}
+}
+
+function playlistElement(s) {
+	var li = document.createElement('li');
+	li.setAttribute('id', s.id);
+	li.className = 'song';
+	li.draggable = 'true',
+	li.onclick = function() { setFilter(this.textContent) };
+	li.ondblclick = function (e) { if (!cfg.locked) play(getIndex(s.id)) };
+	li.ondragstart = function(e) { prepareDrag(e) };
+	li.ondragenter = function() { this.classList.add('over') };
+	li.ondragleave = function() { this.classList.remove('over') };
+	li.ondragover = function (e) { allowDrop(e) }
+	li.ondragend = function() { endDrag() }
+	li.ondrop = function(e) { dropSong(e) };
+	li.textContent = getSong(s.path);
+	return li;
+}
+
+function prepareDrag(e) {
+	e.stopPropagation();
+	dom.clear.className = 'drag';
+	dom.clear.textContent = '';
+	dom.playlist.appendChild(playlistElement({ 'id': 'last', 'path': '' }));
+	if (cfg.index !=-1)
+		dom.playlist.childNodes[cfg.index].className = 'song';
+
+	drag = e.target;
+	e.dataTransfer.effectAllowed = 'move';
+	e.dataTransfer.setData('text/plain', (cfg.index != -1 ? cfg.playlist[cfg.index].id : -1));
+}
+
+function allowDrop(e) {
+	e.preventDefault();
+	e.stopPropagation();
+}
+
+function endDrag() {
+	dom.clear.className = '';
+	dom.clear.textContent = 'Clear';
+	dom.playlist.removeChild(dom.playlist.lastChild);
+}
+
+function dropSong(e) {
+	e.preventDefault();
+	e.stopPropagation();
+	var to = e.target;
+	to.classList.remove('over');
+	if (drag == to) return;
+
+	dom.playlist.insertBefore(drag, to);
+	
+	var indexfrom = getIndex(drag.getAttribute('id'));
+	var indexto = getIndex(to.getAttribute('id'));
+	cfg.playlist.splice(indexto - (indexfrom < indexto ? 1 : 0), 0, cfg.playlist.splice(indexfrom, 1)[0]);
+	cfg.index = getIndex(e.dataTransfer.getData('text'));
+
+	if (cfg.index != -1)
+		dom.playlist.childNodes[cfg.index].className = 'playing';
+}
+
+function removeItem(e) {
+	e.preventDefault();
+	e.stopPropagation();
+	var playId = (cfg.index != -1 ? cfg.playlist[cfg.index].id : -1);
+	var index = getIndex(drag.getAttribute('id'));
+	cfg.playlist.splice(index, 1);
+	dom.playlist.removeChild(dom.playlist.childNodes[index]);
+	resizePlaylist();
+	if (cfg.index != -1) {
+		if (index != cfg.index) dom.playlist.childNodes[cfg.index].className = 'playing';
+		cfg.index = (index == cfg.index ? cfg.index - 1 : getIndex(playId));
+	}
+}
+
+function getIndex(id) {
+	if (id == 'last') return cfg.playlist.length;
+	if (id != -1) for (var i = 0; i < cfg.playlist.length; i++)
+		if (id == cfg.playlist[i].id) return i;
+	return -1;
 }
 
 function fillShare(path) {
@@ -325,49 +412,58 @@ function next() {
 	} else load(songs[0].id);
 }
 
-function download(type) {
-	if (cfg.index == -1) return;
-	var path = cfg.playlist[cfg.index].path;
-	var uri = dir + (type == 'f' ? path.substring(0, path.lastIndexOf('/')) : path);
-	dom.a.href = 'music.php?dl='+ esc(uri);
-	dom.a.click();
-}
-
-function share(type) {
-	var share = (type == 'f' ? dom.folderuri : dom.songuri);
-	if (!share.value) return;
-	share.select();
-	document.execCommand('copy');
-	share.nextElementSibling.nextElementSibling.className = 'copied';
-	setTimeout(function() {
-		share.nextElementSibling.nextElementSibling.className = 'link';
-	}, 1500);
-}
-
-function shareWhatsApp(type) {
-	var share = (type == 'f' ? dom.folderuri : dom.songuri);
-	if (share.value)
-		window.open('https://api.whatsapp.com/send?text=Have a listen to '+ encodeURIComponent(share.value));
-}
-
 function load(id) {
 	add(id, true);
 	play(cfg.index + 1);
 }
 
+function download(type) {
+	if (cfg.index != -1) {
+		var path = cfg.playlist[cfg.index].path;
+		var uri = dir + (type == 'f' ? path.substring(0, path.lastIndexOf('/')) : path);
+		dom.a.href = 'music.php?dl='+ esc(uri);
+		dom.a.click();
+	}
+}
+
+function share(type) {
+	var share = (type == 'f' ? dom.folderuri : dom.songuri);
+	if (share.value) {
+		share.select();
+		document.execCommand('copy');
+		share.nextElementSibling.nextElementSibling.className = 'copied';
+		setTimeout(function() {
+			share.nextElementSibling.nextElementSibling.className = 'link';
+		}, 1500);
+	}
+}
+
+function shareWhatsApp(type) {
+	var share = (type == 'f' ? dom.folderuri : dom.songuri);
+	if (share.value) {
+		msg = prompt('Your message via WhatApp (the url will be added at the end):', whatsappmsg);
+		whatsappmsg = (msg ? msg : '');
+		window.open('https://api.whatsapp.com/send?text='+ whatsappmsg +' '+ encodeURIComponent(share.value));
+	}
+}
+
 function add(id, next) {
-	var path = songs[id].getAttribute('path');
+	var s = {
+		'id': id,
+		'path': songs[id].getAttribute('path'),
+		'cover': songs[id].getAttribute('cover')
+	};
 	
 	if (cfg.playlist.length > 0) {
 		if (next) {
-			if (path == cfg.playlist[cfg.index].path) {
+			if (s.path == cfg.playlist[cfg.index].path) {
 				cfg.index--;
 				return;
 			}
 		} else {
 			var i = (nodupes ? 0 : cfg.index);
 			for (; i < cfg.playlist.length; i++) {
-				if (path == cfg.playlist[i].path) {
+				if (s.path == cfg.playlist[i].path) {
 					dom.tree.className = 'dim';
 					setTimeout(function() {
 						dom.tree.className = '';
@@ -377,28 +473,21 @@ function add(id, next) {
 			}
 		}
 	}
-		
-	var li = document.createElement('li');
-	li.className = 'song';
-	li.textContent = getSong(path);
-	li.onclick = function() { setFilter(this.textContent) };
-
-	var c = songs[id].getAttribute('cover');
-	item = {'id': id, 'path': path, 'cover': c};
-
+	
+	var li = playlistElement(s);
 	if (next) {
-		cfg.playlist.splice(cfg.index + 1, 0, item);
+		cfg.playlist.splice(cfg.index + 1, 0, s);
 		if (cfg.index > 0)
 			playlist.insertBefore(li, dom.playlist.childNodes[cfg.index + 1]);
 		else
 			dom.playlist.appendChild(li);
 	} else {
-		cfg.playlist.push(item);
+		cfg.playlist.push(s);
 		dom.playlist.appendChild(li);
 	}
 	
 	resizePlaylist();
-	log('Added to playlist: '+ item.path);
+	log('Added to playlist: '+ s.path);
 }
 
 function play(index) {
@@ -434,10 +523,8 @@ function toggle(e) {
 function toggleLock() {
 	if (!password()) return;
 	if (!cfg.locked) {
-		if (!cfg.enqueue)
-			dom.enqueue.click();
-		if (!cfg.random)
-			dom.random.click();
+		if (!cfg.enqueue) dom.enqueue.click();
+		if (!cfg.random) dom.random.click();
 	}
 	cfg.locked ^= true;
 	document.body.className = (cfg.locked ? 'locked' : '');
@@ -450,7 +537,7 @@ function password() {
 
 	var prev = 'Use previously set password';
 	var p = prompt('Enter password', (!cfg.locked && cfg.password ? prev : ''));
-	if (!p) return false;
+	if (p == null) return false;
 	if (p == prev) return true;
 
 	var pass = 0;
@@ -466,7 +553,6 @@ function password() {
 }
 
 function clearPlaylist() {
-	if (cfg.locked) return;
 	if (cfg.playlist.length > 0 && confirm('Clear the playlist?')) {
 		cfg.playlist = [];
 		cfg.index = -1;
@@ -537,7 +623,7 @@ document.addEventListener('keydown', function(e) {
 			stop();
 			return;
 		case 67:	// c
-			clearPlaylist();
+			if (!cfg.locked) clearPlaylist();
 			return;
 		case 69:	// e
 			dom.enqueue.click();
@@ -555,13 +641,21 @@ document.addEventListener('keydown', function(e) {
 		case 83:	// s
 			dom.share.click();
 			return;
+		case 61:	// = Firefox
 		case 187:	// =
 			e.preventDefault();
 			next();
 			return;
+		case 173:	// - Firefox
 		case 189:	// -
 			e.preventDefault();
 			previous();
+			return;
+		case 219:	// [
+			audio.currentTime -= 5;
+			return;
+		case 221:	// ]
+			audio.currentTime += 5;
 			return;
 	}
 	return false;
