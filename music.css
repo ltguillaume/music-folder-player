@@ -5,8 +5,8 @@
 }
 
 html.touch {
-	font-size: 1.25em;
-	line-height: 2em;
+	font-size: 1.1em;
+	line-height: 2.5em;
 }
 
 body, button {
@@ -45,7 +45,7 @@ button {
 
 input {
 	width: 19em;
-	max-width: calc(100% - 7em);
+	max-width: calc(100% - 7.5em);
 	padding: .1em;
 	border: none;
 	border-bottom: 1px solid #444;
@@ -110,7 +110,7 @@ li.over { border-top: 1px dotted #ef6c00 }
 
 #options.whatsapp #folderwhatsapp, #options.whatsapp #songwhatsapp { display: inline-block }
 
-#options.whatsapp #folderuri, #options.whatsapp #songuri { max-width: calc(100% - 9.5em) }
+#options.whatsapp #folderuri, #options.whatsapp #songuri { max-width: calc(100% - 10em) }
 
 #shares input { direction: rtl }
 
