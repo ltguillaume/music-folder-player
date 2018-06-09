@@ -57,10 +57,6 @@ function init() {
 		dom.playpause.className = 'playing';
 		dom.folder.className = dom.song.className = '';
 		if (cfg.index != -1) {
-			if (cfg.index > 0)
-				dom.playlist.childNodes[cfg.index - 1].className = 'song';
-			if (cfg.index < cfg.playlist.length - 1)
-				dom.playlist.childNodes[cfg.index + 1].className = 'song';
 			dom.playlist.childNodes[cfg.index].className = 'playing';
 			if (!onplaylist)
 				dom.playlist.scrollTop = dom.playlist.childNodes[cfg.index].offsetTop - dom.playlist.offsetTop;
@@ -72,9 +68,7 @@ function init() {
 		dom.folder.className = dom.song.className = 'dim';
 	}
 
-	audio.onended = function() {
-		next();
-	}
+	audio.onended = function() { next() }
 	
 	audio.ontimeupdate = audio.durationchange = function() {
 		dom.time.textContent = timeTxt(~~audio.currentTime) +" / "+ timeTxt(~~audio.duration);
@@ -85,15 +79,17 @@ function init() {
 		next();
 	};
 	
-	window.addEventListener('touchstart', function onFirstTouch() {
-		document.documentElement.className = 'touch';
-		dom.clear.style.display = 'initial';
+	window.addEventListener('touchstart', function() {
+		window.addEventListener('touchend', function(e) {
+			e.preventDefault();
+		}, {once: true});
 		window.addEventListener('touchmove', function(e) {
 			onplaylist = dom.playlist.contains(e.targetTouches[0].target);
-		}, false);
-		window.removeEventListener('touchstart', onFirstTouch, false);
-	}, false);
-	
+		}, {passive: true});
+		document.documentElement.className = 'touch';
+		dom.clear.style.display = 'initial';
+	}, {once: true, passive: true});
+
 	window.onunload = function() {
 		if (ls) {
 			localStorage.setItem("asymm_music", JSON.stringify(cfg));
@@ -253,7 +249,7 @@ function playlistElement(s) {
 	li.className = 'song';
 	li.draggable = 'true',
 	li.onclick = function() { setFilter(this.textContent) };
-	li.ondblclick = function (e) { if (!cfg.locked) play(getIndex(s.id)) };
+	li.ondblclick = function (e) { dblClick(e) };
 	li.ondragstart = function(e) { prepareDrag(e) };
 	li.ondragenter = function() { this.classList.add('over') };
 	li.ondragleave = function() { this.classList.remove('over') };
@@ -261,7 +257,15 @@ function playlistElement(s) {
 	li.ondragend = function() { endDrag() }
 	li.ondrop = function(e) { dropSong(e) };
 	li.textContent = getSong(s.path);
+	li.title = getFolder(s.path);
 	return li;
+}
+
+function dblClick(e) {
+	if (!cfg.locked) {
+		e.preventDefault();
+		play(getIndex(e.target.getAttribute('id')));
+	}
 }
 
 function prepareDrag(e) {
@@ -283,9 +287,12 @@ function allowDrop(e) {
 }
 
 function endDrag() {
-	dom.clear.className = '';
-	dom.clear.textContent = 'Clear';
-	dom.playlist.removeChild(dom.playlist.lastChild);
+	if (dom.clear.className != '') {
+		dom.clear.className = '';
+		dom.clear.textContent = 'Clear';
+	}
+	if (dom.playlist.hasChildNodes() && dom.playlist.lastChild.getAttribute('id') == 'last')
+		dom.playlist.removeChild(dom.playlist.lastChild);
 }
 
 function dropSong(e) {
@@ -491,6 +498,8 @@ function add(id, next) {
 }
 
 function play(index) {
+	if (cfg.index != -1)
+		dom.playlist.childNodes[cfg.index].className = 'song';
 	if (index == -1) return next();
 	var path = cfg.playlist[index].path;
 	var c = cfg.playlist[index].cover;
@@ -605,12 +614,16 @@ function setFilter(f) {
 	filter();
 }
 
+function clearFilter() {
+	dom.filter.value = '';
+	filter();
+}
+
 document.addEventListener('keydown', function(e) {
 	if (e.altKey || e.ctrlKey) return;
 	
 	if (e.which == 27) {	// esc
-		setFilter('');
-		dom.filter.blur();
+		clearFilter();
 		return;
 	} else if (dom.filter == document.activeElement) return false;
 
