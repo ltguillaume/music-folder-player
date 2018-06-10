@@ -212,6 +212,7 @@ function songClick(e) {
 function buildPlaylist() {
 	if (cfg.playlist.length == 0 || url.length > 1) return;	// Only rebuild saved playlist for main library
 	cfg.index = Math.min(cfg.index, cfg.playlist.length - 1);
+	dom.playlist.innerHTML = '';
 
 	var i, li;
 	for (i in cfg.playlist) {
@@ -231,21 +232,10 @@ function buildPlaylist() {
 		dom.playlist.scrollTop = dom.playlist.childNodes[cfg.index].offsetTop - dom.playlist.offsetTop;
 		fillShare(cfg.playlist[cfg.index].path);
 	}
-	
-	// Only for next(): if songs were added/removed since last session, id'could be changed
-	var last = cfg.playlist[cfg.playlist.length - 1];
-	last.id = -1;
-	for (s in songs) {
-		if (last.path == songs[s].getAttribute('path')) {
-			last.id = songs[s].getAttribute('id');
-			break;
-		}
-	}
 }
 
 function playlistElement(s) {
 	var li = document.createElement('li');
-	li.setAttribute('id', s.id);
 	li.className = 'song';
 	li.draggable = 'true',
 	li.onclick = function() { setFilter(this.textContent) };
@@ -264,7 +254,7 @@ function playlistElement(s) {
 function dblClick(e) {
 	if (!cfg.locked) {
 		e.preventDefault();
-		play(getIndex(e.target.getAttribute('id')));
+		play(getIndex(e.target));
 	}
 }
 
@@ -272,13 +262,13 @@ function prepareDrag(e) {
 	e.stopPropagation();
 	dom.clear.className = 'drag';
 	dom.clear.textContent = '';
-	dom.playlist.appendChild(playlistElement({ 'id': 'last', 'path': '' }));
+	dom.playlist.appendChild(playlistElement({ 'path': 'last' }));
 	if (cfg.index !=-1)
 		dom.playlist.childNodes[cfg.index].className = 'song';
 
 	drag = e.target;
 	e.dataTransfer.effectAllowed = 'move';
-	e.dataTransfer.setData('text/plain', (cfg.index != -1 ? cfg.playlist[cfg.index].id : -1));
+	e.dataTransfer.setData('text/plain', (getIndex(drag)));
 }
 
 function allowDrop(e) {
@@ -291,47 +281,54 @@ function endDrag() {
 		dom.clear.className = '';
 		dom.clear.textContent = 'Clear';
 	}
-	if (dom.playlist.hasChildNodes() && dom.playlist.lastChild.getAttribute('id') == 'last')
+	if (dom.playlist.hasChildNodes() && dom.playlist.lastChild.textContent == '') {
 		dom.playlist.removeChild(dom.playlist.lastChild);
+	}
 }
 
 function dropSong(e) {
 	e.preventDefault();
 	e.stopPropagation();
 	var to = e.target;
+	log('Drag '+ drag.innerHTML +' to place of '+ to.innerHTML);
 	to.classList.remove('over');
-	if (drag == to) return;
-
-	dom.playlist.insertBefore(drag, to);
-	
-	var indexfrom = getIndex(drag.getAttribute('id'));
-	var indexto = getIndex(to.getAttribute('id'));
-	cfg.playlist.splice(indexto - (indexfrom < indexto ? 1 : 0), 0, cfg.playlist.splice(indexfrom, 1)[0]);
-	cfg.index = getIndex(e.dataTransfer.getData('text'));
-
-	if (cfg.index != -1)
-		dom.playlist.childNodes[cfg.index].className = 'playing';
+	var indexfrom = e.dataTransfer.getData('text');
+	var indexto = getIndex(to);
+	if (indexto != indexfrom) {
+		dom.playlist.insertBefore(drag, to);	
+		cfg.playlist.splice(indexto - (indexfrom < indexto ? 1 : 0), 0, cfg.playlist.splice(indexfrom, 1)[0]);
+		log('Playback index from '+ cfg.index);
+		if (cfg.index != -1) {
+			if (indexfrom == cfg.index)
+				cfg.index = (indexfrom < indexto ? indexto - 1 : indexto);
+			else if (indexfrom < cfg.index && indexto > cfg.index)
+				cfg.index--;
+			else if (indexfrom > cfg.index && indexto <= cfg.index)
+				cfg.index++;
+		}
+	}
+	dom.playlist.childNodes[cfg.index].className = 'playing';
+	log('Drag from position '+ indexfrom +' to position '+ indexto);
+	log('play index to '+ cfg.index);
 }
 
 function removeItem(e) {
 	e.preventDefault();
 	e.stopPropagation();
-	var playId = (cfg.index != -1 ? cfg.playlist[cfg.index].id : -1);
-	var index = getIndex(drag.getAttribute('id'));
+	var index = getIndex(drag);
 	cfg.playlist.splice(index, 1);
 	dom.playlist.removeChild(dom.playlist.childNodes[index]);
 	resizePlaylist();
-	if (cfg.index != -1) {
-		if (index != cfg.index) dom.playlist.childNodes[cfg.index].className = 'playing';
-		cfg.index = (index == cfg.index ? cfg.index - 1 : getIndex(playId));
-	}
+	if (cfg.index != -1 && index <= cfg.index)
+		cfg.index--;
+	if (cfg.index != -1)
+		dom.playlist.childNodes[cfg.index].className = 'playing';
 }
 
-function getIndex(id) {
-	if (id == 'last') return cfg.playlist.length;
-	if (id != -1) for (var i = 0; i < cfg.playlist.length; i++)
-		if (id == cfg.playlist[i].id) return i;
-	return -1;
+function getIndex(li) {
+	if (li.textContent == '')	// Temporary last item for dragging
+		return cfg.playlist.length;
+	return Array.prototype.indexOf.call(li.parentNode.children, li);
 }
 
 function fillShare(path) {
@@ -454,9 +451,34 @@ function shareWhatsApp(type) {
 	}
 }
 
+function importPlaylist() {
+	var input = document.createElement('input');
+	input.setAttribute('type', 'file');
+	input.setAttribute('accept', '.mfp.json');
+	input.onchange = function(e) {
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			var items = JSON.parse(e.target.result);
+			for (i in items)
+				cfg.playlist.push(items[i]);
+			buildPlaylist();
+		};
+		reader.readAsText(input.files[0], 'UTF-8');
+	}
+	input.click();
+}
+
+function exportPlaylist() {
+	var filename = prompt('Enter a filename', deftitle +' Playlist');
+	if (filename) {
+		dom.a.href = 'data:text/json;charset=utf-8,'+ JSON.stringify(cfg.playlist);
+		dom.a.download = filename +'.mfp.json';
+		dom.a.click();
+	}
+}
+
 function add(id, next) {
 	var s = {
-		'id': id,
 		'path': songs[id].getAttribute('path'),
 		'cover': songs[id].getAttribute('cover')
 	};

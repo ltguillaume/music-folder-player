@@ -1,5 +1,5 @@
 # Music Folder Player
-An elegant HTML5 web folder player for parties and/or private music collections
+An elegant HTML5 web folder player for parties and/or private music collections. It does not use a database (so it's alway up-to-date), but can easily handle folders with 25,000 songs or more. It has no dependencies other than PHP and installation costs less than 2 minutes.
 
 ## Overview
 - Rebuilds the tree of known music files for a specified folder
@@ -16,6 +16,7 @@ An elegant HTML5 web folder player for parties and/or private music collections
 - Click on song or folder name to find in library
 - Download a song or zipped folder (only tested on ArchLinux)
 - Share a song or folder link
+- Import/export the playlist
 - Share links directly to WhatsApp (optional)
 - Save playlist and configuration to browser's Local Storage
 - Design should be fully responsive on CSS3-compatible browser

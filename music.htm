@@ -16,10 +16,10 @@
 			<div id="song" class="dim" onclick="setFilter(event)">Track Title</div>
 			<div id="time" class="dim">00:00</div>
 			<div id="controls">
-				<button id="stop" class="button" title="Stop playback (0)" onclick="stop()"/>
-				<button id="playpause" class="button" title="Play or pause (space)" onclick="playPause()"/>
-				<button id="previous" class="button" title="Play previous (-)" onclick="previous()"/>
-				<button id="next" class="button" title="Play next (=)" onclick="next()"/>
+				<button id="stop" title="Stop playback (0)" onclick="stop()"/>
+				<button id="playpause" title="Play or pause (space)" onclick="playPause()"/>
+				<button id="previous" title="Play previous (-)" onclick="previous()"/>
+				<button id="next" title="Play next (=)" onclick="next()"/>
 				<audio id="audio">HTML5 not supported</audio>
 			</div>
 		</div>
@@ -42,7 +42,9 @@
 				<button id="songshare" class="link" title="Share link to song" onclick="share('s')"/>
 				<button id="songwhatsapp" class="whatsapp hide" title="Share song link via WhatsApp" onclick="shareWhatsApp('s')"/>
 			</div>
-			<a id="download" class="hide"></a>
+			<button id="import" title="Add songs from exported playlist" onclick="importPlaylist()">Import playlist</button>
+			<button id="export" title="Export current playlist to file" onclick="exportPlaylist()">Export playlist</button>
+			<a id="a" class="hide"></a>
 		</div>
 	</div>	
 	<div id="playlistdiv">

@@ -108,11 +108,18 @@ li.over { border-top: 1px dotted #ef6c00 }
 
 #options > .sharediv { white-space: nowrap }
 
-#options > button:before, #playlistdiv > div > button:before { margin-right: .25em }
+#options > button:before, #shares > button:before,
+#playlistdiv button:before { margin-right: .25em }
 
 #options.whatsapp #folderwhatsapp, #options.whatsapp #songwhatsapp { display: inline-block }
 
 #options.whatsapp #folderuri, #options.whatsapp #songuri { max-width: calc(100% - 10em) }
+
+#shares {
+	margin-top: .25em;
+	padding-top: .25em;
+	border-top: 1px solid #eee;
+}
 
 #shares input { direction: rtl }
 
@@ -212,6 +219,8 @@ body.locked #enqueue, body.locked #random {
 #clear:before { content: "\f204" }
 #clearfilter:before { content: "\f217" }
 #enqueue:before { content: "\f17f" }
+#export:before { content: "\f188" }
+#import:before { content: "\f184" }
 #library:before { content: "\f17b" }
 #lock:before, body.locked #enqueue:before, body.locked #random:before { content: "\f16a" !important }
 	#lock.on:before { content: "\f20a" !important }
