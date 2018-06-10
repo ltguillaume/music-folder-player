@@ -38,7 +38,7 @@ button {
 	border-radius: 3px;
 }
 	button:hover {
-		background: #e7ecf1;
+		background: #e9e9f6;
 		cursor: pointer;
 	}
 	button:active, button:focus { outline: none }

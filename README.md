@@ -24,12 +24,12 @@ An elegant HTML5 web folder player for parties and/or private music collections.
 ## List of hotkeys
 Hotkey | Command
 :---: |---
-0 | Stop playback (time to 0:00)
-Space | Play/pause
-\- | Play previous
-\+ | Play next
-\[ | Jump back 5s
-\] | Jump forward 5s
+O | Stop playback (time to 0:00)
+P or Space | Play/pause
+\[ | Play previous
+\] | Play next
+\- | Jump back 5s
+\+ | Jump forward 5s
 E | Toggle enqueue
 R | Toggle random
 S | Toggle share dialog
@@ -50,5 +50,6 @@ Esc | Reset library filter
 ## Credits
 - Parts of this little project are heavily based on the excellent [HTML5 Music Player](https://github.com/GM-Script-Writer-62850/HTML5-Music-Player) by [GM-Script-Writer-62850](https://github.com/GM-Script-Writer-62850)
 - The [Foundation icon font](https://zurb.com/playground/foundation-icon-fonts-3) is used
+- Album art placeholder is based on a [design by CmdRobot](http://fav.me/d7kpm65)
 
 All credits are due, as well as my sincere thanks!

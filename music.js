@@ -246,8 +246,12 @@ function playlistElement(s) {
 	li.ondragover = function (e) { allowDrop(e) }
 	li.ondragend = function() { endDrag() }
 	li.ondrop = function(e) { dropSong(e) };
-	li.textContent = getSong(s.path);
-	li.title = getFolder(s.path);
+	if (s.path == 'last') {
+		li.id = 'last';
+	} else {
+		li.textContent = getSong(s.path);
+		li.title = getFolder(s.path);
+	}
 	return li;
 }
 
@@ -281,7 +285,7 @@ function endDrag() {
 		dom.clear.className = '';
 		dom.clear.textContent = 'Clear';
 	}
-	if (dom.playlist.hasChildNodes() && dom.playlist.lastChild.textContent == '') {
+	if (dom.playlist.hasChildNodes() && dom.playlist.lastChild.id == 'last') {
 		dom.playlist.removeChild(dom.playlist.lastChild);
 	}
 }
@@ -326,7 +330,7 @@ function removeItem(e) {
 }
 
 function getIndex(li) {
-	if (li.textContent == '')	// Temporary last item for dragging
+	if (li.id == 'last')	// Temporary last item for dragging
 		return cfg.playlist.length;
 	return Array.prototype.indexOf.call(li.parentNode.children, li);
 }
@@ -408,8 +412,15 @@ function next() {
 			}
 		}
 	} else if (cfg.index != -1)	{
-		var next = parseInt(cfg.playlist[cfg.index].id) + 1;
-		if (next < songs.length)
+		var path = cfg.playlist[cfg.index].path;
+		var next = -1;
+		for (var i = 0; i < songs.length; i++) {
+			if (songs[i].getAttribute('path') == path) {
+				next = i + 1;
+				break;
+			}
+		}
+		if (next != -1 && next < songs.length)
 			load(songs[next].id);
 		else
 			log('End of library');
@@ -650,25 +661,8 @@ document.addEventListener('keydown', function(e) {
 	} else if (dom.filter == document.activeElement) return false;
 
 	switch (e.which) {
-		case 32:	// space
-			e.preventDefault();
-			playPause();
-			return;
-		case 48:	// 0
-			stop();
-			return;
-		case 67:	// c
-			if (!cfg.locked) clearPlaylist();
-			return;
 		case 69:	// e
 			dom.enqueue.click();
-			return;
-		case 70:	// f
-			e.preventDefault();
-			dom.filter.focus();
-			return;
-		case 76:	// l
-			dom.lock.click();
 			return;
 		case 82:	// r
 			dom.random.click();
@@ -676,21 +670,39 @@ document.addEventListener('keydown', function(e) {
 		case 83:	// s
 			dom.share.click();
 			return;
+		case 76:	// l
+			dom.lock.click();
+			return;
+		case 67:	// c
+			if (!cfg.locked) clearPlaylist();
+			return;
+		case 70:	// f
+			e.preventDefault();
+			dom.filter.focus();
+			return;
 		case 61:	// = Firefox
 		case 187:	// =
 			e.preventDefault();
-			next();
+			audio.currentTime += 5;
 			return;
 		case 173:	// - Firefox
 		case 189:	// -
 			e.preventDefault();
-			previous();
-			return;
-		case 219:	// [
 			audio.currentTime -= 5;
 			return;
+		case 79:	// o
+			stop();
+			return;
+		case 80:	// p
+		case 32:	// space
+			e.preventDefault();
+			playPause();
+			return;
+		case 219:	// [
+			previous();
+			return;
 		case 221:	// ]
-			audio.currentTime += 5;
+			next();
 			return;
 	}
 	return false;
