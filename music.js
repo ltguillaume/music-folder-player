@@ -189,10 +189,11 @@ function buildLibrary(root, folder, element) {
 function folderClick(e) {
 	e.stopPropagation();
 	var li = e.target;
-	if (dom.filter.value != '' && li.className.indexOf('open') == 0) {
+	if (li.className.indexOf('filtered open') == 0) {
 		li.querySelectorAll('ul > *').forEach(function(f) {
 			if (f.style.display != '') f.style.display = '';
 		});
+		li.className = 'open folder';
 	} else {
 		if (li.className.indexOf('open') == -1) li.className = 'open folder';
 		else li.className = 'folder';
@@ -634,7 +635,7 @@ function filter() {
 			for (; f && f !== dom.tree; f = f.parentNode) {
 				if (f.style.display != '') f.style.display = '';
 				if (f.className.indexOf('folder') != -1 && f.className.indexOf('open') == -1)
-					f.className='open folder';
+					f.className='filtered open folder';
 			}
 	});
 }
