@@ -1,25 +1,30 @@
 # Music Folder Player
-An elegant HTML5 web folder player for parties and/or private music collections. It does not use a database (so it's alway up-to-date), but can easily handle folders with 25,000 songs or more. It has no dependencies other than PHP and installation costs less than 2 minutes.
+An elegant HTML5 web folder player for parties and/or private music collections. It does not use a database (so it's alway up-to-date), but can easily handle folders with 25,000 songs or more. It has no dependencies other than PHP and installation costs less than 2 minutes. The design should be fully responsive on CSS3-compatible browsers.
 
 ## Overview
+#### Playback
 - Rebuilds the tree of known music files for a specified folder
 - Click to play directly, while keeping the playlist intact
+- Click on cover image to zoom
+- Click on song or folder name to find in library
+- Filter the library to quickly find songs
+#### Playlist
 - Enable "Enqueue" mode to add songs to the bottom of the playlist
 - Drag and drop to change the playlist order or remove a song
 - Automatically continue playing from library when playlist is exhausted (continuing from last song, or at random)
 - Random playback will prevent choosing already played songs
-- (Password) lock the playlist and playlist controls for parties (only enqueue and play/pause work)
-- Filter the library to quickly find songs
+- Playlist and configuration will be saved to the browser's Local Storage if possible.
+#### Parties
+- Password lock the playlist and playlist controls (only enqueue and play/pause work)
+- Tip: use [OpenKiosk](openkiosk.mozdevgroup.com) and disable _Set inactive terminal_
 - Prevent adding a song if it's already queued up
 - Do not add already played songs to playlist (optional)
-- Click on cover image to zoom
-- Click on song or folder name to find in library
-- Download a song or zipped folder (only tested on ArchLinux)
+#### Sharing
+- Download a song or zipped folder (only tested on a Linux server)
 - Share a song or folder link
 - Import/export the playlist
 - Share links directly to WhatsApp (optional)
-- Save playlist and configuration to browser's Local Storage
-- Design should be fully responsive on CSS3-compatible browser
+
 
 ## List of hotkeys
 Hotkey | Command

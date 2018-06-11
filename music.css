@@ -36,7 +36,9 @@ button {
 	font-size: .95em;
 	border: none;
 	border-radius: 3px;
+	transition: background-color .1s ease-in;
 }
+	button:before { font-size: 1.05em }
 	button:hover {
 		background: #ebf2f7;
 		cursor: pointer;
@@ -60,9 +62,14 @@ ul {
 	padding-left: 1.25em;
 }
 
-li:before { padding-right: .25em }
-li:not(.open):hover { color: #ef6c00 /*#607d8b*/ }
+li:hover {
+	color: #ef6c00 !important;
+	transition: color .05s ease-in;
+}
+	li:hover * { color: #444 }
+
 li#last:before { visibility: hidden }
+
 li.over { border-top: 1px dotted #ef6c00 }
 
 #player {
@@ -75,28 +82,32 @@ li.over { border-top: 1px dotted #ef6c00 }
 	vertical-align: middle;
 }
 
-#current { max-width: calc(100% - 8.5em)}
+#cover {
+	max-width: 7.25em;
+	max-height: 7.25em;
+	border: 1px solid #fafafa;
+	border-radius: 3px;
+	cursor: zoom-in;
+	transition: max-width .5s ease-out, max-height .5s ease-out;
+}
+	#cover.zoomed {
+		max-width: 100%;
+		max-height: 100%;
+		margin: 0 auto;
+		cursor: zoom-out;
+		transition: max-width .5s ease-in, max-height .5s ease-in;
+	}
+
+#current {
+	max-width: calc(100% - 8.5em);
+	padding-left: .5em;
+}
 
 #current > div {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-
-#cover {
-	width: 7.25em;
-	height: 7.25em;
-	margin-right: 1em;
-	border: 1px solid #fafafa;
-	border-radius: 3px;
-	cursor: zoom-in;
-}
-	#cover.zoomed {
-		width: auto;
-		height: auto;
-		margin: 0 auto;
-		cursor: zoom-out;
-	}
 
 #folder, #song { cursor: alias }
 
@@ -108,18 +119,25 @@ li.over { border-top: 1px dotted #ef6c00 }
 
 #options > .sharediv { white-space: nowrap }
 
-#options > button:before, #shares > button:before,
-#playlistdiv button:before { margin-right: .25em }
+li:before, #options > button:before,
+#shares > button:before, #playlistdiv button:before { margin-right: .25em }
 
 #options.whatsapp #folderwhatsapp, #options.whatsapp #songwhatsapp { display: inline-block }
 
 #options.whatsapp #folderuri, #options.whatsapp #songuri { max-width: calc(100% - 10em) }
 
 #shares {
-	margin-top: .25em;
-	padding-top: .25em;
-	border-top: 1px solid #eee;
+		max-height: 0;
+		overflow-y: hidden;
+		transition: margin-top .2s, padding-top .2s, max-height .2s ease-out;
 }
+	#shares.show {
+		max-height: 9em;
+		margin-top: .25em;
+		padding-top: .25em;
+		border-top: 1px solid #eee;
+		transition: max-height .2s ease-in;
+	}
 
 #shares input { direction: rtl }
 
@@ -172,6 +190,8 @@ li.over { border-top: 1px dotted #ef6c00 }
 #tree li { cursor: pointer }
 
 #tree li.open > ul { display: block }
+#tree li.filtered { color: #ccc }
+#tree li.filtered > ul { color: #444 }
 
 .dim { opacity: .5 }
 
@@ -193,13 +213,10 @@ body.locked #enqueue, body.locked #random {
 		display: block;
 		max-width: 100%;
 		margin: 0 auto;
+		padding: 0;
 		text-align: center;
 	}
-		#cover:not(.zoomed) {
-			width: initial;
-			height: initial;
-			max-height: 10em;
-		}
+		#cover { max-height: 10em }
 	
 	#options { text-align: center }
 }

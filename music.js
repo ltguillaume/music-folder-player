@@ -189,7 +189,7 @@ function buildLibrary(root, folder, element) {
 function folderClick(e) {
 	e.stopPropagation();
 	var li = e.target;
-	if (li.className.indexOf('filtered open') == 0) {
+	if (li.className.indexOf('open filtered') == 0) {
 		li.querySelectorAll('ul > *').forEach(function(f) {
 			if (f.style.display != '') f.style.display = '';
 		});
@@ -265,6 +265,7 @@ function dblClick(e) {
 
 function prepareDrag(e) {
 	e.stopPropagation();
+	if (cfg.locked) return;
 	dom.clear.className = 'drag';
 	dom.clear.textContent = '';
 	dom.playlist.appendChild(playlistElement({ 'path': 'last' }));
@@ -483,7 +484,7 @@ function importPlaylist() {
 function exportPlaylist() {
 	var filename = prompt('Enter a filename', deftitle +' Playlist');
 	if (filename) {
-		dom.a.href = 'data:text/json;charset=utf-8,'+ JSON.stringify(cfg.playlist);
+		dom.a.href = 'data:text/json;charset=utf-8,'+ esc(JSON.stringify(cfg.playlist));
 		dom.a.download = filename +'.mfp.json';
 		dom.a.click();
 	}
@@ -554,9 +555,9 @@ function play(index) {
 
 function toggle(e) {
 	if (e.target.id == 'share') {
-		var shown = (dom.shares.className == '');
+		var shown = (dom.shares.className == 'show');
 		dom.share.className = (shown ? '' : 'on');
-		dom.shares.className = (shown ? 'hide' : '');
+		dom.shares.className = (shown ? '' : 'show');
 	} else if (!cfg.locked) {
 		cfg[e.target.id] ^= true;
 		e.target.className = (cfg[e.target.id] ? 'on' : '');
@@ -631,12 +632,16 @@ function filter() {
 	if (clear == '') return;
 	var term = dom.filter.value.toLowerCase();
 	items.forEach(function(f) {
-		if (f.getAttribute('path').toLowerCase().indexOf(term) != -1)
-			for (; f && f !== dom.tree; f = f.parentNode) {
-				if (f.style.display != '') f.style.display = '';
-				if (f.className.indexOf('folder') != -1 && f.className.indexOf('open') == -1)
-					f.className='filtered open folder';
+		var path = f.getAttribute('path');
+		if (path.substring(path.lastIndexOf('/')).toLowerCase().indexOf(term) != -1) {
+			f.style.display = '';
+			for (var p = f.parentNode; p && p !== dom.tree; p = p.parentNode) {
+				if (p.style.display != '')
+					p.style.display = '';
+				if (p.className.indexOf('folder') != -1 && p.className.indexOf('open') == -1)
+					p.className='open filtered folder';
 			}
+		}
 	});
 }
 
@@ -657,6 +662,7 @@ document.addEventListener('keydown', function(e) {
 	if (e.altKey || e.ctrlKey) return;
 	
 	if (e.which == 27) {	// esc
+		e.preventDefault();
 		clearFilter();
 		return;
 	} else if (dom.filter == document.activeElement) return false;
