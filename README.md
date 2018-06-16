@@ -29,6 +29,7 @@ An elegant HTML5 web folder player for parties and/or private music collections.
 ## List of hotkeys
 Hotkey | Command
 :---: |---
+Z | Zoom cover image
 O | Stop playback (time to 0:00)
 P or Space | Play/pause
 \[ | Play previous
@@ -37,6 +38,7 @@ P or Space | Play/pause
 \+ | Jump forward 5s
 E | Toggle enqueue
 R | Toggle random
+X | Toggle crossfade
 S | Toggle share dialog
 L | Lock/unlock playlist and playback controls
 C | Clear playlist
@@ -49,7 +51,7 @@ Esc | Reset library filter
 1. Put all `music.*` files into a folder on your web server
 2. Have zip present on your web server
 3. Optionally rename `music.htm` to `index.html`
-4. Edit `music.php` so that the variable `$dir` corresponds with your music folder
+4. Edit `music.php` so that the variable `$root` corresponds with your music folder
 5. Edit the variables at the top of `music.js`
 
 ## Credits
