@@ -9,24 +9,29 @@ var
 	cfg,
 	dom,
 	drag,
+	fade,
 	library,
 	ls,
 	onplaylist,
 	url,
+	current = 0,
+	played = Array(),
 	songs = Array();
 
 function init() {
-	url = document.URL.replace('?root=', '?').split('?', 2);
+	url = document.URL.replace('?play=', '?').split('?', 2);
 	ls = ls();
 
 	var get = function(id) { return document.getElementById(id) };
-	audio = get('audio');
 	dom = {
+		'player': get('player'),
 		'cover': get('cover'),
+		'current': get('current'),
 		'folder': get('folder'),
 		'song': get('song'),
 		'playpause': get('playpause'),
 		'options': get('options'),
+		'crossfade': get('crossfade'),
 		'enqueue': get('enqueue'),
 		'random': get('random'),
 		'share': get('share'),
@@ -43,6 +48,7 @@ function init() {
 	};
 
 	title.textContent = deftitle;
+	if (cfg.crossfade) dom.crossfade.className = 'on';
 	if (cfg.enqueue) dom.enqueue.className = 'on';
 	if (cfg.random) dom.random.className = 'on';
 	if (cfg.locked) {
@@ -52,32 +58,6 @@ function init() {
 	}
 	if (whatsapp)
 		dom.options.className = 'whatsapp';
-
-	audio.onplay = function() {
-		dom.playpause.className = 'playing';
-		dom.folder.className = dom.song.className = '';
-		if (cfg.index != -1) {
-			dom.playlist.childNodes[cfg.index].className = 'playing';
-			if (!onplaylist)
-				dom.playlist.scrollTop = dom.playlist.childNodes[cfg.index].offsetTop - dom.playlist.offsetTop;
-		}
-	}
-	
-	audio.onpause = function() {
-		dom.playpause.className = '';
-		dom.folder.className = dom.song.className = 'dim';
-	}
-
-	audio.onended = function() { next() }
-	
-	audio.ontimeupdate = audio.durationchange = function() {
-		dom.time.textContent = timeTxt(~~audio.currentTime) +" / "+ timeTxt(~~audio.duration);
-	}
-	
-	audio.onerror = function() {
-		dom.playlist.childNodes[cfg.index].style.color = 'red';
-		next();
-	};
 	
 	window.addEventListener('touchstart', function() {
 		window.addEventListener('touchend', function(e) {
@@ -97,20 +77,29 @@ function init() {
 		}
 	}
 	
+	var audio1 = (cfg.crossfade ? new Audio() : null);
+	audio = [get('audio'), audio1];
+	prepAudio(audio[0]);
+	if (audio[1]) prepAudio(audio[1]);
+	
 	var lib = document.createElement('script');
-	lib.src = 'music.php'+ (url.length > 1 ? '?root='+ url[1] : '');
+	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ url[1] : '');
 	log('PHP request = '+ lib.src);
 	lib.onload = function() {
 		buildLibrary('', library, tree);
 		buildPlaylist();
+		if (document.documentElement.className == 'load')
+			document.documentElement.className = '';
 	};
 	document.body.appendChild(lib);
 }
 
 function ls() {
 	var def = {
+		'crossfade': false,
 		'enqueue': false,
 		'random': false,	// (url.length == 1 ? true : false)
+		'repeat': true,
 		'locked': false,
 		'password': false,
 		'playlist': [],
@@ -147,17 +136,65 @@ function log(s) {
 	if (debug) console.log(s);
 }
 
-function get(id) {
-	return document.getElementById(id);
+function prepAudio(a) {
+	a.onplay = function() {
+		dom.playpause.className = 'playing';
+		dom.folder.className = dom.song.className = '';
+		if (cfg.index != -1) {
+			dom.playlist.childNodes[cfg.index].className = 'playing';
+			if (!onplaylist)
+				dom.playlist.scrollTop = dom.playlist.childNodes[cfg.index].offsetTop - dom.playlist.offsetTop;
+		}
+	}
+	
+	a.onpause = function(e) {
+		if (this == audio[current]) {
+			dom.playpause.className = '';
+			dom.folder.className = dom.song.className = 'dim';
+		}
+	}
+
+	a.onended = function() {
+		if (!cfg.crossfade) next()
+	}
+	
+	a.ontimeupdate = function() {
+		if (this == audio[current])
+			dom.time.textContent = timeTxt(~~this.currentTime) +" / "+ timeTxt(~~this.duration);
+		if (cfg.crossfade && !fade && (this.duration - this.currentTime) < 7) {
+			var fading = current;
+			log('Crossfading '+ audio[fading].src +' (should pop up once)');
+			fade = setInterval(function() {
+				if (!audio[fading].paused && audio[fading].volume >= 0.04) {
+					audio[fading].volume -= 0.04;
+				} else if (audio[fading].ended) {
+					clearInterval(fade);
+					fade = null;
+				}
+			}, 200);
+			setTimeout(function() {
+				if (!audio[current].paused) {
+					current ^= 1;
+					if (audio[current].paused)
+						next();
+				}
+			}, 2000);
+		}
+	}
+	
+	a.onerror = function() {
+		dom.playlist.childNodes[cfg.index].style.color = 'red';
+		next();
+	};
 }
 
 function buildLibrary(root, folder, element) {
-	var li, i, f, s, cover = false;
+	var li, i, f, cover = false;
 	for (i in folder) {
 		if (i != '/') {	// Subfolder
 			li = document.createElement('li');
 			li.className = 'folder';
-			li.setAttribute('path', root + i);
+			li.path = root + i;
 			li.textContent = i;
 			li.onclick = function(e) { folderClick(e) };
 			element.appendChild(li);
@@ -175,8 +212,8 @@ function buildLibrary(root, folder, element) {
 				li = document.createElement('li');
 				li.id = songs.length;
 				li.className = 'song';
-				li.setAttribute('path', root + f);
-				if (cover) li.setAttribute('cover', cover);
+				li.path = root + f;
+				if (cover) li.cover = cover;
 				li.textContent = getSong(f);
 				li.onclick = function(e) { songClick(e) };
 				songs.push(li);
@@ -189,7 +226,7 @@ function buildLibrary(root, folder, element) {
 function folderClick(e) {
 	e.stopPropagation();
 	var li = e.target;
-	if (li.className.indexOf('open filtered') == 0) {
+	if (li.className.indexOf('filtered') != -1 || li.className.indexOf('parent') != -1) {
 		li.querySelectorAll('ul > *').forEach(function(f) {
 			if (f.style.display != '') f.style.display = '';
 		});
@@ -244,10 +281,10 @@ function playlistElement(s) {
 	li.ondragstart = function(e) { prepareDrag(e) };
 	li.ondragenter = function() { this.classList.add('over') };
 	li.ondragleave = function() { this.classList.remove('over') };
-	li.ondragover = function (e) { allowDrop(e) }
-	li.ondragend = function() { endDrag() }
+	li.ondragover = function (e) { allowDrop(e) };
+	li.ondragend = function() { endDrag() };
 	li.ondrop = function(e) { dropSong(e) };
-	if (s.path == 'last') {
+	if (s.id == 'last') {
 		li.id = 'last';
 	} else {
 		li.textContent = getSong(s.path);
@@ -268,7 +305,7 @@ function prepareDrag(e) {
 	if (cfg.locked) return;
 	dom.clear.className = 'drag';
 	dom.clear.textContent = '';
-	dom.playlist.appendChild(playlistElement({ 'path': 'last' }));
+	dom.playlist.appendChild(playlistElement({ 'id': 'last' }));
 	if (cfg.index !=-1)
 		dom.playlist.childNodes[cfg.index].className = 'song';
 
@@ -314,8 +351,8 @@ function dropSong(e) {
 		}
 	}
 	dom.playlist.childNodes[cfg.index].className = 'playing';
-	log('Drag from position '+ indexfrom +' to position '+ indexto);
-	log('play index to '+ cfg.index);
+	log('Drag from '+ indexfrom +' to '+ indexto);
+	log('Playback index to '+ cfg.index);
 }
 
 function removeItem(e) {
@@ -338,8 +375,8 @@ function getIndex(li) {
 }
 
 function fillShare(path) {
-	dom.folderuri.value = url[0] +'?root='+ esc(dir + path.substring(0, path.lastIndexOf('/')));
-	dom.songuri.value = url[0] +'?root='+ esc(dir + path);
+	dom.folderuri.value = url[0] +'?play='+ esc(root + path.substring(0, path.lastIndexOf('/')));
+	dom.songuri.value = url[0] +'?play='+ esc(root + path);
 }
 
 function esc(s) {
@@ -348,7 +385,7 @@ function esc(s) {
 
 function getFolder(path) {
 	if (path.indexOf('/') == -1 && url.length > 1)
-		path = dir;
+		path = root;
 	return path.substring(path.lastIndexOf('/', path.lastIndexOf('/') - 1) + 1, path.lastIndexOf('/'));
 }
 
@@ -366,22 +403,23 @@ function timeTxt(t) {
 }
 
 function zoom() {
-	dom.cover.className = (dom.cover.className == '' ? 'zoomed' : '');
+	dom.player.className = (dom.player.className == '' ? 'fullzoom' : 
+		(dom.player.className == 'zoom' ? '' : 'zoom'));
 }
 
 function stop() {
 	if (cfg.locked) return;
-	audio.pause();
-	audio.currentTime = 0;
+	audio[current].pause();
+	audio[current].currentTime = 0;
 }
 
 function playPause() {
-	if (!audio.src)
+	if (!audio[current].src)
 		play(cfg.index);
-	else if (audio.paused)
-		audio.play();
+	else if (audio[current].paused)
+		audio[current].play();
 	else
-		audio.pause();
+		audio[current].pause();
 }
 
 function previous() {
@@ -397,35 +435,35 @@ function next() {
 	if (cfg.playlist.length > cfg.index + 1)
 		play(cfg.index + 1);
 	else if (cfg.random) {
-		var next, dupe = false;
-		for (i = 0; i < songs.length; i++) {
-			if (songs.length == 1)	// Repeat when sharing single song
-				return load(0);
-			next = songs[~~((Math.random() * songs.length))];
-			for (var s in cfg.playlist)
-				if (next.getAttribute('path') == cfg.playlist[s].path) {
-					dupe = true;
-					log('Random song was found to be duplicate');
-					break;
-				}
-			if (!dupe && next) {
-				load(next.id);
-				break;
-			}
+		if (played.length == songs.length) {
+			log('All songs have been played');
+			if (cfg.repeat) {
+				log('Clearing played');
+				played.length = 0;
+			} else return;
 		}
+		var next;
+		do { next = ~~((Math.random() * songs.length)) }
+			while (played.indexOf(next.toString()) != -1);
+		load(songs[next].id);
 	} else if (cfg.index != -1)	{
 		var path = cfg.playlist[cfg.index].path;
 		var next = -1;
 		for (var i = 0; i < songs.length; i++) {
-			if (songs[i].getAttribute('path') == path) {
+			if (songs[i].path == path) {
 				next = i + 1;
 				break;
 			}
 		}
 		if (next != -1 && next < songs.length)
 			load(songs[next].id);
-		else
+		else {
 			log('End of library');
+			if (cfg.repeat) {
+				log('Starting at the top');
+				load(songs[0].id);
+			}
+		}
 	} else load(songs[0].id);
 }
 
@@ -437,7 +475,7 @@ function load(id) {
 function download(type) {
 	if (cfg.index != -1) {
 		var path = cfg.playlist[cfg.index].path;
-		var uri = dir + (type == 'f' ? path.substring(0, path.lastIndexOf('/')) : path);
+		var uri = root + (type == 'f' ? path.substring(0, path.lastIndexOf('/')) : path);
 		dom.a.href = 'music.php?dl='+ esc(uri);
 		dom.a.click();
 	}
@@ -492,8 +530,8 @@ function exportPlaylist() {
 
 function add(id, next) {
 	var s = {
-		'path': songs[id].getAttribute('path'),
-		'cover': songs[id].getAttribute('cover')
+		'path': songs[id].path,
+		'cover': songs[id].cover
 	};
 	
 	if (cfg.playlist.length > 0) {
@@ -530,6 +568,10 @@ function add(id, next) {
 	
 	resizePlaylist();
 	log('Added to playlist: '+ s.path);
+	if (!played.includes(id)) {
+		played.push(id);
+		log('Added id '+ id +' to played');
+	}
 }
 
 function play(index) {
@@ -540,28 +582,55 @@ function play(index) {
 	var c = cfg.playlist[index].cover;
 
 	cfg.index = index;
-	audio.src = esc(dir + path);
-	audio.play();
-
-	if (c)
-		dom.cover.src = esc(dir + path.substring(0, path.lastIndexOf('/') + 1) + c);
-	else
-		dom.cover.src = defcover;
-	dom.folder.textContent = getFolder(path);
-	dom.song.textContent = getSong(path);
-	title.textContent = dom.song.textContent +' - '+ deftitle;
+	audio[current].src = esc(root + path);
+	audio[current].volume = 1;
+	audio[current].play();
+	
+	var prevcover = dom.cover.src || defcover;
+	c = (c ? esc(root + path.substring(0, path.lastIndexOf('/') + 1) + c) : defcover);
+	if (prevcover.indexOf(c) == -1) {
+		dom.cover.style.opacity = '0';
+		if (dom.player.className == 'fullzoom')
+			dom.current.style.opacity = 0;
+			dom.folder.textContent = getFolder(path);
+			dom.song.textContent = getSong(path);
+		setTimeout(function() {
+			dom.cover.src = c;
+			setTimeout(function() {
+				dom.cover.style.opacity = '1';
+				if (dom.player.className == 'fullzoom')
+					dom.current.style.opacity = 1;
+			}, 150);
+		}, 150);
+	} else {
+		dom.folder.textContent = getFolder(path);
+		dom.song.textContent = getSong(path);
+	}
+	
+	title.textContent = getFolder(path) +' - '+ getSong(path);
 	fillShare(path);
 }
 
 function toggle(e) {
-	if (e.target.id == 'share') {
-		var shown = (dom.shares.className == 'show');
-		dom.share.className = (shown ? '' : 'on');
-		dom.shares.className = (shown ? '' : 'show');
-	} else if (!cfg.locked) {
-		cfg[e.target.id] ^= true;
-		e.target.className = (cfg[e.target.id] ? 'on' : '');
-	}
+	switch(e.target.id) {
+		case 'share':
+			var shown = (dom.shares.className == 'show');
+			dom.share.className = (shown ? '' : 'on');
+			dom.shares.className = (shown ? '' : 'show');
+			return;
+		case 'lock':
+			return toggleLock();
+		case 'crossfade':	// No return
+			if (!audio[1]) {
+				audio[1] = new Audio();
+				prepAudio(audio[1]);
+			}
+		default:
+			if (!cfg.locked) {
+				cfg[e.target.id] ^= true;
+				e.target.className = (cfg[e.target.id] ? 'on' : '');
+			}
+		}
 }
 
 function toggleLock() {
@@ -626,20 +695,33 @@ function filter() {
 	var items = dom.tree.querySelectorAll('li');
 	items.forEach(function(f) {
 		f.style.display = clear;
-		if (f.className.indexOf('open') == 0)
+		if (f.className.indexOf('open') != -1)
 			f.className = 'folder';
 	});
 	if (clear == '') return;
+
 	var term = dom.filter.value.toLowerCase();
 	items.forEach(function(f) {
-		var path = f.getAttribute('path');
-		if (path.substring(path.lastIndexOf('/')).toLowerCase().indexOf(term) != -1) {
+		var path = f.path.substring(f.path.lastIndexOf('/') + 1);
+		if (path.toLowerCase().indexOf(term) != -1) {
 			f.style.display = '';
+			
+			if (f.className.indexOf('folder') != -1) {
+				if (path == dom.filter.value) {
+					f.querySelectorAll('ul > *').forEach(function(f) {
+						f.style.display = '';
+					});
+					f.className = 'folder open filtered';
+				} else f.className = 'folder filtered';
+			}
+			
 			for (var p = f.parentNode; p && p !== dom.tree; p = p.parentNode) {
 				if (p.style.display != '')
 					p.style.display = '';
-				if (p.className.indexOf('folder') != -1 && p.className.indexOf('open') == -1)
-					p.className='open filtered folder';
+				if (p.className.indexOf('folder') != -1)
+					p.className = 'folder open '+
+						(p.className.indexOf('filtered') != -1 ? 'filtered ' : '')
+						+'parent';
 			}
 		}
 	});
@@ -668,6 +750,12 @@ document.addEventListener('keydown', function(e) {
 	} else if (dom.filter == document.activeElement) return false;
 
 	switch (e.which) {
+		case 90:	// z
+			zoom();
+			return;
+		case 88:	// x
+			dom.crossfade.click();
+			return;
 		case 69:	// e
 			dom.enqueue.click();
 			return;
@@ -690,12 +778,12 @@ document.addEventListener('keydown', function(e) {
 		case 61:	// = Firefox
 		case 187:	// =
 			e.preventDefault();
-			audio.currentTime += 5;
+			audio[current].currentTime += 5;
 			return;
 		case 173:	// - Firefox
 		case 189:	// -
 			e.preventDefault();
-			audio.currentTime -= 5;
+			audio[current].currentTime -= 5;
 			return;
 		case 79:	// o
 			stop();

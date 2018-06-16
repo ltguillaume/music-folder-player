@@ -4,11 +4,13 @@
 	padding: 0;
 }
 
-html.touch {
-	font-size: 1.1em;
-	line-height: 2.5em;
-}
-	html.touch #current { line-height: 1.5em }
+html { transition: opacity .2s ease-in }
+	html.load { opacity: 0 }
+	html.touch {
+		font-size: 1.1em;
+		line-height: 2.5em;
+	}
+		html.touch #current { line-height: 1.5em }
 
 body, button, input {
 	background: #fefeff;
@@ -77,25 +79,37 @@ li.over { border-top: 1px dotted #ef6c00 }
 	overflow: hidden;
 }
 
-#cover, #current {
+#player > * {
 	display: inline-block;
 	vertical-align: middle;
+	transition: max-width .5s ease-out, max-height .5s ease-out, opacity .1s ease-in;
 }
+	#player.zoom > *, #player.fullzoom > * {
+		transition: max-width .5s ease-in, max-height .5s ease-in, opacity .1s ease-in;
+	}
 
 #cover {
+	min-width: 7.25em;
 	max-width: 7.25em;
+	min-height: 7.25em;
 	max-height: 7.25em;
 	border: 1px solid #fafafa;
 	border-radius: 3px;
 	cursor: zoom-in;
-	transition: max-width .5s ease-out, max-height .5s ease-out;
 }
-	#cover.zoomed {
+	#player.zoom > #cover {
+		min-width: 500px;
+		min-height: 500px;
+		max-width: 500px;
+		max-height: 500px;
+		cursor: zoom-out;
+	}
+	#player.zoom > #current { max-width: calc(100% - 500px) }
+	#player.fullzoom #cover {
 		max-width: 100%;
 		max-height: 100%;
 		margin: 0 auto;
 		cursor: zoom-out;
-		transition: max-width .5s ease-in, max-height .5s ease-in;
 	}
 
 #current {
@@ -190,8 +204,8 @@ li:before, #options > button:before,
 #tree li { cursor: pointer }
 
 #tree li.open > ul { display: block }
-#tree li.filtered { color: #ccc }
-#tree li.filtered > ul { color: #444 }
+#tree li.parent:not(.filtered) { color: #ccc }
+#tree li.parent > ul { color: #444 }
 
 .dim { opacity: .5 }
 
@@ -209,9 +223,13 @@ body.locked #enqueue, body.locked #random {
 }
 
 @media screen and (max-width: 570px) {
-	#cover, #current, #current > div {
+	#cover, #current, #current > div,
+	#player.zoom  #cover, #player.zoom #current, #player.zoom #current > div {
 		display: block;
+		min-width: 0;
+		min-height: 0;
 		max-width: 100%;
+		max-height: 100%;
 		margin: 0 auto;
 		padding: 0;
 		text-align: center;
@@ -235,6 +253,7 @@ body.locked #enqueue, body.locked #random {
 
 #clear:before { content: "\f204" }
 #clearfilter:before { content: "\f217" }
+#crossfade:before { content: "\f1b2" }
 #enqueue:before { content: "\f17f" }
 #export:before { content: "\f188" }
 #import:before { content: "\f184" }
