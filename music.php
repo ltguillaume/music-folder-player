@@ -40,14 +40,12 @@
 					break;
 				}
 			}
-			echo 'var library={"\/":'. json_encode($files) .'};';
-			echo 'var root="";';
+			echo 'var root=""; var library={"\/":'. json_encode($files) .'};';
 			exit;
 		}
 	}
 	
-	echo 'var library='. json_encode(tree($dir, 0));
-	echo ';var root="'. $dir .'/";';
+	echo 'var root="'. $dir .'/"; var library='. json_encode(tree($dir, 0));
 
 	function tree($dir, $depth) {
 		$scan = scandir($dir);

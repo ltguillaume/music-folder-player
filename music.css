@@ -4,13 +4,14 @@
 	padding: 0;
 }
 
-html { transition: opacity .2s ease-in }
-	html.load { opacity: 0 }
-	html.touch {
-		font-size: 1.1em;
-		line-height: 2.5em;
-	}
-		html.touch #current { line-height: 1.5em }
+html.touch {
+	font-size: 1.1em;
+	line-height: 2.5em;
+}
+	html.touch #current { line-height: 1.5em }
+
+html > body > div { transition: opacity .2s ease-in }
+	html.load > body > *, html.load > body > div:before { opacity: 0 }
 
 body, button, input {
 	background: #fefeff;
@@ -74,6 +75,21 @@ li#last:before { visibility: hidden }
 
 li.over { border-top: 1px dotted #ef6c00 }
 
+#load {
+	position: absolute;
+	top: calc(50% - .5em);
+	left: calc(50% - .5em);
+	font-size: 7.25em;
+	line-height: 1em;
+	color: #eee;
+	opacity: 0;
+	border: none;
+}
+	#load.ing {
+		opacity: 1;
+		transition: opacity 5s;
+	}
+
 #player {
 	white-space: nowrap;
 	overflow: hidden;
@@ -98,13 +114,13 @@ li.over { border-top: 1px dotted #ef6c00 }
 	cursor: zoom-in;
 }
 	#player.zoom > #cover {
-		min-width: 500px;
-		min-height: 500px;
-		max-width: 500px;
-		max-height: 500px;
+		min-width: 300px;
+		min-height: 300px;
+		max-width: 300px;
+		max-height: 300px;
 		cursor: zoom-out;
 	}
-	#player.zoom > #current { max-width: calc(100% - 500px) }
+	#player.zoom > #current { max-width: calc(100% - 300px) }
 	#player.fullzoom #cover {
 		max-width: 100%;
 		max-height: 100%;
@@ -224,7 +240,7 @@ body.locked #enqueue, body.locked #random {
 
 @media screen and (max-width: 570px) {
 	#cover, #current, #current > div,
-	#player.zoom  #cover, #player.zoom #current, #player.zoom #current > div {
+	#player.zoom #cover, #player.zoom #current, #player.zoom #current > div {
 		display: block;
 		min-width: 0;
 		min-height: 0;
@@ -257,6 +273,7 @@ body.locked #enqueue, body.locked #random {
 #enqueue:before { content: "\f17f" }
 #export:before { content: "\f188" }
 #import:before { content: "\f184" }
+#load:before { content: "\f1ed" }
 #library:before { content: "\f17b" }
 #lock:before, body.locked #enqueue:before, body.locked #random:before { content: "\f16a" !important }
 	#lock.on:before { content: "\f20a" !important }

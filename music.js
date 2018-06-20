@@ -47,6 +47,7 @@ function init() {
 		'tree': get('tree')
 	};
 
+	get('load').className = 'ing';
 	title.textContent = deftitle;
 	if (cfg.crossfade) dom.crossfade.className = 'on';
 	if (cfg.enqueue) dom.enqueue.className = 'on';
@@ -88,8 +89,8 @@ function init() {
 	lib.onload = function() {
 		buildLibrary('', library, tree);
 		buildPlaylist();
-		if (document.documentElement.className == 'load')
-			document.documentElement.className = '';
+		document.documentElement.className = '';
+		get('load').className = '';
 	};
 	document.body.appendChild(lib);
 }
