@@ -60,6 +60,8 @@ function init() {
 	if (whatsapp)
 		dom.options.className = 'whatsapp';
 	
+	dom.cover.onload = function() { dom.cover.style.opacity = 1 }	// Flickering appearance of old cover src is Firefox bug
+	
 	window.addEventListener('touchstart', function() {
 		window.addEventListener('touchend', function(e) {
 			e.preventDefault();
@@ -70,7 +72,7 @@ function init() {
 		document.documentElement.className = 'touch';
 		dom.clear.style.display = 'initial';
 	}, {once: true, passive: true});
-
+	
 	window.onunload = function() {
 		if (ls) {
 			localStorage.setItem("asymm_music", JSON.stringify(cfg));
@@ -156,22 +158,24 @@ function prepAudio(a) {
 	}
 
 	a.onended = function() {
-		if (!cfg.crossfade) next()
+		if (audio[current].ended)	// For crossfade
+			next();
 	}
 	
 	a.ontimeupdate = function() {
 		if (this == audio[current])
 			dom.time.textContent = timeTxt(~~this.currentTime) +" / "+ timeTxt(~~this.duration);
-		if (cfg.crossfade && !fade && (this.duration - this.currentTime) < 7) {
+		if (cfg.crossfade && !fade && (this.duration - this.currentTime) < 10) {
 			var fading = current;
-			log('Crossfading '+ audio[fading].src +' (should pop up once)');
+			log('Fading out '+ audio[fading].src);
 			fade = setInterval(function() {
-				if (!audio[fading].paused && audio[fading].volume >= 0.04) {
-					audio[fading].volume -= 0.04;
-				} else if (audio[fading].ended) {
+				if (audio[fading].ended) {
 					clearInterval(fade);
 					fade = null;
-				}
+				} else if (audio[fading].volume > 0.04)
+					audio[fading].volume -= 0.04;
+				else if (audio[fading].volume > 0)
+					audio[fading].volume = 0;
 			}, 200);
 			setTimeout(function() {
 				if (!audio[current].paused) {
@@ -590,17 +594,14 @@ function play(index) {
 	var prevcover = dom.cover.src || defcover;
 	c = (c ? esc(root + path.substring(0, path.lastIndexOf('/') + 1) + c) : defcover);
 	if (prevcover.indexOf(c) == -1) {
-		dom.cover.style.opacity = '0';
-		if (dom.player.className == 'fullzoom')
-			dom.current.style.opacity = 0;
+		dom.cover.style.opacity = 0;
+		if (dom.player.className == 'fullzoom') dom.current.style.opacity = 0;
+		setTimeout(function() {
 			dom.folder.textContent = getFolder(path);
 			dom.song.textContent = getSong(path);
-		setTimeout(function() {
 			dom.cover.src = c;
 			setTimeout(function() {
-				dom.cover.style.opacity = '1';
-				if (dom.player.className == 'fullzoom')
-					dom.current.style.opacity = 1;
+				if (dom.player.className == 'fullzoom') dom.current.style.opacity = 1;
 			}, 150);
 		}, 150);
 	} else {
@@ -626,6 +627,7 @@ function toggle(e) {
 				audio[1] = new Audio();
 				prepAudio(audio[1]);
 			}
+			fade = null;
 		default:
 			if (!cfg.locked) {
 				cfg[e.target.id] ^= true;
