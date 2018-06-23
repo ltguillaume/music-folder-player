@@ -177,13 +177,8 @@ function prepAudio(a) {
 				else if (audio[fading].volume > 0)
 					audio[fading].volume = 0;
 			}, 200);
-			setTimeout(function() {
-				if (!audio[current].paused) {
-					current ^= 1;
-					if (audio[current].paused)
-						next();
-				}
-			}, 2000);
+			current ^= 1;
+			next();
 		}
 	}
 	
