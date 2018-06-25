@@ -228,7 +228,7 @@ li:before, #options > button:before,
 .hide { display: none }
 
 body.locked #stop, body.locked #previous, body.locked #next,
-body.locked #enqueue, body.locked #random {
+body.locked #enqueue, body.locked #random, body.locked #crossfade {
 	opacity: .5;
 	cursor: arrow;
 }
@@ -275,7 +275,8 @@ body.locked #enqueue, body.locked #random {
 #import:before { content: "\f184" }
 #load:before { content: "\f1ed" }
 #library:before { content: "\f17b" }
-#lock:before, body.locked #enqueue:before, body.locked #random:before { content: "\f16a" !important }
+#lock:before, body.locked #enqueue:before, body.locked #random:before,
+	body.locked #crossfade:before { content: "\f16a" !important }
 	#lock.on:before { content: "\f20a" !important }
 #next:before { content: "\f17c" }
 #options:before { content: "\f214" }
