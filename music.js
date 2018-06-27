@@ -225,12 +225,14 @@ function buildLibrary(root, folder, element) {
 
 function folderClick(e) {
 	e.stopPropagation();
-	var li = e.target;
+	var open, li = e.target;
 	if (li.className.indexOf('filtered') != -1 || li.className.indexOf('parent') != -1) {
 		li.querySelectorAll('ul > *').forEach(function(f) {
 			if (f.style.display != '') f.style.display = '';
+			else if (!open) open = f;
 		});
 		li.className = 'open folder';
+		if (open.previousSibling) open.previousSibling.scrollIntoView({behavior: "smooth"});
 	} else {
 		if (li.className.indexOf('open') == -1) li.className = 'open folder';
 		else li.className = 'folder';
