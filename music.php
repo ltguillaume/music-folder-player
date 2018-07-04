@@ -30,13 +30,13 @@
 	if (isset($_GET['play']) && !in_array('..', explode('/', $_GET['play']))) {
 		$dir = trim($_GET['play'], '/');
 		if (!is_dir($dir)) {
-			$files = new stdClass();
-			$files->{$dir} = '';	// Add file
-			$scan = scandir(dirname($dir));
-			foreach ($scan as $f) {	// Scan for cover
+			$files = array();
+			$files[$dir] = '';	// Add file
+			$scan = scandir(dirname($dir));	// Scan parent folder for cover
+			foreach ($scan as $f) {
 				$ext = strtolower(substr($f, strrpos($f, '.') + 1));
 				if ($ext == 'jpg' || $ext == 'png') {
-					$files->{$f} = '';
+					$files[$f] = '';
 					break;
 				}
 			}

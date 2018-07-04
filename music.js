@@ -2,9 +2,21 @@ var
 	debug = false,	// Show some debug messages in console
 	defcover = 'music.png',	// Default cover image if none found
 	deftitle = 'Music',	// Default page title
-	nodupes = true,		// Don't add already played songs to playlist
-	whatsapp = false,	// Add button to share directly to WhatsApp
+	nodupes = false,		// Don't add already played songs to playlist
+	whatsapp = true,	// Add button to share directly to WhatsApp
 	whatsappmsg = 'Have a listen to',	// Default WhatsApp message
+
+	folderdesc = 'Click: expand/collapse\nRight-click: add to playlist',
+	songdesc = 'Click: play/enqueue\nRight-click: play next',
+	playlistdesc = '\n\nClick: play now\nRight-Click: find in library',
+	addfolderdlg = 'Add this folder to playlist?',
+	whatsappdlg = 'Your message via WhatApp (the url will be added at the end):',
+	exportdlg = 'Enter a filename:',
+	prevpassdlg = 'Use previously set password:',
+	passdlg = 'Enter password:',
+	wrongpassdlg = 'Intruder alert!',
+	clearplaylistdlg = 'Clear the playlist?',
+	
 	audio,
 	cfg,
 	dom,
@@ -196,7 +208,9 @@ function buildLibrary(root, folder, element) {
 			li.className = 'folder';
 			li.path = root + i;
 			li.textContent = i;
-			li.onclick = function(e) { folderClick(e) };
+			li.onclick = function(e) { openFolder(e) };
+			li.oncontextmenu = function(e) { addFolder(e) };
+			li.title = folderdesc;
 			element.appendChild(li);
 			var ul = li.appendChild(document.createElement('ul'));
 			buildLibrary(root + i +'/', folder[i], ul);
@@ -215,7 +229,9 @@ function buildLibrary(root, folder, element) {
 				li.path = root + f;
 				if (cover) li.cover = cover;
 				li.textContent = getSong(f);
-				li.onclick = function(e) { songClick(e) };
+				li.onclick = function(e) { addSong(e) };
+				li.oncontextmenu = function(e) { addSongNext(e) };
+				li.title = songdesc;
 				songs.push(li);
 				element.appendChild(li);
 			}
@@ -223,29 +239,54 @@ function buildLibrary(root, folder, element) {
 	}
 }
 
-function folderClick(e) {
+function openFolder(e) {
 	e.stopPropagation();
-	var open, li = e.target;
+	var open, li = e.target, dim = (li.className.indexOf('dim') != -1 ? ' dim' : '');
 	if (li.className.indexOf('filtered') != -1 || li.className.indexOf('parent') != -1) {
 		li.querySelectorAll('ul > *').forEach(function(f) {
 			if (f.style.display != '') f.style.display = '';
 			else if (!open) open = f;
 		});
-		li.className = 'open folder';
-		if (open.previousSibling) open.previousSibling.scrollIntoView({behavior: "smooth"});
+		li.className = 'open folder'+ dim;
+		if (open.previousSibling && !isVisible(open)) open.previousSibling.scrollIntoView({ behavior: "smooth" });
 	} else {
-		if (li.className.indexOf('open') == -1) li.className = 'open folder';
-		else li.className = 'folder';
+		li.className = (li.className.indexOf('open') != -1 ? 'folder' : 'open folder') + dim;
 	}
 }
 
-function songClick(e) {
+function addFolder(e) {
+	e.preventDefault();
+	e.stopPropagation();
+	var li = e.target;
+	if (confirm(addfolderdlg +'\n'+ e.target.path)) {
+		li.className += ' dim';
+		li.querySelectorAll('li.song').forEach(function(f, i) {
+			add(f.id);
+			f.className += ' dim';
+		});
+	}
+}
+
+function isVisible (li) {
+	const { top, bottom } = li.getBoundingClientRect();
+	return top >= 0 && bottom <= (window.innerHeight || document.documentElement.clientHeight);
+}
+
+function addSong(e) {
 	e.stopPropagation();
 	var li = e.target;
 	if (cfg.enqueue)
 		add(li.id);
 	else
 		load(li.id);
+	li.className += ' dim';
+}
+
+function addSongNext(e) {
+	e.preventDefault();
+	e.stopPropagation();
+	var li = e.target;
+	add(li.id, true);
 	li.className += ' dim';
 }
 
@@ -278,8 +319,8 @@ function playlistElement(s) {
 	var li = document.createElement('li');
 	li.className = 'song';
 	li.draggable = 'true',
-	li.onclick = function() { setFilter(this.textContent) };
-	li.ondblclick = function (e) { dblClick(e) };
+	li.onclick = function (e) { playSong(e) };
+	li.oncontextmenu = function(e) { findSong(e) };
 	li.ondragstart = function(e) { prepareDrag(e) };
 	li.ondragenter = function() { this.classList.add('over') };
 	li.ondragleave = function() { this.classList.remove('over') };
@@ -290,16 +331,18 @@ function playlistElement(s) {
 		li.id = 'last';
 	} else {
 		li.textContent = getSong(s.path);
-		li.title = getFolder(s.path);
+		li.title = getFolder(s.path) + playlistdesc;
 	}
 	return li;
 }
 
-function dblClick(e) {
-	if (!cfg.locked) {
-		e.preventDefault();
-		play(getIndex(e.target));
-	}
+function playSong(e) {
+	if (!cfg.locked) play(getIndex(e.target));
+}
+
+function findSong(e) {
+	e.preventDefault();
+	setFilter(e.target.textContent);
 }
 
 function prepareDrag(e) {
@@ -498,7 +541,7 @@ function share(type) {
 function shareWhatsApp(type) {
 	var share = (type == 'f' ? dom.folderuri : dom.songuri);
 	if (share.value) {
-		msg = prompt('Your message via WhatApp (the url will be added at the end):', whatsappmsg);
+		msg = prompt(whatsappdlg, whatsappmsg);
 		whatsappmsg = (msg ? msg : '');
 		window.open('https://api.whatsapp.com/send?text='+ whatsappmsg +' '+ encodeURIComponent(share.value));
 	}
@@ -522,7 +565,7 @@ function importPlaylist() {
 }
 
 function exportPlaylist() {
-	var filename = prompt('Enter a filename', deftitle +' Playlist');
+	var filename = prompt(exportdlg, deftitle);
 	if (filename) {
 		dom.a.href = 'data:text/json;charset=utf-8,'+ esc(JSON.stringify(cfg.playlist));
 		dom.a.download = filename +'.mfp.json';
@@ -648,8 +691,8 @@ function toggleLock() {
 function password() {
 	if (cfg.locked && !cfg.password) return true;
 
-	var prev = 'Use previously set password';
-	var p = prompt('Enter password', (!cfg.locked && cfg.password ? prev : ''));
+	var prev = prevpassdlg;
+	var p = prompt(passdlg, (!cfg.locked && cfg.password ? prev : ''));
 	if (p == null) return false;
 	if (p == prev) return true;
 
@@ -658,7 +701,7 @@ function password() {
 		pass = pass * 7 + p.charCodeAt(i);
 	
 	if (cfg.locked && cfg.password != pass) {
-		alert('Intruder alert!');
+		alert(wrongpassdlg);
 		return false;
 	}
 	if (!cfg.locked) cfg.password = pass;
@@ -666,7 +709,7 @@ function password() {
 }
 
 function clearPlaylist() {
-	if (cfg.playlist.length > 0 && confirm('Clear the playlist?')) {
+	if (cfg.playlist.length > 0 && confirm(clearplaylistdlg)) {
 		cfg.playlist = [];
 		cfg.index = -1;
 		dom.playlist.innerHTML = '';
@@ -696,7 +739,7 @@ function filter() {
 	items.forEach(function(f) {
 		f.style.display = clear;
 		if (f.className.indexOf('open') != -1)
-			f.className = 'folder';
+			f.className = 'folder'+ (f.className.indexOf('dim') != -1 ? ' dim' : '');
 	});
 	if (clear == '') return;
 
@@ -711,17 +754,18 @@ function filter() {
 					f.querySelectorAll('ul > *').forEach(function(f) {
 						f.style.display = '';
 					});
-					f.className = 'folder open filtered';
-				} else f.className = 'folder filtered';
+					f.className = 'folder open filtered'+ (f.className.indexOf('dim') != -1 ? ' dim' : '');
+				} else f.className = 'folder filtered'+ (f.className.indexOf('dim') != -1 ? ' dim' : '');
 			}
 			
 			for (var p = f.parentNode; p && p !== dom.tree; p = p.parentNode) {
 				if (p.style.display != '')
 					p.style.display = '';
 				if (p.className.indexOf('folder') != -1)
-					p.className = 'folder open '+
-						(p.className.indexOf('filtered') != -1 ? 'filtered ' : '')
-						+'parent';
+					p.className = 'folder open'+
+						(p.className.indexOf('filtered') != -1 ? ' filtered' : '')
+						+' parent'
+						+ (p.className.indexOf('dim') != -1 ? ' dim' : '');
 			}
 		}
 	});

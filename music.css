@@ -2,6 +2,7 @@
 	max-width: 100%;
 	margin: 0;
 	padding: 0;
+	box-sizing: border-box;
 }
 
 html.touch {
@@ -84,6 +85,7 @@ li.over { border-top: 1px dotted #ef6c00 }
 	color: #eee;
 	opacity: 0;
 	border: none;
+	z-index: -1;
 }
 	#load.ing {
 		opacity: 1;
@@ -147,8 +149,6 @@ li.over { border-top: 1px dotted #ef6c00 }
 
 #controls > button:before { margin: .25em }
 
-#options > .sharediv { white-space: nowrap }
-
 li:before, #options > button:before,
 #shares > button:before, #playlistdiv button:before { margin-right: .25em }
 
@@ -162,7 +162,7 @@ li:before, #options > button:before,
 		transition: margin-top .2s, padding-top .2s, max-height .2s ease-out;
 }
 	#shares.show {
-		max-height: 9em;
+		max-height: 11em;
 		margin-top: .25em;
 		padding-top: .25em;
 		border-top: 1px solid #eee;
@@ -170,6 +170,11 @@ li:before, #options > button:before,
 	}
 
 #shares input { direction: rtl }
+
+#shares > .sharediv {
+	white-space: nowrap;
+	overflow: hidden;
+}
 
 #playlistdiv > div {	position: relative }
 
