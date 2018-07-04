@@ -6,22 +6,22 @@ An elegant HTML5 web folder player for parties and/or private music collections.
 ## Overview
 #### Playback
 - Rebuilds the tree of known music files for a specified folder
-- Click to play directly keeps the rest of the playlist intact
+- Click to play keeps the rest of the playlist intact
 - Click on cover image to zoom (full size, click again for 300x300px)
-- Click on song or folder name to find in library
+- Click on song or folder name to find it in the library
 - Filter the library to quickly find songs
 #### Playlist
 - Enable "Enqueue" mode to add songs to the bottom of the playlist
-- Drag and drop to change the playlist order or remove a song
+- Drag and drop to change the playlist order or drag to bin to remove a song
 - Automatically continue playing from library when playlist is exhausted (continuing from last song, or at random)
 - Random playback will prevent choosing already played songs
 - Click on a song to play directly
-- Right-click a song to find in library
+- Right-click (long-press) a song to find it in the library
 - Playlist and configuration will be saved to the browser's Local Storage if possible.
 #### Library
-- Right-click a folder to add all its songs to the playlist
 - Click a song to play or enqueue (when "Enqueue" mode is enabled)
-- Right-click a song to play next (enqueue right after currently playing song)
+- Right-click (long-press) a song to play it next
+- Right-click (long-press) a folder to add all its songs to the playlist
 #### Parties
 - Password lock the playlist and playlist controls (only enqueue and play/pause work)
 - Tip: use [OpenKiosk](openkiosk.mozdevgroup.com) and disable _Set inactive terminal_
