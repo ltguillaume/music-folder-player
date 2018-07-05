@@ -581,12 +581,12 @@ function add(id, next) {
 	
 	if (cfg.playlist.length > 0) {
 		if (next) {
-			if (s.path == cfg.playlist[cfg.index].path) {
+			if (cfg.index > -1 && s.path == cfg.playlist[cfg.index].path) {
 				cfg.index--;
 				return;
 			}
 		} else {
-			var i = (nodupes ? 0 : cfg.index);
+			var i = (nodupes || cfg.index == -1 ? 0 : cfg.index);
 			for (; i < cfg.playlist.length; i++) {
 				if (s.path == cfg.playlist[i].path) {
 					dom.tree.className = 'dim';
@@ -602,10 +602,7 @@ function add(id, next) {
 	var li = playlistElement(s);
 	if (next) {
 		cfg.playlist.splice(cfg.index + 1, 0, s);
-		if (cfg.index > 0)
-			playlist.insertBefore(li, dom.playlist.childNodes[cfg.index + 1]);
-		else
-			dom.playlist.appendChild(li);
+		playlist.insertBefore(li, dom.playlist.childNodes[cfg.index + 1]);
 	} else {
 		cfg.playlist.push(s);
 		dom.playlist.appendChild(li);
