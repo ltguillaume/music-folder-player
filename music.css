@@ -66,11 +66,12 @@ ul {
 	padding-left: 1.25em;
 }
 
-li:hover {
+li:hover, li:focus {
 	color: #ef6c00 !important;
 	transition: color .05s ease-in;
+	outline: none;
 }
-	li:hover * { color: #444 }
+	li:hover *, li:focus * { color: #444}
 
 li#last:before { visibility: hidden }
 
@@ -78,10 +79,9 @@ li.over { border-top: 1px dotted #ef6c00 }
 
 #load {
 	position: absolute;
-	top: calc(50% - .5em);
+	top: calc(50% - 1em);
 	left: calc(50% - .5em);
 	font-size: 7.25em;
-	line-height: 1em;
 	color: #eee;
 	opacity: 0;
 	border: none;
@@ -102,9 +102,6 @@ li.over { border-top: 1px dotted #ef6c00 }
 	vertical-align: middle;
 	transition: max-width .5s ease-out, max-height .5s ease-out, opacity .1s ease-in;
 }
-	#player.zoom > *, #player.fullzoom > * {
-		transition: max-width .5s ease-in, max-height .5s ease-in, opacity .1s ease-in;
-	}
 
 #cover {
 	min-width: 7.25em;
@@ -223,7 +220,8 @@ li:before, #options > button:before,
 }
 
 #tree li { cursor: pointer }
-
+#tree li:focus { text-decoration: underline solid #ef6c00 }
+#tree li:focus * { text-decoration: underline solid #fefeff }
 #tree li.open > ul { display: block }
 #tree li.parent:not(.filtered) { color: #ccc }
 #tree li.parent > ul { color: #444 }

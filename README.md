@@ -5,8 +5,9 @@ An elegant HTML5 web folder player for parties and/or private music collections.
 
 ## Overview
 #### Playback
-- Rebuilds the tree of known music files for a specified folder
-- Click to play keeps the rest of the playlist intact
+- Rebuilds the tree of a specified folder, showing only supported music files
+- Suggested folder structure: `Artist - (Year) Album/Track - Title.ext` (i.e. filename contains title, parent folder contains artist and album title)
+- Clicking to play a song directly will keep the rest of the playlist intact
 - Click on cover image to zoom (full size, click again for 300x300px)
 - Click on song or folder name to find it in the library
 - Filter the library to quickly find songs
@@ -17,11 +18,12 @@ An elegant HTML5 web folder player for parties and/or private music collections.
 - Random playback will prevent choosing already played songs
 - Click on a song to play directly
 - Right-click (long-press) a song to find it in the library
-- Playlist and configuration will be saved to the browser's Local Storage if possible.
+- Playlist and configuration will be saved to the browser's Local Storage if possible
 #### Library
 - Click a song to play or enqueue (when "Enqueue" mode is enabled)
 - Right-click (long-press) a song to play it next
 - Right-click (long-press) a folder to add all its songs to the playlist
+- Use arrow keys to traverse the library tree, Enter to play/enqueue, or Shift-Enter to play next
 #### Parties
 - Password lock the playlist and playlist controls (only enqueue and play/pause work)
 - Tip: use [OpenKiosk](openkiosk.mozdevgroup.com) and disable _Set inactive terminal_
@@ -51,6 +53,9 @@ L | Lock/unlock playlist and playback controls
 C | Clear playlist
 F | Focus library filter
 Esc | Reset library filter
+Arrow keys | Navigate library tree
+Enter | Play/Enqueue
+Shift-Enter | Play next
 
 ## Installation
 1. Put all `music.*` files into a folder on your web server

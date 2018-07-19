@@ -101,7 +101,7 @@ function init() {
 	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ url[1] : '');
 	log('PHP request = '+ lib.src);
 	lib.onload = function() {
-		buildLibrary('', library, tree);
+		buildLibrary('', library, dom.tree);
 		buildPlaylist();
 		document.documentElement.className = '';
 		get('load').className = '';
@@ -210,6 +210,7 @@ function buildLibrary(root, folder, element) {
 			li.textContent = i;
 			li.onclick = function(e) { openFolder(e) };
 			li.oncontextmenu = function(e) { addFolder(e) };
+			li.tabIndex = 1;
 			li.title = folderdesc;
 			element.appendChild(li);
 			var ul = li.appendChild(document.createElement('ul'));
@@ -231,6 +232,7 @@ function buildLibrary(root, folder, element) {
 				li.textContent = getSong(f);
 				li.onclick = function(e) { addSong(e) };
 				li.oncontextmenu = function(e) { addSongNext(e) };
+				li.tabIndex = 1;
 				li.title = songdesc;
 				songs.push(li);
 				element.appendChild(li);
@@ -248,17 +250,18 @@ function openFolder(e) {
 			else if (!open) open = f;
 		});
 		li.className = 'open folder'+ dim;
-		if (open.previousSibling && !isVisible(open)) open.previousSibling.scrollIntoView({ behavior: "smooth" });
 	} else {
 		li.className = (li.className.indexOf('open') != -1 ? 'folder' : 'open folder') + dim;
 	}
+	setFocus(li, (li.className.indexOf('open') != -1 ? 'open' : 'close'));
+	if (audio[current].paused) fillShare(li.path +'/');
 }
 
 function addFolder(e) {
 	e.preventDefault();
 	e.stopPropagation();
 	var li = e.target;
-	if (confirm(addfolderdlg +'\n'+ e.target.path)) {
+	if (confirm(addfolderdlg +'\n'+ li.path.substring(li.path.lastIndexOf('/') + 1))) {
 		li.className += ' dim';
 		li.querySelectorAll('li.song').forEach(function(f, i) {
 			add(f.id);
@@ -267,9 +270,14 @@ function addFolder(e) {
 	}
 }
 
-function isVisible (li) {
+function setFocus (li, direction) {
+	li.focus();
 	const { top, bottom } = li.getBoundingClientRect();
-	return top >= 0 && bottom <= (window.innerHeight || document.documentElement.clientHeight);
+	if (top < 0 || bottom > (window.innerHeight || document.documentElement.clientHeight))
+		li.scrollIntoView({
+			block: (direction == 'left' || direction == 'open' ? 'start' : 'nearest'),
+			behavior: 'smooth'
+		});
 }
 
 function addSong(e) {
@@ -280,6 +288,7 @@ function addSong(e) {
 	else
 		load(li.id);
 	li.className += ' dim';
+	if (audio[current].paused) fillShare(li.path);
 }
 
 function addSongNext(e) {
@@ -288,6 +297,7 @@ function addSongNext(e) {
 	var li = e.target;
 	add(li.id, true);
 	li.className += ' dim';
+	if (audio[current].paused) fillShare(li.path);
 }
 
 function buildPlaylist() {
@@ -330,7 +340,7 @@ function playlistElement(s) {
 	if (s.id == 'last') {
 		li.id = 'last';
 	} else {
-		li.textContent = getSong(s.path);
+		li.innerHTML = getSong(s.path) +'<span class="dim">'+ getArtist(s.path) +'</span>';
 		li.title = getFolder(s.path) + playlistdesc;
 	}
 	return li;
@@ -342,7 +352,8 @@ function playSong(e) {
 
 function findSong(e) {
 	e.preventDefault();
-	setFilter(e.target.textContent);
+	var s = (e.target.tagName.toLowerCase() != 'li' ? e.target.parentNode : e.target);
+	setFilter(s.firstChild.textContent);
 }
 
 function prepareDrag(e) {
@@ -378,12 +389,13 @@ function dropSong(e) {
 	e.preventDefault();
 	e.stopPropagation();
 	var to = e.target;
+	if (to.tagName.toLowerCase() != 'li') to = to.parentNode;
 	log('Drag '+ drag.innerHTML +' to place of '+ to.innerHTML);
 	to.classList.remove('over');
 	var indexfrom = e.dataTransfer.getData('text');
 	var indexto = getIndex(to);
 	if (indexto != indexfrom) {
-		dom.playlist.insertBefore(drag, to);	
+		dom.playlist.insertBefore(drag, to);
 		cfg.playlist.splice(indexto - (indexfrom < indexto ? 1 : 0), 0, cfg.playlist.splice(indexfrom, 1)[0]);
 		log('Playback index from '+ cfg.index);
 		if (cfg.index != -1) {
@@ -395,7 +407,7 @@ function dropSong(e) {
 				cfg.index++;
 		}
 	}
-	dom.playlist.childNodes[cfg.index].className = 'playing';
+	if (cfg.index != -1) dom.playlist.childNodes[cfg.index].className = 'playing';
 	log('Drag from '+ indexfrom +' to '+ indexto);
 	log('Playback index to '+ cfg.index);
 }
@@ -420,8 +432,12 @@ function getIndex(li) {
 }
 
 function fillShare(path) {
-	dom.folderuri.value = url[0] +'?play='+ esc(root + path.substring(0, path.lastIndexOf('/')));
-	dom.songuri.value = url[0] +'?play='+ esc(root + path);
+	if (path.endsWith('/')) {
+		dom.folderuri.value = dom.songuri.value = url[0] +'?play='+ esc(root + path);
+	} else {
+		dom.folderuri.value = url[0] +'?play='+ esc(root + path.substring(0, path.lastIndexOf('/')));
+		dom.songuri.value = url[0] +'?play='+ esc(root + path);
+	}
 }
 
 function esc(s) {
@@ -432,6 +448,12 @@ function getFolder(path) {
 	if (path.indexOf('/') == -1 && url.length > 1)
 		path = root;
 	return path.substring(path.lastIndexOf('/', path.lastIndexOf('/') - 1) + 1, path.lastIndexOf('/'));
+}
+
+function getArtist(path) {
+	var artist = getFolder(path);
+	artist = artist.substring(0, artist.indexOf(' -'));
+	return (artist.length > 0 ? ' ('+ artist +')' : '');
 }
 
 function getSong(path) {
@@ -518,10 +540,9 @@ function load(id) {
 }
 
 function download(type) {
-	if (cfg.index != -1) {
-		var path = cfg.playlist[cfg.index].path;
-		var uri = root + (type == 'f' ? path.substring(0, path.lastIndexOf('/')) : path);
-		dom.a.href = 'music.php?dl='+ esc(uri);
+	var uri = (type == 'f' ? dom.folderuri.value : dom.songuri.value);
+	if (uri) {
+		dom.a.href = 'music.php?dl='+ uri.substring(uri.indexOf('?play=') + 6);
 		dom.a.click();
 	}
 }
@@ -584,7 +605,8 @@ function add(id, next) {
 			if (cfg.index > -1 && s.path == cfg.playlist[cfg.index].path) {
 				cfg.index--;
 				return;
-			}
+			} else if (cfg.index + 1 < cfg.playlist.length && s.path == cfg.playlist[cfg.index + 1].path)
+				return;
 		} else {
 			var i = (nodupes || cfg.index == -1 ? 0 : cfg.index);
 			for (; i < cfg.playlist.length; i++) {
@@ -646,7 +668,7 @@ function play(index) {
 		dom.song.textContent = getSong(path);
 	}
 	
-	title.textContent = getFolder(path) +' - '+ getSong(path);
+	title.textContent = getSong(path) + getArtist(path);
 	fillShare(path);
 }
 
@@ -738,34 +760,37 @@ function filter() {
 		if (f.className.indexOf('open') != -1)
 			f.className = 'folder'+ (f.className.indexOf('dim') != -1 ? ' dim' : '');
 	});
-	if (clear == '') return;
-
-	var term = dom.filter.value.toLowerCase();
-	items.forEach(function(f) {
-		var path = f.path.substring(f.path.lastIndexOf('/') + 1);
-		if (path.toLowerCase().indexOf(term) != -1) {
-			f.style.display = '';
-			
-			if (f.className.indexOf('folder') != -1) {
-				if (path == dom.filter.value) {
-					f.querySelectorAll('ul > *').forEach(function(f) {
-						f.style.display = '';
-					});
-					f.className = 'folder open filtered'+ (f.className.indexOf('dim') != -1 ? ' dim' : '');
-				} else f.className = 'folder filtered'+ (f.className.indexOf('dim') != -1 ? ' dim' : '');
+	
+	if (clear != '') {
+		var term = dom.filter.value.toLowerCase();
+		items.forEach(function(f) {
+			var path = f.path.substring(f.path.lastIndexOf('/') + 1);
+			if (path.toLowerCase().indexOf(term) != -1) {
+				f.style.display = '';
+				
+				if (f.className.indexOf('folder') != -1) {
+					if (path == dom.filter.value) {
+						f.querySelectorAll('ul > *').forEach(function(f) {
+							f.style.display = '';
+						});
+						f.className = 'folder open filtered'+ (f.className.indexOf('dim') != -1 ? ' dim' : '');
+					} else f.className = 'folder filtered'+ (f.className.indexOf('dim') != -1 ? ' dim' : '');
+				}
+				
+				for (var p = f.parentNode; p && p !== dom.tree; p = p.parentNode) {
+					if (p.style.display != '')
+						p.style.display = '';
+					if (p.className.indexOf('folder') != -1)
+						p.className = 'folder open'+
+							(p.className.indexOf('filtered') != -1 ? ' filtered' : '')
+							+' parent'
+							+ (p.className.indexOf('dim') != -1 ? ' dim' : '');
+				}
 			}
-			
-			for (var p = f.parentNode; p && p !== dom.tree; p = p.parentNode) {
-				if (p.style.display != '')
-					p.style.display = '';
-				if (p.className.indexOf('folder') != -1)
-					p.className = 'folder open'+
-						(p.className.indexOf('filtered') != -1 ? ' filtered' : '')
-						+' parent'
-						+ (p.className.indexOf('dim') != -1 ? ' dim' : '');
-			}
-		}
-	});
+		});
+	}
+	
+	keyNav(null, 'down');
 }
 
 function setFilter(f) {
@@ -781,65 +806,169 @@ function clearFilter() {
 	filter();
 }
 
+function keyNav(el, direction) {
+	var to;
+	
+	if (dom.tree.contains(el)) {
+		switch (direction) {
+			case 'up':
+				if (el.previousElementSibling) {
+					to = el.previousElementSibling;
+					while (to.className.indexOf('open') != -1)
+						to = to.lastElementChild.lastElementChild;
+				} else
+					to = el.parentNode.parentNode;
+				break;
+			case 'down':
+				if (el.className.indexOf('open') != -1) {
+					to = el.firstElementChild.firstElementChild;
+				} else if (el.nextElementSibling) {
+					to = el.nextElementSibling;
+				} else {
+					var parent = el.parentNode.parentNode;
+					while (parent.nextElementSibling == null)
+						parent = parent.parentNode.parentNode;
+					to = parent.nextElementSibling;
+				}
+				break;
+			case 'left':
+				if (el.className.indexOf('open') != -1 && el.className.indexOf('parent') == -1)
+					return el.click();
+				else
+					to = el.parentNode.parentNode;
+				break;
+			case 'right':
+				if (el.className.indexOf('open') != -1)
+					keyNav(el, 'down');
+				else if (el.className.indexOf('folder') != -1)
+					el.click();
+				return;
+			case 'first':
+				to = el.parentNode.firstElementChild;
+				direction = 'down';
+				break;
+			case 'last':
+				to = el.parentNode.lastElementChild;
+				direction = 'up';
+		}
+	}
+	
+	if (!to || !dom.tree.contains(to)) {
+		if (direction == 'up') {
+			to = dom.tree.lastElementChild;
+			while (to.className.indexOf('open') != -1)
+				to = to.lastElementChild.lastElementChild;
+		} else {
+			to = dom.tree.querySelector('li');
+		}
+	}
+	
+	if (to.style.display == 'none')
+		return keyNav(to, direction);
+
+	setFocus(to, direction);
+}
+
 document.addEventListener('keydown', function(e) {
 	if (e.altKey || e.ctrlKey) return;
+	var el = document.activeElement;
 	
 	if (e.which == 27) {	// esc
 		e.preventDefault();
 		clearFilter();
 		return;
-	} else if (dom.filter == document.activeElement) return false;
+	} else if (el == dom.filter) return false;
 
-	switch (e.which) {
+	
+	switch (e.keyCode) {
 		case 90:	// z
 			zoom();
-			return;
-		case 88:	// x
-			dom.crossfade.click();
-			return;
-		case 69:	// e
-			dom.enqueue.click();
-			return;
-		case 82:	// r
-			dom.random.click();
-			return;
-		case 83:	// s
-			dom.share.click();
-			return;
-		case 76:	// l
-			dom.lock.click();
-			return;
-		case 67:	// c
-			if (!cfg.locked) clearPlaylist();
-			return;
-		case 70:	// f
-			e.preventDefault();
-			dom.filter.focus();
-			return;
+			break;
 		case 61:	// = Firefox
 		case 187:	// =
 			e.preventDefault();
 			audio[current].currentTime += 5;
-			return;
+			break;
 		case 173:	// - Firefox
 		case 189:	// -
 			e.preventDefault();
 			audio[current].currentTime -= 5;
-			return;
+			break;
 		case 79:	// o
 			stop();
-			return;
+			break;
 		case 80:	// p
 		case 32:	// space
 			e.preventDefault();
 			playPause();
-			return;
+			break;
 		case 219:	// [
 			previous();
-			return;
+			break;
 		case 221:	// ]
 			next();
-			return;
+			break;
+		case 69:	// e
+			dom.enqueue.click();
+			break;
+		case 82:	// r
+			dom.random.click();
+			break;
+		case 88:	// x
+			dom.crossfade.click();
+			break;
+		case 83:	// s
+			dom.share.click();
+			break;
+		case 76:	// l
+			dom.lock.click();
+			break;
+		case 67:	// c
+			if (!cfg.locked) clearPlaylist();
+			break;
+		case 70:	// f
+			e.preventDefault();
+			dom.filter.focus();
+			break;
+		case 36:	// Home
+			e.preventDefault();
+			keyNav(null, 'down');
+			break;
+		case 35:	// End
+			e.preventDefault();
+			keyNav(null, 'up');
+			break;
+		case 38:	// ArrowUp
+			e.preventDefault();
+			if (e.shiftKey)
+				keyNav(el, 'first');
+			else
+				keyNav(el, 'up');
+			break;
+		case 40:	// ArrowDown
+			e.preventDefault();
+			if (e.shiftKey)
+				keyNav(el, 'last');
+			else
+				keyNav(el, 'down');
+			break;
+		case 37:	// LeftArrow
+			e.preventDefault();
+			keyNav(el, 'left');
+			break;
+		case 39:	// RightArrow
+			e.preventDefault();
+			keyNav(el, 'right');
+			break;
+		case 13:	// Enter
+			if (dom.tree.contains(el)) {
+				if (e.ctrlKey || e.shiftKey)
+					el.dispatchEvent(new CustomEvent('contextmenu'));
+				else
+					el.click();
+			}
+			break;
+		default:
+			return false;
 	}
-	return false;
 }, false);

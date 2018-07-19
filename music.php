@@ -1,7 +1,8 @@
 <?php
 	$root = 'library';	// Music folder path, relative to this file
 	$maxdepth = 10;		// Maximum recursive folder depth
-	$ext = array('aac','fla','flac','m4a','mp3','mp4','ogg','opus','wav','jpg','png');
+	$ext = array('jpg','png','aac','fla','flac','m4a','mp3','mp4','ogg','opus','wav');
+	$img = array('jpg','png');
 	
 	if (isset($_GET['dl']) && !in_array('..', explode('/', $_GET['dl']))) {
 		$dl = urldecode(trim($_GET['dl'], '/'));
@@ -35,7 +36,7 @@
 			$scan = scandir(dirname($dir));	// Scan parent folder for cover
 			foreach ($scan as $f) {
 				$ext = strtolower(substr($f, strrpos($f, '.') + 1));
-				if ($ext == 'jpg' || $ext == 'png') {
+				if (in_array($ext, $GLOBALS['img'])) {
 					$files[$f] = '';
 					break;
 				}
@@ -51,6 +52,7 @@
 		$scan = scandir($dir);
 		$files = array();
 		$tree = array();
+		$hasmusic = false;
 		
 		foreach ($scan as $f) {
 			if (substr($f, 0, 1) == '.')
@@ -61,11 +63,17 @@
 					if ($subfolder)
 						$tree[$f] = $subfolder;
 				}
-			} elseif (in_array(strtolower(substr($f, strrpos($f, '.') + 1)), $GLOBALS['ext']))
-					$files[$f] = '';
+			} else {
+					$ext = strtolower(substr($f, strrpos($f, '.') + 1));
+					if (in_array($ext, $GLOBALS['ext'])) {
+						$files[$f] = '';
+						if (!in_array($ext, $GLOBALS['img']))
+							$hasmusic = true;
+					}
+			}
 		}
 		
-		if (count((array) $files) > 0)
+		if ($hasmusic)
 			$tree['/'] = $files;
 		if (count((array) $tree) > 0)
 			return $tree;
