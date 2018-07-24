@@ -10,6 +10,13 @@ html.touch {
 	line-height: 2.5em;
 }
 	html.touch #current { line-height: 1.5em }
+	html.touch li {
+		user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		-webkit-user-select: none;
+		-webkit-touch-callout: none;
+	}
 
 html > body > div { transition: opacity .2s ease-in }
 	html.load > body > *, html.load > body > div:before { opacity: 0 }
@@ -181,6 +188,7 @@ li:before, #options > button:before,
 	top: .0;
 	right: 0;
 	box-shadow: 0 0 2px 2px #fefeff;
+	z-index: 1;
 }
 	#clear.drag {
 		display: initial;

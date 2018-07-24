@@ -1,6 +1,7 @@
 <?php
 	$root = 'library';	// Music folder path, relative to this file
 	$maxdepth = 10;		// Maximum recursive folder depth
+	$notfound = 'Error! Location not found.';
 	$ext = array('jpg','png','aac','fla','flac','m4a','mp3','mp4','ogg','opus','wav');
 	$img = array('jpg','png');
 	
@@ -30,6 +31,8 @@
 	$dir = $root;
 	if (isset($_GET['play']) && !in_array('..', explode('/', $_GET['play']))) {
 		$dir = trim($_GET['play'], '/');
+		if (!file_exists($dir))
+			die('var library={"'. $notfound .'":""}');
 		if (!is_dir($dir)) {
 			$files = array();
 			$files[$dir] = '';	// Add file
@@ -47,7 +50,7 @@
 	}
 	
 	echo 'var root="'. $dir .'/"; var library='. json_encode(tree($dir, 0));
-
+	
 	function tree($dir, $depth) {
 		$scan = scandir($dir);
 		$files = array();
