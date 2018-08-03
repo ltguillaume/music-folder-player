@@ -17,9 +17,10 @@ html.touch {
 		-webkit-user-select: none;
 		-webkit-touch-callout: none;
 	}
+	html.touch u { text-decoration: none }
 
 html > body > div { transition: opacity .2s ease-in }
-	html.load > body > *, html.load > body > div:before { opacity: 0 }
+	html.loading > body > *, html.loading > body > div:before { opacity: 0 }
 
 body, button, input {
 	background: #fefeff;
@@ -47,13 +48,11 @@ button {
 	font-size: .95em;
 	border: none;
 	border-radius: 3px;
-	transition: background-color .1s ease-in;
+	cursor: pointer;
+	transition: background .1s ease-in;
 }
 	button:before { font-size: 1.05em }
-	button:hover {
-		background: #ebf2f7;
-		cursor: pointer;
-	}
+	button:hover, #afteroptions a:hover { background: #ebf2f7 }
 	button:active, button:focus { outline: none }
 	button::-moz-focus-inner { border: none }
 
@@ -84,7 +83,7 @@ li#last:before { visibility: hidden }
 
 li.over { border-top: 1px dotted #ef6c00 }
 
-#load {
+#loading {
 	position: absolute;
 	top: calc(50% - 1em);
 	left: calc(50% - .5em);
@@ -94,7 +93,7 @@ li.over { border-top: 1px dotted #ef6c00 }
 	border: none;
 	z-index: -1;
 }
-	#load.ing {
+	#loading.show {
 		opacity: 1;
 		transition: opacity 5s;
 	}
@@ -153,24 +152,41 @@ li.over { border-top: 1px dotted #ef6c00 }
 
 #controls > button:before { margin: .25em }
 
-li:before, #options > button:before,
-#shares > button:before, #playlistdiv button:before { margin-right: .25em }
+li:before, #options button:before { margin-right: .25em }
 
 #options.whatsapp #folderwhatsapp, #options.whatsapp #songwhatsapp { display: inline-block }
 
 #options.whatsapp #folderuri, #options.whatsapp #songuri { max-width: calc(100% - 10em) }
 
-#shares {
+#playlistoptions, #shares {
 		max-height: 0;
 		overflow-y: hidden;
 		transition: margin-top .2s, padding-top .2s, max-height .2s ease-out;
 }
-	#shares.show {
+	#options.playlistbtn #playlistoptions, #options.share #shares {
 		max-height: 11em;
 		margin-top: .25em;
 		padding-top: .25em;
 		border-top: 1px solid #eee;
 		transition: max-height .2s ease-in;
+	}
+
+#afterdiv { display: inline-block }
+
+#afteroptions {
+	display: none;
+	position: absolute;
+	background: #fefeff;
+	border: 1px solid #eee;
+	border-radius: 3px;
+	box-shadow: 0 1px 2px 2px #fefeff;
+	z-index: 2;
+}
+	#afteroptions button {
+		display: block;
+		width: 100%;
+		text-align: left;
+		border-radius: 0;
 	}
 
 #shares input { direction: rtl }
@@ -190,14 +206,15 @@ li:before, #options > button:before,
 	box-shadow: 0 0 2px 2px #fefeff;
 	z-index: 1;
 }
+	#clear:not(:hover) { 	background: rgba(254,254,255,.8) }
 	#clear.drag {
-		display: initial;
+		display: block;
 		height: 100%;
 		padding: .5em 1em;
 		border-left: 1px solid #eee;
 	}
 	body.locked #playlistdiv #clear { display: none !important }
-	body:not(.locked) #playlistdiv:hover #clear { display: initial }
+	body:not(.locked) #playlistdiv:hover #clear { display: block }
 
 #playlist {
 	min-height: 2.25em;
@@ -239,10 +256,12 @@ li:before, #options > button:before,
 .hide { display: none }
 
 body.locked #stop, body.locked #previous, body.locked #next,
-body.locked #enqueue, body.locked #random, body.locked #crossfade {
+body.locked #enqueue, body.locked #random, body.locked #crossfade, body.locked #playlistbtn {
 	opacity: .5;
-	cursor: arrow;
+	cursor: default;
+	background: #fefeff !important;
 }
+	body.locked #enqueue:before, body.locked #random:before { content: '\f126' }
 
 @media screen and (max-width: 480px) {
 	body > div { margin: .1em }
@@ -278,34 +297,38 @@ body.locked #enqueue, body.locked #random, body.locked #crossfade {
 	text-align: center;
 }
 
+#after:before { content: "\f182" }
 #clear:before { content: "\f204" }
 #clearfilter:before { content: "\f217" }
 #crossfade:before { content: "\f1b2" }
-#enqueue:before { content: "\f17f" }
+#enqueue:before { content: "\f199" }
 #export:before { content: "\f188" }
-#import:before { content: "\f184" }
-#load:before { content: "\f1ed" }
+#import:before { content: "\f17f" }
+#loading:before { content: "\f1ed" }
 #library:before { content: "\f17b" }
 #lock:before { content: "\f16a" !important }
 	#lock.on:before { content: "\f20a" !important }
 #next:before { content: "\f17c" }
 #options:before { content: "\f214" }
 #player:before { content: "\f153" }
+#playlistbtn:before { content: "\f18e" }
 #playlistdiv:before { content: "\f103" }
-#playpause:before { content: "\f198" }
+#playpause:before, #playlibrary:before { content: "\f198" }
 	#playpause.playing:before { content: "\f191" }
 #previous:before { content: "\f19c" }
+#random:before, #randomlibrary:before { content: "\f13a" }
+#repeatplaylist:before { content: "\f1a5" }
+#save:before { content: "\f184" }
 #setfilter:before { content: "\f14b" }
-#random:before { content: "\f13a" }
 #share:before { content: "\f1ad" }
-#stop:before { content: "\f1ef" }
+#stop:before, #stopplayback:before { content: "\f1ef" }
 
 .copied:before { content: "\f129" }
 .download:before { content: "\f143" }
 .folder:before { content: "\f150" }
 .folder.open:before { content: "\f14e" }
-.on:before { content: "\f126" !important }
 .playing:before { content: "\f198" }
 .link:before { content: "\f165" }
 .song:before { content: "\f17b"; opacity: .6 }
+body:not(.locked) button.on:before { content: "\f126" !important }
 button.whatsapp:before { content: "\f1a6" }

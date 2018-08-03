@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="load">
+<html class="loading">
 <head>
 		<meta charset="UTF-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,28 +9,42 @@
 		<title id="title"></title>
 </head>
 <body onload="init()">
-	<span id="load"></span>
+	<span id="loading"></span>
 	<div id="player">
-		<img id="cover" src="music.png" onclick="zoom()"/>
+		<img id="cover" src="music.png" title="Zoom to full size, 300px (Z)" onclick="zoom()"/>
 		<div id="current">
 			<div id="folder" class="dim" onclick="setFilter(event)">Album Title</div>
 			<div id="song" class="dim" onclick="setFilter(event)">Track Title</div>
 			<div id="time" class="dim">00:00</div>
 			<div id="controls">
-				<button id="stop" title="Stop playback ( O )" onclick="stop()"/>
-				<button id="playpause" title="Play or pause ( P, Space )" onclick="playPause()"/>
-				<button id="previous" title="Play previous ( [ )" onclick="previous()"/>
-				<button id="next" title="Play next ( ] )" onclick="next()"/>
+				<button id="stop" title="Stop playback (0)" onclick="stop()"/>
+				<button id="playpause" title="Play or pause (Space)" onclick="playPause()"/>
+				<button id="previous" title="Play previous ([)" onclick="previous()"/>
+				<button id="next" title="Play next (])" onclick="next(event)"/>
 				<audio id="audio">HTML5 not supported</audio>
 			</div>
 		</div>
 	</div>
 	<div id="options">
-		<button id="enqueue" title="Enqueue songs on click ( E )" onclick="toggle(event)">Enqueue</button>
-		<button id="random" title="Play random songs after playlist items ( R )" onclick="toggle(event)">Random</button>
-		<button id="crossfade" title="Crossfade between songs ( X )" onclick="toggle(event)">Crossfade</button>
-		<button id="share" title="Share or download current song or folder ( S )" onclick="toggle(event)">Share</button>
-		<button id="lock" title="Lock playlist and playback controls ( L )" onclick="toggleLock()">Lock</button>
+		<button id="enqueue" title="Enqueue songs on click (E)" onclick="toggle(event)"><u>E</u>nqueue</button>
+		<button id="random" title="Randomize upcoming playlist songs (R)" onclick="toggle(event)"><u>R</u>andom</button>
+		<button id="crossfade" title="Crossfade between songs (O)" onclick="toggle(event)">Cr<u>o</u>ssfade</button>
+		<button id="playlistbtn" title="Playlist options (P)" onclick="toggle(event)"><u>P</u>laylist</button>
+		<button id="share" title="Share or download current song or folder (S)" onclick="toggle(event)"><u>S</u>hare</button>
+		<button id="lock" title="Lock playlist and playback controls (L)" onclick="toggleLock()"><u>L</u>ock</button>
+		<div id="playlistoptions">
+			<button id="load" title="Add songs from saved playlist (D)" onclick="loadPlaylist()">Loa<u>d</u></button>
+			<button id="save" title="Save playlist online (V)" onclick="savePlaylist()">Sa<u>v</u>e</button>
+			<div id="afterdiv">
+				<button id="after" title="Define action after last playlist item (A)" onclick="afterOptions(event)"><u>A</u>fter playlist&hellip;</button>
+				<div id="afteroptions" onmouseout="afterOptions(event)" onclick="toggle(event)">
+					<button id="stopplayback" title="Stop playing songs after last playlist item">Stop playback</button>
+					<button id="repeatplaylist" title="Restart playback from the top">Repeat playlist</button>
+					<button id="playlibrary" title="Continue from last song's position in library">Play from library</button>
+					<button id="randomlibrary" title="Randomly select unplayed songs from the library">Random from library</button>
+				</div>
+			</div>
+		</div>
 		<div id="shares">
 			<div class="folder sharediv">
 				<input id="folderuri" onclick="this.select()" readonly>
@@ -44,22 +58,20 @@
 				<button id="songshare" class="link" title="Share link to song" onclick="share('s')"/>
 				<button id="songwhatsapp" class="whatsapp hide" title="Share song link via WhatsApp" onclick="shareWhatsApp('s')"/>
 			</div>
-			<button id="import" title="Add songs from exported playlist" onclick="importPlaylist()">Import playlist</button>
-			<button id="export" title="Export current playlist to file" onclick="exportPlaylist()">Export playlist</button>
 			<a id="a" class="hide"></a>
 		</div>
 	</div>	
 	<div id="playlistdiv">
 		<div>
-			<button id="clear" title="Clear the playlist ( C )" onclick="clearPlaylist()" ondragover="allowDrop(event)" ondrop="removeItem(event)">Clear</button>
+			<button id="clear" title="Clear the playlist (C)" onclick="clearPlaylist()" ondragover="allowDrop(event)" ondrop="removeItem(event)">Clear</button>
 			<div id="playlist" onmouseover="onplaylist=true" onmouseout="onplaylist=false"></div>
 		</div>
 	</div>
 	<div id="library">
 		<div id="filterdiv">
-			<input id="filter" title="Filter library ( F )" placeholder="Filter..." onchange="filter()"/>
-			<button id="setfilter" title="Apply filter ( Enter )" onclick="filter()"/>
-			<button id="clearfilter" title="Clear filter ( Esc )" onclick="clearFilter()"/>
+			<input id="filter" title="Filter library (F)" placeholder="Filter..." onchange="filter()"/>
+			<button id="setfilter" title="Apply filter (Enter)" onclick="filter()"/>
+			<button id="clearfilter" title="Clear filter (Esc)" onclick="clearFilter()"/>
 		</div>
 		<div id="tree"></div>
 	</div>

@@ -6,13 +6,13 @@ var
 	whatsapp = true,	// Add button to share directly to WhatsApp
 	whatsappmsg = 'Have a listen to',	// Default WhatsApp message
 
-	folderdesc = 'Click: expand/collapse\nRight-click: add to playlist',
-	songdesc = 'Click: play/enqueue\nRight-click: play next',
-	playlistdesc = '\n\nClick: play now\nRight-Click: find in library',
+	folderdesc = 'Click: Expand/collapse (Enter)\nRClick: Enqueue (Shift-Enter)',
+	songdesc = 'Click: Play/enqueue (Enter)\nRClick: Play next (Shift-Enter)',
+	playlistdesc = '\n\nClick: Play now\nRClick: Find in library',
 	addfolderdlg = 'Add this folder to playlist?',
 	whatsappdlg = 'Your message via WhatApp (the url will be added at the end):',
 	exportdlg = 'Enter a filename:',
-	prevpassdlg = 'Use previously set password:',
+	prevpassdlg = '[Use previously set password]',
 	passdlg = 'Enter password:',
 	wrongpassdlg = 'Intruder alert!',
 	clearplaylistdlg = 'Clear the playlist?',
@@ -46,6 +46,14 @@ function init() {
 		'crossfade': get('crossfade'),
 		'enqueue': get('enqueue'),
 		'random': get('random'),
+		'playlistbtn': get('playlistbtn'),
+		'playlistoptions': get('playlistoptions'),
+		'after': get('after'),
+		'afteroptions': get('afteroptions'),
+		'stopplayback': get('stopplayback'),
+		'repeatplaylist': get('repeatplaylist'),
+		'playlibrary': get('playlibrary'),
+		'randomlibrary': get('randomlibrary'),
 		'share': get('share'),
 		'shares': get('shares'),
 		'lock': get('lock'),
@@ -54,12 +62,13 @@ function init() {
 		'a': get('a'),
 		'clear': get('clear'),
 		'playlist': get('playlist'),
+		'library': get('library'),
 		'filter': get('filter'),
 		'time': get('time'),
 		'tree': get('tree')
 	};
 
-	get('load').className = 'ing';
+	get('loading').className = 'show';
 	title.textContent = deftitle;
 	if (cfg.crossfade) dom.crossfade.className = 'on';
 	if (cfg.enqueue) dom.enqueue.className = 'on';
@@ -104,7 +113,7 @@ function init() {
 		buildLibrary('', library, dom.tree);
 		buildPlaylist();
 		document.documentElement.className = '';
-		get('load').className = '';
+		get('loading').className = '';
 	};
 	document.body.appendChild(lib);
 }
@@ -113,8 +122,8 @@ function ls() {
 	var def = {
 		'crossfade': false,
 		'enqueue': false,
-		'random': false,	// (url.length == 1 ? true : false)
-		'repeat': true,
+		'random': false,
+		'after': (url.length == 1 ? 'randomlibrary' : 'playlibrary'),
 		'locked': false,
 		'password': false,
 		'playlist': [],
@@ -270,11 +279,11 @@ function addFolder(e) {
 	}
 }
 
-function setFocus (li, direction) {
-	li.focus();
-	const { top, bottom } = li.getBoundingClientRect();
+function setFocus (el, direction) {
+	el.focus();
+	const { top, bottom } = el.getBoundingClientRect();
 	if (top < 0 || bottom > (window.innerHeight || document.documentElement.clientHeight))
-		li.scrollIntoView({
+		el.scrollIntoView({
 			block: (direction == 'left' || direction == 'open' ? 'start' : 'nearest'),
 			behavior: 'smooth'
 		});
@@ -283,7 +292,7 @@ function setFocus (li, direction) {
 function addSong(e) {
 	e.stopPropagation();
 	var li = e.target;
-	if (cfg.enqueue)
+	if (cfg.enqueue || cfg.locked)
 		add(li.id);
 	else
 		load(li.id);
@@ -307,7 +316,7 @@ function buildPlaylist() {
 
 	var i, li;
 	for (i in cfg.playlist) {
-		li = playlistElement(cfg.playlist[i]);
+		li = playlistItem(cfg.playlist[i]);
 		li.className = (i == cfg.index ? 'playing' : 'song');
 		dom.playlist.appendChild(li);
 		if (i == cfg.index) {
@@ -325,18 +334,18 @@ function buildPlaylist() {
 	}
 }
 
-function playlistElement(s) {
+function playlistItem(s) {
 	var li = document.createElement('li');
 	li.className = 'song';
 	li.draggable = 'true',
-	li.onclick = function (e) { playSong(e) };
-	li.oncontextmenu = function(e) { findSong(e) };
+	li.onclick = function (e) { playItem(e) };
+	li.oncontextmenu = function(e) { findItem(e) };
 	li.ondragstart = function(e) { prepareDrag(e) };
 	li.ondragenter = function() { this.classList.add('over') };
 	li.ondragleave = function() { this.classList.remove('over') };
 	li.ondragover = function (e) { allowDrop(e) };
 	li.ondragend = function() { endDrag() };
-	li.ondrop = function(e) { dropSong(e) };
+	li.ondrop = function(e) { dropItem(e) };
 	if (s.id == 'last') {
 		li.id = 'last';
 	} else {
@@ -346,11 +355,11 @@ function playlistElement(s) {
 	return li;
 }
 
-function playSong(e) {
+function playItem(e) {
 	if (!cfg.locked) play(getIndex(e.target));
 }
 
-function findSong(e) {
+function findItem(e) {
 	e.preventDefault();
 	var s = (e.target.tagName.toLowerCase() != 'li' ? e.target.parentNode : e.target);
 	setFilter(s.firstChild.textContent);
@@ -361,7 +370,7 @@ function prepareDrag(e) {
 	if (cfg.locked) return;
 	dom.clear.className = 'drag';
 	dom.clear.textContent = '';
-	dom.playlist.appendChild(playlistElement({ 'id': 'last' }));
+	dom.playlist.appendChild(playlistItem({ 'id': 'last' }));
 	if (cfg.index !=-1)
 		dom.playlist.childNodes[cfg.index].className = 'song';
 
@@ -385,7 +394,7 @@ function endDrag() {
 	}
 }
 
-function dropSong(e) {
+function dropItem(e) {
 	e.preventDefault();
 	e.stopPropagation();
 	var to = e.target;
@@ -394,22 +403,24 @@ function dropSong(e) {
 	to.classList.remove('over');
 	var indexfrom = e.dataTransfer.getData('text');
 	var indexto = getIndex(to);
-	if (indexto != indexfrom) {
-		dom.playlist.insertBefore(drag, to);
-		cfg.playlist.splice(indexto - (indexfrom < indexto ? 1 : 0), 0, cfg.playlist.splice(indexfrom, 1)[0]);
-		log('Playback index from '+ cfg.index);
-		if (cfg.index != -1) {
-			if (indexfrom == cfg.index)
-				cfg.index = (indexfrom < indexto ? indexto - 1 : indexto);
-			else if (indexfrom < cfg.index && indexto > cfg.index)
-				cfg.index--;
-			else if (indexfrom > cfg.index && indexto <= cfg.index)
-				cfg.index++;
-		}
-	}
+	if (indexto != indexfrom) moveItem(drag, to, indexfrom, indexto);
 	if (cfg.index != -1) dom.playlist.childNodes[cfg.index].className = 'playing';
 	log('Drag from '+ indexfrom +' to '+ indexto);
 	log('Playback index to '+ cfg.index);
+}
+
+function moveItem(drag, to, indexfrom, indexto) {
+	dom.playlist.insertBefore(drag, to);
+	cfg.playlist.splice(indexto - (indexfrom < indexto ? 1 : 0), 0, cfg.playlist.splice(indexfrom, 1)[0]);
+	log('Playback index from '+ cfg.index);
+	if (cfg.index != -1) {
+		if (indexfrom == cfg.index)
+			cfg.index = (indexfrom < indexto ? indexto - 1 : indexto);
+		else if (indexfrom < cfg.index && indexto > cfg.index)
+			cfg.index--;
+		else if (indexfrom > cfg.index && indexto <= cfg.index)
+			cfg.index++;
+	}
 }
 
 function removeItem(e) {
@@ -497,41 +508,50 @@ function previous() {
 		log('No previous item in playlist');
 }
 
+function next(e) {
+	if (!cfg.locked) next();
+}
+
 function next() {
-	if (cfg.locked && cfg.index != -1) return;
-	if (cfg.playlist.length > cfg.index + 1)
+	if (cfg.playlist.length > cfg.index + 1) {
+		if (cfg.random && !cfg.playlist[cfg.index + 1].playNext) {
+			var next = cfg.index + ~~(Math.random() * (cfg.playlist.length - cfg.index));
+			var drag = dom.playlist.childNodes[next],
+				to = dom.playlist.childNodes[cfg.index + 1],
+				indexfrom = next,
+				indexto = cfg.index + 1;
+			moveItem(drag, to, indexfrom, indexto);
+		}
 		play(cfg.index + 1);
-	else if (cfg.random) {
+	} else if (cfg.after != 'stopplayback' || cfg.locked) {
 		if (played.length == songs.length) {
-			log('All songs have been played');
-			if (cfg.repeat) {
-				log('Clearing played');
-				played.length = 0;
-			} else return;
+			log('All songs have been played. Clearing played.');
+			played.length = 0;
 		}
-		var next;
-		do { next = ~~((Math.random() * songs.length)) }
-			while (played.indexOf(next.toString()) != -1);
-		load(songs[next].id);
-	} else if (cfg.index != -1)	{
-		var path = cfg.playlist[cfg.index].path;
-		var next = -1;
-		for (var i = 0; i < songs.length; i++) {
-			if (songs[i].path == path) {
-				next = i + 1;
-				break;
-			}
-		}
-		if (next != -1 && next < songs.length)
+		if (cfg.after == 'randomlibrary' || cfg.locked) {
+			var next;
+			do { next = ~~((Math.random() * songs.length)) }
+				while (played.indexOf(next.toString()) != -1);
 			load(songs[next].id);
-		else {
-			log('End of library');
-			if (cfg.repeat) {
-				log('Starting at the top');
+		} else if (cfg.after == 'playlibrary')	{
+			if (cfg.index == -1) return load(songs[0].id);
+			var path = cfg.playlist[cfg.index].path;
+			var next = -1;
+			for (var i = 0; i < songs.length; i++) {
+				if (songs[i].path == path) {
+					next = i + 1;
+					break;
+				}
+			}
+			if (next != -1 && next < songs.length)
+				load(songs[next].id);
+			else {
+				log('End of library. Starting at the top');
 				load(songs[0].id);
 			}
-		}
-	} else load(songs[0].id);
+		} else if (cfg.after == 'repeatplaylist' && cfg.playlist.length > 0)
+			return play(0);
+	}
 }
 
 function load(id) {
@@ -600,31 +620,27 @@ function add(id, next) {
 		'cover': songs[id].cover
 	};
 	
+	var i = (nodupes || cfg.index == -1 ? 0 : cfg.index);
 	if (cfg.playlist.length > 0) {
-		if (next) {
-			if (cfg.index > -1 && s.path == cfg.playlist[cfg.index].path) {
-				cfg.index--;
+		if (next && s.path == cfg.playlist[i].path) {	// Currently playing
+				if (cfg.index > -1) cfg.index--;
 				return;
-			} else if (cfg.index + 1 < cfg.playlist.length && s.path == cfg.playlist[cfg.index + 1].path)
+		}
+		i++;
+		for (; i < cfg.playlist.length && (next ? cfg.playlist[i].playNext : true); i++) {
+			if (s.path == cfg.playlist[i].path) {
+				dom.tree.className = 'dim';
+				setTimeout(function() { dom.tree.className = '' }, 500);
 				return;
-		} else {
-			var i = (nodupes || cfg.index == -1 ? 0 : cfg.index);
-			for (; i < cfg.playlist.length; i++) {
-				if (s.path == cfg.playlist[i].path) {
-					dom.tree.className = 'dim';
-					setTimeout(function() {
-						dom.tree.className = '';
-					}, 500);
-					return;
-				}
 			}
 		}
 	}
 	
-	var li = playlistElement(s);
+	var li = playlistItem(s);
 	if (next) {
-		cfg.playlist.splice(cfg.index + 1, 0, s);
-		playlist.insertBefore(li, dom.playlist.childNodes[cfg.index + 1]);
+		s.playNext = 1;
+		cfg.playlist.splice(i, 0, s);
+		playlist.insertBefore(li, dom.playlist.childNodes[i]);
 	} else {
 		cfg.playlist.push(s);
 		dom.playlist.appendChild(li);
@@ -674,19 +690,34 @@ function play(index) {
 
 function toggle(e) {
 	switch(e.target.id) {
+		case 'playlistbtn':
+			if (cfg.locked) return;	// Continue
 		case 'share':
-			var shown = (dom.shares.className == 'show');
-			dom.share.className = (shown ? '' : 'on');
-			dom.shares.className = (shown ? '' : 'show');
+			if (e.target.className == 'on') {
+				dom.options.className = dom.options.className.replace(' '+ e.target.id, '');
+				e.target.className = '';
+			} else {
+				dom.options.className += ' '+ e.target.id;
+				e.target.className = 'on';
+			}
+			return;
+		case 'stopplayback':
+		case 'repeatplaylist':
+		case 'playlibrary':
+		case 'randomlibrary':
+			if (!cfg.locked) {
+				cfg.after = e.target.id;
+				afterOptions(e);
+			}
 			return;
 		case 'lock':
 			return toggleLock();
-		case 'crossfade':	// No return
+		case 'crossfade':
 			if (!audio[1]) {
 				audio[1] = new Audio();
 				prepAudio(audio[1]);
 			}
-			fade = null;
+			fade = null;	// Continue
 		default:
 			if (!cfg.locked) {
 				cfg[e.target.id] ^= true;
@@ -697,10 +728,6 @@ function toggle(e) {
 
 function toggleLock() {
 	if (!password()) return;
-	if (!cfg.locked) {
-		if (!cfg.enqueue) dom.enqueue.click();
-		if (!cfg.random) dom.random.click();
-	}
 	cfg.locked ^= true;
 	document.body.className = (cfg.locked ? 'locked' : '');
 	dom.lock.className = (cfg.locked ? 'on' : '');
@@ -725,6 +752,21 @@ function password() {
 	}
 	if (!cfg.locked) cfg.password = pass;
 	return true;
+}
+
+function afterOptions(e) {
+	if (dom.afteroptions.style.display == 'block' && !dom.afteroptions.contains(e.relatedTarget)) {
+		dom.afteroptions.style.display = 'none';
+	} else {
+		const { bottom, left } = dom.after.getBoundingClientRect();
+		dom.afteroptions.top = bottom;
+		dom.afteroptions.left = left;
+		dom.stopplayback.className = (cfg.after == 'stopplayback' ? 'on' : '');
+		dom.repeatplaylist.className = (cfg.after == 'repeatplaylist' ? 'on' : '');
+		dom.playlibrary.className = (cfg.after == 'playlibrary' ? 'on' : '');
+		dom.randomlibrary.className = (cfg.after == 'randomlibrary' ? 'on' : '');
+		dom.afteroptions.style.display = 'block';
+	}
 }
 
 function clearPlaylist() {
@@ -799,6 +841,7 @@ function setFilter(f) {
 	else
 		dom.filter.value = f.target.textContent;
 	filter();
+	setFocus(dom.library, 'open');
 }
 
 function clearFilter() {
@@ -894,19 +937,19 @@ document.addEventListener('keydown', function(e) {
 			e.preventDefault();
 			audio[current].currentTime -= 5;
 			break;
-		case 79:	// o
+		case 48:	// 0
 			stop();
 			break;
-		case 80:	// p
 		case 32:	// space
 			e.preventDefault();
+			e.target.blur();
 			playPause();
 			break;
 		case 219:	// [
 			previous();
 			break;
 		case 221:	// ]
-			next();
+			next(e);
 			break;
 		case 69:	// e
 			dom.enqueue.click();
@@ -914,8 +957,22 @@ document.addEventListener('keydown', function(e) {
 		case 82:	// r
 			dom.random.click();
 			break;
-		case 88:	// x
+		case 79:	// o
 			dom.crossfade.click();
+			break;
+		case 80:	// p
+			dom.playlistbtn.click();
+			break;
+		case 73:	// i
+			importPlaylist();
+			break;
+		case 88:	// x
+			exportPlaylist();
+			break;
+		case 65:	// a
+			if (dom.options.className.indexOf('playlist') == -1 )
+				dom.playlistbtn.click();
+			afterOptions(e);
 			break;
 		case 83:	// s
 			dom.share.click();
@@ -962,7 +1019,7 @@ document.addEventListener('keydown', function(e) {
 			break;
 		case 13:	// Enter
 			if (dom.tree.contains(el)) {
-				if (e.ctrlKey || e.shiftKey)
+				if (e.shiftKey)
 					el.dispatchEvent(new CustomEvent('contextmenu'));
 				else
 					el.click();
