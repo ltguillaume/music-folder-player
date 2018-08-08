@@ -21,6 +21,7 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 	- Continue from last song's position in library
 	- Randomly select unplayed songs from the library
 - Playlist and configuration will be saved to the browser's Local Storage if possible
+- Load/save online playlists
 - Import/export playlists from/to a local file
 #### Library
 - Filter the library to quickly find songs
@@ -54,6 +55,8 @@ O | Toggle "Crossfade between songs"
 P | Toggle "Playlist options"
 S | Toggle "Share or download current song or folder"
 L | Toggle "Lock playlist and playback controls"
+D | Load playlist: Add songs from saved playlist
+V | Save playlist: Save playlist online
 I | Import playlist: Add songs from exported playlist
 X | Export current playlist to file
 A | Define action after last playlist item
@@ -65,11 +68,12 @@ Enter | Play/Add to playlist
 Shift-Enter | Play song next/Add folder to playlist
 
 ## Installation
-1. Put all `music.*` files into a folder on your web server
-2. Install zip on your web server
-3. Optionally rename `music.htm` to `index.html`
+1. Put `music.*` into a folder on your web server
+2. For online playlists, make sure the user (e.g. `http`) used by PHP has write permissions for the folder `music.pls` (or disable online playlists in `music.js`)
+3. For downloading folders, install zip on your server
 4. Edit `music.php` so that the variable `$root` corresponds with your music folder, relative to the folder with `music.*` (you could create a symbolic link here to a folder elsewhere).
 5. Edit the variables at the top of `music.js`
+6. Optionally rename `music.htm` to `index.html`
 
 ## Credits
 - Parts of this little project are heavily based on the excellent [HTML5 Music Player](https://github.com/GM-Script-Writer-62850/HTML5-Music-Player) by [GM-Script-Writer-62850](https://github.com/GM-Script-Writer-62850)

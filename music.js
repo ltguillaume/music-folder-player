@@ -3,6 +3,7 @@ var
 	defcover = 'music.png',	// Default cover image if none found
 	deftitle = 'Music',	// Default page title
 	nodupes = false,		// Don't add already played songs to playlist
+	onlinepls = true,	// Show buttons to load/save playlists online
 	whatsapp = true,	// Add button to share directly to WhatsApp
 	whatsappmsg = 'Have a listen to',	// Default WhatsApp message
 
@@ -11,10 +12,13 @@ var
 	playlistdesc = '\n\nClick: Play now\nRClick: Find in library',
 	addfolderdlg = 'Add this folder to playlist?',
 	whatsappdlg = 'Your message via WhatApp (the url will be added at the end):',
-	exportdlg = 'Enter a filename:',
+	exportdlg = 'Playlist name:',
+	overwritedlg = 'Playlist already exists. Overwrite?',
 	prevpassdlg = '[Use previously set password]',
 	passdlg = 'Enter password:',
 	wrongpassdlg = 'Intruder alert!',
+	noplaylists = 'No playlists available',
+	errorsave = 'Error on saving:',
 	clearplaylistdlg = 'Clear the playlist?',
 	
 	audio,
@@ -47,7 +51,11 @@ function init() {
 		'enqueue': get('enqueue'),
 		'random': get('random'),
 		'playlistbtn': get('playlistbtn'),
-		'playlistoptions': get('playlistoptions'),
+		'playlistsdiv': get('playlistsdiv'),
+		'load': get('load'),
+		'save': get('save'),
+		'playlists': get('playlists'),
+		'afterdiv': get('afterdiv'),
 		'after': get('after'),
 		'afteroptions': get('afteroptions'),
 		'stopplayback': get('stopplayback'),
@@ -68,7 +76,8 @@ function init() {
 		'tree': get('tree')
 	};
 
-	get('loading').className = 'show';
+
+	get('splash').className = 'show';
 	title.textContent = deftitle;
 	if (cfg.crossfade) dom.crossfade.className = 'on';
 	if (cfg.enqueue) dom.enqueue.className = 'on';
@@ -78,25 +87,26 @@ function init() {
 		dom.lock.className = 'on';
 		dom.lock.textContent = 'Unlock';
 	}
-	if (whatsapp)
-		dom.options.className = 'whatsapp';
+	if (url.length > 1) dom.load.style.display = 'none';
+	if (!onlinepls) dom.load.style.display = dom.save.style.display = 'none';
+	if (whatsapp) dom.options.className = 'whatsapp';
 	
 	dom.cover.onload = function() { dom.cover.style.opacity = 1 }	// Flickering appearance of old cover src is Firefox bug
 	
 	window.addEventListener('touchstart', function() {
 		window.addEventListener('touchend', function(e) {
 			e.preventDefault();
-		}, {once: true});
+		}, { once: true });
 		window.addEventListener('touchmove', function(e) {
 			onplaylist = dom.playlist.contains(e.targetTouches[0].target);
-		}, {passive: true});
+		}, { passive: true });
 		document.documentElement.className = 'touch';
 		dom.clear.style.display = 'initial';
-	}, {once: true, passive: true});
+	}, { once: true, passive: true });
 	
 	window.onunload = function() {
 		if (ls) {
-			localStorage.setItem("asymm_music", JSON.stringify(cfg));
+			localStorage.setItem('asymm_music', JSON.stringify(cfg));
 			log('Session saved');
 		}
 	}
@@ -113,7 +123,7 @@ function init() {
 		buildLibrary('', library, dom.tree);
 		buildPlaylist();
 		document.documentElement.className = '';
-		get('loading').className = '';
+		get('splash').className = '';
 	};
 	document.body.appendChild(lib);
 }
@@ -185,7 +195,7 @@ function prepAudio(a) {
 	
 	a.ontimeupdate = function() {
 		if (this == audio[current])
-			dom.time.textContent = timeTxt(~~this.currentTime) +" / "+ timeTxt(~~this.duration);
+			dom.time.textContent = timeTxt(~~this.currentTime) +' / '+ timeTxt(~~this.duration);
 		if (cfg.crossfade && !fade && (this.duration - this.currentTime) < 10) {
 			var fading = current;
 			log('Fading out '+ audio[fading].src);
@@ -227,7 +237,7 @@ function buildLibrary(root, folder, element) {
 		} else {
 			for (f in folder[i]) {
 				if (f.toLowerCase().endsWith('.jpg') || f.toLowerCase().endsWith('.png')) {
-					if (!cover || f.toLowerCase().startsWith('folder'))
+					if (!cover || f.toLowerCase().startsWith('cover'))
 						cover = f;
 					delete(folder[i][f]);
 				}
@@ -588,6 +598,50 @@ function shareWhatsApp(type) {
 	}
 }
 
+function getPlaylists() {
+	var xhttp = new XMLHttpRequest();
+	xhttp.onload = function() {
+		playlists = JSON.parse(this.responseText);
+		log(playlists);
+		var playlistElements = '';
+		if (playlists.length != []) {
+			for (p in playlists) {
+				playlistElements += '<button class="add">'+ p +'</button>';
+			}
+		} else playlistElements = '&nbsp;'+ noplaylists +'&nbsp;';
+		dom.playlists.innerHTML = playlistElements;
+		dom.playlists.style.display = 'block';
+	};
+	xhttp.open('GET', 'music.php?pl', true);
+	xhttp.send();
+}
+
+function loadPlaylist(e) {
+	if (e.target.className == 'on') return;
+	e.target.className = 'on';
+	var items = JSON.parse(playlists[e.target.textContent]);
+	for (i in items)
+		cfg.playlist.push(items[i]);
+	buildPlaylist();
+}
+
+function savePlaylist() {
+	var name = prompt(exportdlg)
+	if (name) name = name.replace(/[\\\/:*?"<>|]/g, ' ');
+	if (name) {
+		for (pl in playlists)
+			if (pl == name && !confirm(overwritedlg)) return;
+		var xhttp = new XMLHttpRequest();
+		xhttp.onload = function() {
+			if (this.responseText != '')
+				alert(errorsave +'\n\n'+ this.responseText);
+		}
+		xhttp.open('POST', 'music.php', true);
+		xhttp.setRequestHeader('Content-type', 'application/json');
+		xhttp.send(JSON.stringify({ 'name': name, 'songs': JSON.stringify(cfg.playlist) }));
+	}
+}
+
 function importPlaylist() {
 	var input = document.createElement('input');
 	input.setAttribute('type', 'file');
@@ -606,7 +660,7 @@ function importPlaylist() {
 }
 
 function exportPlaylist() {
-	var filename = prompt(exportdlg, deftitle);
+	var filename = prompt(exportdlg);
 	if (filename) {
 		dom.a.href = 'data:text/json;charset=utf-8,'+ esc(JSON.stringify(cfg.playlist));
 		dom.a.download = filename +'.mfp.json';
@@ -689,16 +743,19 @@ function play(index) {
 }
 
 function toggle(e) {
-	switch(e.target.id) {
+	var button = (e.target.tagName.toLowerCase() == 'u' ? e.target.parentNode : e.target);
+	switch(button.id) {
 		case 'playlistbtn':
-			if (cfg.locked) return;	// Continue
+			if (cfg.locked) return;
+			dom.playlists.style.display = 'none';
+			dom.afteroptions.style.display = 'none';	// Continue
 		case 'share':
-			if (e.target.className == 'on') {
-				dom.options.className = dom.options.className.replace(' '+ e.target.id, '');
-				e.target.className = '';
+			if (button.className == 'on') {
+				dom.options.className = dom.options.className.replace(' '+ button.id, '');
+				button.className = '';
 			} else {
-				dom.options.className += ' '+ e.target.id;
-				e.target.className = 'on';
+				dom.options.className += ' '+ button.id;
+				button.className = 'on';
 			}
 			return;
 		case 'stopplayback':
@@ -706,8 +763,9 @@ function toggle(e) {
 		case 'playlibrary':
 		case 'randomlibrary':
 			if (!cfg.locked) {
-				cfg.after = e.target.id;
-				afterOptions(e);
+				cfg.after = button.id;
+				dom.afteroptions.style.display = 'none';
+				menu('after');
 			}
 			return;
 		case 'lock':
@@ -720,8 +778,8 @@ function toggle(e) {
 			fade = null;	// Continue
 		default:
 			if (!cfg.locked) {
-				cfg[e.target.id] ^= true;
-				e.target.className = (cfg[e.target.id] ? 'on' : '');
+				cfg[button.id] ^= true;
+				button.className = (cfg[button.id] ? 'on' : '');
 			}
 		}
 }
@@ -754,19 +812,34 @@ function password() {
 	return true;
 }
 
-function afterOptions(e) {
-	if (dom.afteroptions.style.display == 'block' && !dom.afteroptions.contains(e.relatedTarget)) {
-		dom.afteroptions.style.display = 'none';
-	} else {
-		const { bottom, left } = dom.after.getBoundingClientRect();
-		dom.afteroptions.top = bottom;
-		dom.afteroptions.left = left;
-		dom.stopplayback.className = (cfg.after == 'stopplayback' ? 'on' : '');
-		dom.repeatplaylist.className = (cfg.after == 'repeatplaylist' ? 'on' : '');
-		dom.playlibrary.className = (cfg.after == 'playlibrary' ? 'on' : '');
-		dom.randomlibrary.className = (cfg.after == 'randomlibrary' ? 'on' : '');
-		dom.afteroptions.style.display = 'block';
+function menu(e) {
+	if (e.type == 'mouseleave' && document.documentElement.className == 'touch') return;
+
+	var btn, el;
+	if (e == 'load' || dom.playlistsdiv.contains(e.target)) {
+		el = dom.playlists;
+		btn = dom.load;
+	} else if (e == 'after' || dom.afterdiv.contains(e.target)) {
+		el = dom.afteroptions;
+		btn = dom.after;
 	}
+	
+	if (el.style.display == 'none' && e.type !== 'mouseleave') {
+		const { bottom, left } = btn.getBoundingClientRect();
+		el.top = bottom;
+		el.left = left;
+		switch (el) {
+			case dom.playlists:
+				getPlaylists();
+				break;
+			case dom.afteroptions:
+				dom.stopplayback.className = (cfg.after == 'stopplayback' ? 'on' : '');
+				dom.repeatplaylist.className = (cfg.after == 'repeatplaylist' ? 'on' : '');
+				dom.playlibrary.className = (cfg.after == 'playlibrary' ? 'on' : '');
+				dom.randomlibrary.className = (cfg.after == 'randomlibrary' ? 'on' : '');
+				el.style.display = 'block';
+		}
+	} else el.style.display = 'none';
 }
 
 function clearPlaylist() {
@@ -963,6 +1036,15 @@ document.addEventListener('keydown', function(e) {
 		case 80:	// p
 			dom.playlistbtn.click();
 			break;
+		case 68:	// d
+			if (!onlinepls || url.length > 1) return;
+			if (dom.options.className.indexOf('playlist') == -1 )
+				dom.playlistbtn.click();
+			menu('load');
+			break;
+		case 86:	// v
+			if (onlinepls) savePlaylist();
+			break;
 		case 73:	// i
 			importPlaylist();
 			break;
@@ -972,7 +1054,7 @@ document.addEventListener('keydown', function(e) {
 		case 65:	// a
 			if (dom.options.className.indexOf('playlist') == -1 )
 				dom.playlistbtn.click();
-			afterOptions(e);
+			menu('after');
 			break;
 		case 83:	// s
 			dom.share.click();

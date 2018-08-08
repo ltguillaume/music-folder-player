@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html class="loading">
+<html class="splash">
 <head>
 		<meta charset="UTF-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link href="music.css" type="text/css" rel="stylesheet"/>
 		<link href="music.png" type="image/png" rel="shortcut icon">
-		<script src="music.js" type="application/javascript" charset="UTF-8"></script>
+		<script src="music.js"></script>
 		<title id="title"></title>
 </head>
 <body onload="init()">
-	<span id="loading"></span>
+	<span id="splash"></span>
 	<div id="player">
 		<img id="cover" src="music.png" title="Zoom to full size, 300px (Z)" onclick="zoom()"/>
 		<div id="current">
@@ -17,10 +17,10 @@
 			<div id="song" class="dim" onclick="setFilter(event)">Track Title</div>
 			<div id="time" class="dim">00:00</div>
 			<div id="controls">
-				<button id="stop" title="Stop playback (0)" onclick="stop()"/>
-				<button id="playpause" title="Play or pause (Space)" onclick="playPause()"/>
-				<button id="previous" title="Play previous ([)" onclick="previous()"/>
-				<button id="next" title="Play next (])" onclick="next(event)"/>
+				<button id="stop" title="Stop playback (0)" onclick="stop()"></button>
+				<button id="playpause" title="Play or pause (Space)" onclick="playPause()"></button>
+				<button id="previous" title="Play previous ([)" onclick="previous()"></button>
+				<button id="next" title="Play next (])" onclick="next(event)"></button>
 				<audio id="audio">HTML5 not supported</audio>
 			</div>
 		</div>
@@ -33,11 +33,17 @@
 		<button id="share" title="Share or download current song or folder (S)" onclick="toggle(event)"><u>S</u>hare</button>
 		<button id="lock" title="Lock playlist and playback controls (L)" onclick="toggleLock()"><u>L</u>ock</button>
 		<div id="playlistoptions">
-			<button id="load" title="Add songs from saved playlist (D)" onclick="loadPlaylist()">Loa<u>d</u></button>
+			<div id="playlistsdiv">
+				<button id="load" title="Add songs from online playlist (D)" onclick="menu(event)">Loa<u>d</u></button>
+				<div id="playlists" onmouseleave="menu(event)" onclick="loadPlaylist(event)">
+				</div>
+			</div>
 			<button id="save" title="Save playlist online (V)" onclick="savePlaylist()">Sa<u>v</u>e</button>
+			<button id="import" title="Add songs from exported playlist (I)" onclick="importPlaylist()"><u>I</u>mport</button>
+			<button id="export" title="Export current playlist to file (X)" onclick="exportPlaylist()">E<u>x</u>port</button>
 			<div id="afterdiv">
-				<button id="after" title="Define action after last playlist item (A)" onclick="afterOptions(event)"><u>A</u>fter playlist&hellip;</button>
-				<div id="afteroptions" onmouseout="afterOptions(event)" onclick="toggle(event)">
+				<button id="after" title="Define action after last playlist item (A)" onclick="menu(event)"><u>A</u>fter playlist</button>
+				<div id="afteroptions" onmouseleave="menu(event)" onclick="toggle(event)">
 					<button id="stopplayback" title="Stop playing songs after last playlist item">Stop playback</button>
 					<button id="repeatplaylist" title="Restart playback from the top">Repeat playlist</button>
 					<button id="playlibrary" title="Continue from last song's position in library">Play from library</button>
@@ -48,15 +54,15 @@
 		<div id="shares">
 			<div class="folder sharediv">
 				<input id="folderuri" onclick="this.select()" readonly>
-				<button id="folderdownload" class="download" title="Download album/folder" onclick="download('f')"/>
-				<button id="foldershare" class="link" title="Share link to album/folder"onclick="share('f')"/>
-				<button id="folderwhatsapp" class="whatsapp hide" title="Share folder link via WhatsApp"onclick="shareWhatsApp('f')"/>
+				<button id="folderdownload" class="download" title="Download album/folder" onclick="download('f')"></button>
+				<button id="foldershare" class="link" title="Share link to album/folder" onclick="share('f')"></button>
+				<button id="folderwhatsapp" class="whatsapp hide" title="Share folder link via WhatsApp" onclick="shareWhatsApp('f')"></button>
 			</div>
 			<div class="song sharediv">
 				<input id="songuri" onclick="this.select()" readonly>
-				<button id="songdownload" class="download" title="Download song" onclick="download('s')"/>
-				<button id="songshare" class="link" title="Share link to song" onclick="share('s')"/>
-				<button id="songwhatsapp" class="whatsapp hide" title="Share song link via WhatsApp" onclick="shareWhatsApp('s')"/>
+				<button id="songdownload" class="download" title="Download song" onclick="download('s')"></button>
+				<button id="songshare" class="link" title="Share link to song" onclick="share('s')"></button>
+				<button id="songwhatsapp" class="whatsapp hide" title="Share song link via WhatsApp" onclick="shareWhatsApp('s')"></button>
 			</div>
 			<a id="a" class="hide"></a>
 		</div>
@@ -64,14 +70,14 @@
 	<div id="playlistdiv">
 		<div>
 			<button id="clear" title="Clear the playlist (C)" onclick="clearPlaylist()" ondragover="allowDrop(event)" ondrop="removeItem(event)">Clear</button>
-			<div id="playlist" onmouseover="onplaylist=true" onmouseout="onplaylist=false"></div>
+			<div id="playlist" onmouseenter="onplaylist=true" onmouseleave="onplaylist=false"></div>
 		</div>
 	</div>
 	<div id="library">
 		<div id="filterdiv">
-			<input id="filter" title="Filter library (F)" placeholder="Filter..." onchange="filter()"/>
-			<button id="setfilter" title="Apply filter (Enter)" onclick="filter()"/>
-			<button id="clearfilter" title="Clear filter (Esc)" onclick="clearFilter()"/>
+			<input id="filter" title="Filter library (F)" placeholder="Filter..." onchange="filter()">
+			<button id="setfilter" title="Apply filter (Enter)" onclick="filter()"></button>
+			<button id="clearfilter" title="Clear filter (Esc)" onclick="clearFilter()"></button>
 		</div>
 		<div id="tree"></div>
 	</div>

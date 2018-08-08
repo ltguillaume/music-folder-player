@@ -1,10 +1,16 @@
 <?php
 	$root = 'library';	// Music folder path, relative to this file
+	$playlistdir = 'music.pls';	// Folder to save playlists, relative to this file
 	$maxdepth = 10;		// Maximum recursive folder depth
 	$notfound = 'Error! Location not found.';
 	$ext = array('jpg','png','aac','fla','flac','m4a','mp3','mp4','ogg','opus','wav');
 	$img = array('jpg','png');
 	
+	header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+	header('Cache-Control: post-check=0, pre-check=0', false);
+	header('Pragma: no-cache');
+	header('Content-Type: application/javascript; charset=utf-8');
+
 	if (isset($_GET['dl']) && !in_array('..', explode('/', $_GET['dl']))) {
 		$dl = urldecode(trim($_GET['dl'], '/'));
 		if (is_dir($dl)) {
@@ -21,12 +27,22 @@
 			readfile($dl);
 			exit;
 		} else die('File not found');
+	} elseif (isset($_GET['pl'])) {
+		$playlists = array();
+		if (is_dir($playlistdir)) {
+			$scan = scandir($playlistdir);
+			foreach ($scan as $f)
+				if (substr($f, -8) == 'mfp.json')
+					$playlists[substr($f, 0, -9)] = json_decode(file_get_contents($playlistdir .'/'. $f));
+		}
+		die(json_encode($playlists));
 	}
-
-	header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
-	header('Cache-Control: post-check=0, pre-check=0', false);
-	header('Pragma: no-cache');
-	header('Content-Type: application/javascript; charset=utf-8');
+	
+	$pl = json_decode(file_get_contents('php://input'), true);
+	if (isset($pl['name'])) {
+		if (!is_dir($playlistdir)) mkdir($playlistdir);
+		die(file_put_contents($playlistdir .'/'. $pl['name'] .'.mfp.json', json_encode($pl['songs'])));
+	}
 
 	$dir = $root;
 	if (isset($_GET['play']) && !in_array('..', explode('/', $_GET['play']))) {
