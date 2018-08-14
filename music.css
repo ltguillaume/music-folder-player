@@ -1,3 +1,7 @@
+body { background: url(musicbg.png) }
+body > div { box-shadow: 0 0 3px #efefef }
+/*--------------------------------------*/
+
 * {
 	max-width: 100%;
 	margin: 0;
@@ -40,12 +44,13 @@ body > div {
 	padding: .25em;
 	border: 1px solid #eee;
 	border-radius: 2px;
-	transition: opacity .2s ease-in
+	transition: opacity .2s ease-in;
 }
 	body > div:before {
 		position: absolute;
 		left: .75em;
 		margin-top: -.25em;
+		text-shadow: .5px .5px #ddd;
 	}
 
 body.locked #stop, body.locked #previous, body.locked #next,
@@ -230,7 +235,7 @@ li.over { border-top: 1px dotted #ef6c00 }
 
 #playlist {
 	min-height: 2.25em;
-	max-height: 10em;
+	max-height: 10.25em;
 	overflow-y: auto;
 }
 	#playlist.resize {
@@ -268,7 +273,7 @@ li.over { border-top: 1px dotted #ef6c00 }
 .hide { display: none }
 
 @media screen and (max-width: 480px) {
-	body > div { margin: .1em }
+	body > div { margin: 2px }
 	body > div:before { display: none }
 }
 

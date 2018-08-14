@@ -124,6 +124,7 @@ function init() {
 		buildPlaylist();
 		document.documentElement.className = '';
 		get('splash').className = '';
+		console.log('Song count: '+ songs.length +'\nhttps://github.com/ltGuillaume/MusicFolderPlayer');
 	};
 	document.body.appendChild(lib);
 }
@@ -194,22 +195,23 @@ function prepAudio(a) {
 	}
 	
 	a.ontimeupdate = function() {
-		if (this == audio[current])
+		if (this == audio[current]) {
 			dom.time.textContent = timeTxt(~~this.currentTime) +' / '+ timeTxt(~~this.duration);
-		if (cfg.crossfade && !fade && (this.duration - this.currentTime) < 10) {
-			var fading = current;
-			log('Fading out '+ audio[fading].src);
-			fade = setInterval(function() {
-				if (audio[fading].ended) {
-					clearInterval(fade);
-					fade = null;
-				} else if (audio[fading].volume > 0.04)
-					audio[fading].volume -= 0.04;
-				else if (audio[fading].volume > 0)
-					audio[fading].volume = 0;
-			}, 200);
-			current ^= 1;
-			next();
+			if (cfg.crossfade && !fade && (this.duration - this.currentTime) < 10) {
+				var fading = current;
+				log('Fading out '+ audio[fading].src);
+				fade = setInterval(function() {
+					if (audio[fading].ended) {
+						clearInterval(fade);
+						fade = null;
+					} else if (audio[fading].volume > 0.04)
+						audio[fading].volume -= 0.04;
+					else if (audio[fading].volume > 0)
+						audio[fading].volume = 0;
+				}, 200);
+				current ^= 1;
+				next();
+			}
 		}
 	}
 	
@@ -701,7 +703,7 @@ function add(id, next) {
 	}
 	
 	resizePlaylist();
-	log('Added to playlist: '+ s.path);
+	log('Added to playlist (#'+ i +'): '+ s.path);
 	if (!played.includes(id)) {
 		played.push(id);
 		log('Added id '+ id +' to played');
@@ -856,7 +858,7 @@ function clearPlaylist() {
 }
 
 function resizePlaylist() {
-	if (cfg.playlist.length > 6) {
+	if (cfg.playlist.length > 7) {
 		if (dom.playlist.className != 'resize') {
 			dom.playlist.style.height = dom.playlist.offsetHeight +'px';
 			dom.playlist.className = 'resize';
