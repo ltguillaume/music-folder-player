@@ -45,6 +45,8 @@ function init() {
 		'current': get('current'),
 		'folder': get('folder'),
 		'song': get('song'),
+		'time': get('time'),
+		'seek': get('seek'),
 		'playpause': get('playpause'),
 		'options': get('options'),
 		'crossfade': get('crossfade'),
@@ -62,6 +64,7 @@ function init() {
 		'repeatplaylist': get('repeatplaylist'),
 		'playlibrary': get('playlibrary'),
 		'randomlibrary': get('randomlibrary'),
+		'randomfiltered': get('randomfiltered'),
 		'share': get('share'),
 		'shares': get('shares'),
 		'lock': get('lock'),
@@ -72,7 +75,6 @@ function init() {
 		'playlist': get('playlist'),
 		'library': get('library'),
 		'filter': get('filter'),
-		'time': get('time'),
 		'tree': get('tree')
 	};
 
@@ -90,6 +92,7 @@ function init() {
 	if (url.length > 1) dom.load.style.display = 'none';
 	if (!onlinepls) dom.load.style.display = dom.save.style.display = 'none';
 	if (whatsapp) dom.options.className = 'whatsapp';
+	if (cfg.after == 'randomfiltered') cfg.after = 'randomlibrary';
 	
 	dom.cover.onload = function() { dom.cover.style.opacity = 1 }	// Flickering appearance of old cover src is Firefox bug
 	
@@ -151,7 +154,7 @@ function ls() {
 		if (sav != null) {
 			cfg = JSON.parse(sav);
 			for (c in def)
-				if (cfg[c] == undefined) cfg[c] = def[c];
+				if (typeof cfg[c] == 'undefined') cfg[c] = def[c];
 			return true;
 		}
 		cfg = def;
@@ -196,7 +199,10 @@ function prepAudio(a) {
 	
 	a.ontimeupdate = function() {
 		if (this == audio[current]) {
-			dom.time.textContent = timeTxt(~~this.currentTime) +' / '+ timeTxt(~~this.duration);
+			if (document.activeElement != dom.seek) {
+				dom.time.textContent = timeTxt(~~this.currentTime) +' / '+ timeTxt(~~this.duration);
+				dom.seek.value = (this.duration ? this.currentTime / this.duration : 0);
+			}
 			if (cfg.crossfade && !fade && (this.duration - this.currentTime) < 10) {
 				var fading = current;
 				log('Fading out '+ audio[fading].src);
@@ -497,18 +503,30 @@ function zoom() {
 		(dom.player.className == 'zoom' ? '' : 'zoom'));
 }
 
+function seek(e) {
+	if (e == 'c') {
+		audio[current].currentTime = dom.seek.value * audio[current].duration;
+		dom.seek.blur();
+	}	else {
+		dom.time.textContent = timeTxt(~~(dom.seek.value * audio[current].duration))
+			+' / '+ timeTxt(~~audio[current].duration);
+	}
+}
+
 function stop() {
 	if (cfg.locked) return;
 	audio[current].pause();
 	audio[current].currentTime = 0;
+	dom.seek.disabled = 1;
 }
 
 function playPause() {
 	if (!audio[current].src)
 		play(cfg.index);
-	else if (audio[current].paused)
+	else if (audio[current].paused) {
 		audio[current].play();
-	else
+		dom.seek.disabled = 0;
+	} else
 		audio[current].pause();
 }
 
@@ -540,11 +558,13 @@ function next() {
 			log('All songs have been played. Clearing played.');
 			played.length = 0;
 		}
-		if (cfg.after == 'randomlibrary' || cfg.locked) {
+		if (cfg.locked || cfg.after == 'randomlibrary' || cfg.after == 'randomfiltered') {
+			var set = (cfg.after == 'randomlibrary' || cfg.locked
+				|| typeof filteredsongs == 'undefined' || filteredsongs.length == 0 ? songs : filteredsongs);
 			var next;
-			do { next = ~~((Math.random() * songs.length)) }
+			do { next = ~~((Math.random() * set.length)) }
 				while (played.indexOf(next.toString()) != -1);
-			load(songs[next].id);
+			load(set[next].id);
 		} else if (cfg.after == 'playlibrary')	{
 			if (cfg.index == -1) return load(songs[0].id);
 			var path = cfg.playlist[cfg.index].path;
@@ -721,6 +741,7 @@ function play(index) {
 	audio[current].src = esc(root + path);
 	audio[current].volume = 1;
 	audio[current].play();
+	dom.seek.disabled = 0;
 	
 	var prevcover = dom.cover.src || defcover;
 	c = (c ? esc(root + path.substring(0, path.lastIndexOf('/') + 1) + c) : defcover);
@@ -760,6 +781,8 @@ function toggle(e) {
 				button.className = 'on';
 			}
 			return;
+		case 'randomfiltered':
+			if (dom.filter.value == '') return;
 		case 'stopplayback':
 		case 'repeatplaylist':
 		case 'playlibrary':
@@ -768,6 +791,10 @@ function toggle(e) {
 				cfg.after = button.id;
 				dom.afteroptions.style.display = 'none';
 				menu('after');
+				if (button.id == 'randomfiltered') {
+					dom.randomfiltered.firstElementChild.textContent = '['+ dom.filter.value +']';
+					buildFilteredLibrary();
+				} else dom.randomfiltered.firstElementChild.textContent = '';
 			}
 			return;
 		case 'lock':
@@ -784,6 +811,14 @@ function toggle(e) {
 				button.className = (cfg[button.id] ? 'on' : '');
 			}
 		}
+}
+
+function buildFilteredLibrary() {
+	filteredsongs = [];
+	var term = dom.filter.value.toLowerCase();
+	for (s in songs)
+		if (songs[s].path.toLowerCase().indexOf(term) != -1)
+			filteredsongs.push(songs[s]);
 }
 
 function toggleLock() {
@@ -838,7 +873,9 @@ function menu(e) {
 				dom.stopplayback.className = (cfg.after == 'stopplayback' ? 'on' : '');
 				dom.repeatplaylist.className = (cfg.after == 'repeatplaylist' ? 'on' : '');
 				dom.playlibrary.className = (cfg.after == 'playlibrary' ? 'on' : '');
+				dom.randomfiltered.className = (cfg.after == 'randomfiltered' ? 'on' : '');
 				dom.randomlibrary.className = (cfg.after == 'randomlibrary' ? 'on' : '');
+				if (dom.filter.value == '') dom.randomfiltered.className += ' dim';
 				el.style.display = 'block';
 		}
 	} else el.style.display = 'none';
@@ -1070,6 +1107,7 @@ document.addEventListener('keydown', function(e) {
 		case 70:	// f
 			e.preventDefault();
 			dom.filter.focus();
+			dom.filter.select();
 			break;
 		case 36:	// Home
 			e.preventDefault();

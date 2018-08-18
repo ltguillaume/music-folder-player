@@ -16,6 +16,7 @@
 			<div id="folder" class="dim" onclick="setFilter(event)">Album Title</div>
 			<div id="song" class="dim" onclick="setFilter(event)">Track Title</div>
 			<div id="time" class="dim">00:00</div>
+			<input id="seek" type="range" min="0" max="1" value="0" step="any" onchange="seek('c')" oninput="seek('i')" disabled>
 			<div id="controls">
 				<button id="stop" title="Stop playback (0)" onclick="stop()"></button>
 				<button id="playpause" title="Play or pause (Space)" onclick="playPause()"></button>
@@ -48,6 +49,7 @@
 					<button id="repeatplaylist" title="Restart playback from the top">Repeat playlist</button>
 					<button id="playlibrary" title="Continue from last song's position in library">Play from library</button>
 					<button id="randomlibrary" title="Randomly select unplayed songs from the library">Random from library</button>
+					<button id="randomfiltered" title="Randomly select unplayed songs from the filtered library">Randomize filtered <span></span></button>
 				</div>
 			</div>
 		</div>
@@ -66,7 +68,7 @@
 			</div>
 			<a id="a" class="hide"></a>
 		</div>
-	</div>	
+	</div>
 	<div id="playlistdiv">
 		<div>
 			<button id="clear" title="Clear the playlist (C)" onclick="clearPlaylist()" ondragover="allowDrop(event)" ondrop="removeItem(event)">Clear</button>

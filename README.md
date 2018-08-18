@@ -19,7 +19,7 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 	- Stop playback
 	- Repeat the playlist
 	- Continue from last song's position in library
-	- Randomly select unplayed songs from the library
+	- Randomly select unplayed songs from the (filtered) library
 - Playlist and configuration will be saved to the browser's Local Storage if possible
 - Load/save online playlists
 - Import/export playlists from/to a local file

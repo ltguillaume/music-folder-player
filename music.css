@@ -1,7 +1,3 @@
-body { background: url(musicbg.png) }
-body > div { box-shadow: 0 0 3px #efefef }
-/*--------------------------------------*/
-
 * {
 	max-width: 100%;
 	margin: 0;
@@ -20,6 +16,7 @@ html.touch {
 		-webkit-user-select: none;
 		-webkit-touch-callout: none;
 	}
+	html.touch input[type=range] { margin-top: -.1em }
 	html.touch u { text-decoration: none }
 	html.touch #current { line-height: 1.5em }
 	html.touch #playlist {
@@ -55,9 +52,9 @@ body > div {
 
 body.locked #stop, body.locked #previous, body.locked #next,
 body.locked #enqueue, body.locked #random, body.locked #crossfade, body.locked #playlistbtn {
+	background: #fefeff !important;
 	opacity: .5;
 	cursor: default;
-	background: #fefeff !important;
 }
 	body.locked #enqueue:before, body.locked #random:before { content: '\f126' }
 	body.locked #playlistdiv #clear { display: none !important }
@@ -87,6 +84,57 @@ input {
 	border-bottom: 1px solid #444;
 }
 
+input[type=range] {
+	width: 14em;
+	max-width: 80%;
+	height: 15px;
+	padding: 0 0 0 .1em;
+	background: transparent;
+	vertical-align: text-top;
+	opacity: .5;
+	border: none;
+	outline: none !important;
+	cursor: pointer;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+}
+	input[type=range]::-moz-focus-outer { border: none }
+	input[type=range]::-moz-range-track {
+		height: 1px;
+		background: #444;
+	}
+	input[type=range]::-moz-range-thumb {
+		width: 13px;
+		height: 13px;
+		background: #eee;
+		border: 1px solid #444;
+		border-radius: 50%;
+		-moz-appearance: none;
+	}
+		input[type=range]:hover::-moz-range-thumb { background: #ddd }
+	input[type=range]::-webkit-slider-runnable-track {
+		height: 1px;
+		margin-top: 1px;
+		background: #444;
+	}
+	input[type=range]::-webkit-slider-thumb {
+		width: 13px;
+		height: 13px;
+		margin-top: -6px;
+		background: #eee;
+		border: 1px solid #444;
+		border-radius: 50%;
+		-webkit-appearance: none;
+	}
+		input[type=range]:hover::-webkit-slider-thumb { background: #ddd }
+	input[type=range]::-ms-thumb { margin: 0 }
+	input[type=range]::-ms-tooltip { display: none }
+	input[type=range]::-ms-track {
+		height: 1px;
+		background: #444;
+		border: none;
+	}
+
 ul {
 	display: none;
 	margin: 0;
@@ -96,8 +144,8 @@ ul {
 
 li:hover, li:focus {
 	color: #ef6c00 !important;
-	transition: color .05s ease-in;
 	outline: none;
+	transition: color .05s ease-in;
 }
 	li:hover *, li:focus * { color: #444}
 
@@ -167,6 +215,8 @@ li.over { border-top: 1px dotted #ef6c00 }
 #folder, #song { cursor: alias }
 
 #song { font-weight: bold }
+
+#time { display: inline-block }
 
 #controls { margin-top: .25em }
 	#controls > button:before { margin: .25em }
@@ -327,9 +377,9 @@ li.over { border-top: 1px dotted #ef6c00 }
 	#playpause.playing:before { content: "\f191" }
 #previous:before { content: "\f19c" }
 #random:before, #randomlibrary:before { content: "\f13a" }
+#randomfiltered:before, #setfilter:before { content: "\f14b" }
 #repeatplaylist:before { content: "\f1a5" }
 #save:before { content: "\f184" }
-#setfilter:before { content: "\f14b" }
 #share:before { content: "\f1ad" }
 #stop:before, #stopplayback:before { content: "\f1ef" }
 
