@@ -7,9 +7,9 @@ var
 	whatsapp = true,	// Add button to share directly to WhatsApp
 	whatsappmsg = 'Have a listen to',	// Default WhatsApp message
 
-	folderdesc = 'Click: Expand/collapse (Enter)\nRClick: Enqueue (Shift-Enter)',
-	songdesc = 'Click: Play/enqueue (Enter)\nRClick: Play next (Shift-Enter)',
-	playlistdesc = '\n\nClick: Play now\nRClick: Find in library',
+	folderdesc = 'L: Expand/collapse (Enter)\nR: Enqueue (Shift-Enter)',
+	songdesc = 'L: Play/enqueue (Enter)\nR: Play next (Shift-Enter)',
+	playlistdesc = 'L: Play now\nR: Find in library',
 	addfolderdlg = 'Add this folder to playlist?',
 	whatsappdlg = 'Your message via WhatApp (the url will be added at the end):',
 	exportdlg = 'Playlist name:',
@@ -367,8 +367,8 @@ function playlistItem(s) {
 	if (s.id == 'last') {
 		li.id = 'last';
 	} else {
-		li.innerHTML = getSong(s.path) +'<span class="dim">'+ getArtist(s.path) +'</span>';
-		li.title = getFolder(s.path) + playlistdesc;
+		li.innerHTML = getSong(s.path) +'<span class="dim">'+ getArtist(s.path, true) +'</span>';
+		li.title = getFolder(s.path) +'\n\n'+ playlistdesc;
 	}
 	return li;
 }
@@ -461,11 +461,12 @@ function getIndex(li) {
 }
 
 function fillShare(path) {
+	var base = window.location.protocol +'//'+ window.location.host + window.location.pathname;
 	if (path.endsWith('/')) {
-		dom.folderuri.value = dom.songuri.value = url[0] +'?play='+ esc(root + path);
+		dom.folderuri.value = dom.songuri.value = base +'?play='+ esc(root + path);
 	} else {
-		dom.folderuri.value = url[0] +'?play='+ esc(root + path.substring(0, path.lastIndexOf('/')));
-		dom.songuri.value = url[0] +'?play='+ esc(root + path);
+		dom.folderuri.value = base +'?play='+ esc(root + path.substring(0, path.lastIndexOf('/')));
+		dom.songuri.value = base +'?play='+ esc(root + path);
 	}
 }
 
@@ -479,10 +480,11 @@ function getFolder(path) {
 	return path.substring(path.lastIndexOf('/', path.lastIndexOf('/') - 1) + 1, path.lastIndexOf('/'));
 }
 
-function getArtist(path) {
+function getArtist(path, parenthesize = false) {
 	var artist = getFolder(path);
 	artist = artist.substring(0, artist.indexOf(' -'));
-	return (artist.length > 0 ? ' ('+ artist +')' : '');
+	if (parenthesize && artist.length > 0) artist = ' ('+ artist + ')';
+	return (artist.length > 0 ? artist : '');
 }
 
 function getSong(path) {
@@ -761,7 +763,7 @@ function play(index) {
 		dom.song.textContent = getSong(path);
 	}
 	
-	title.textContent = getSong(path) + getArtist(path);
+	title.textContent = getSong(path) + getArtist(path, true);
 	fillShare(path);
 }
 

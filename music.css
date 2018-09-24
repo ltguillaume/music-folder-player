@@ -218,7 +218,7 @@ li.over { border-top: 1px dotted #ef6c00 }
 
 #time { display: inline-block }
 
-#controls { margin-top: .25em }
+#controls { margin-bottom: 1px }
 	#controls > button:before { margin: .25em }
 
 #options button:before, li:before { margin-right: .25em }
