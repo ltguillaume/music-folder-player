@@ -356,12 +356,12 @@ function playlistItem(s) {
 	var li = document.createElement('li');
 	li.className = 'song';
 	li.draggable = 'true',
-	li.onclick = function (e) { playItem(e) };
+	li.onclick = function(e) { playItem(e) };
 	li.oncontextmenu = function(e) { findItem(e) };
 	li.ondragstart = function(e) { prepareDrag(e) };
 	li.ondragenter = function() { this.classList.add('over') };
 	li.ondragleave = function() { this.classList.remove('over') };
-	li.ondragover = function (e) { allowDrop(e) };
+	li.ondragover = function(e) { allowDrop(e) };
 	li.ondragend = function() { endDrag() };
 	li.ondrop = function(e) { dropItem(e) };
 	if (s.id == 'last') {
@@ -540,7 +540,7 @@ function previous() {
 		log('No previous item in playlist');
 }
 
-function next(e) {
+function nextBtn() {
 	if (!cfg.locked) next();
 }
 
@@ -825,6 +825,8 @@ function buildFilteredLibrary() {
 
 function toggleLock() {
 	if (!password()) return;
+	if (!cfg.locked && dom.options.className.indexOf('playlist') != -1)
+		dom.playlistbtn.click();
 	cfg.locked ^= true;
 	document.body.className = (cfg.locked ? 'locked' : '');
 	dom.lock.className = (cfg.locked ? 'on' : '');
@@ -1063,7 +1065,7 @@ document.addEventListener('keydown', function(e) {
 			previous();
 			break;
 		case 221:	// ]
-			next(e);
+			nextBtn();
 			break;
 		case 69:	// e
 			dom.enqueue.click();
@@ -1078,22 +1080,23 @@ document.addEventListener('keydown', function(e) {
 			dom.playlistbtn.click();
 			break;
 		case 68:	// d
-			if (!onlinepls || url.length > 1) return;
-			if (dom.options.className.indexOf('playlist') == -1 )
+			if (cfg.locked || !onlinepls || url.length > 1) return;
+			if (dom.options.className.indexOf('playlist') == -1)
 				dom.playlistbtn.click();
 			menu('load');
 			break;
 		case 86:	// v
-			if (onlinepls) savePlaylist();
+			if (!cfg.locked && onlinepls) savePlaylist();
 			break;
 		case 73:	// i
-			importPlaylist();
+			if (!cfg.locked) importPlaylist();
 			break;
 		case 88:	// x
-			exportPlaylist();
+			if (!cfg.locked) exportPlaylist();
 			break;
 		case 65:	// a
-			if (dom.options.className.indexOf('playlist') == -1 )
+			if (cfg.locked) return;
+			if (dom.options.className.indexOf('playlist') == -1)
 				dom.playlistbtn.click();
 			menu('after');
 			break;

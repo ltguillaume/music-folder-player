@@ -41,6 +41,7 @@ body > div {
 	padding: .25em;
 	border: 1px solid #eee;
 	border-radius: 2px;
+	cursor: default;
 	transition: opacity .2s ease-in;
 }
 	body > div:before {
@@ -54,8 +55,9 @@ body.locked #stop, body.locked #previous, body.locked #next,
 body.locked #enqueue, body.locked #random, body.locked #crossfade, body.locked #playlistbtn {
 	background: #fefeff !important;
 	opacity: .5;
-	cursor: default;
+	pointer-events: none;
 }
+	body.locked #seek { pointer-events: none }
 	body.locked #enqueue:before, body.locked #random:before { content: '\f126' }
 	body.locked #playlistdiv #clear { display: none !important }
 body:not(.locked) #playlistdiv:hover #clear { display: block }
@@ -390,5 +392,5 @@ li.over { border-top: 1px dotted #ef6c00 }
 .playing:before { content: "\f198" }
 .link:before { content: "\f165" }
 .song:before { content: "\f17b"; opacity: .6 }
-body:not(.locked) button.on:before { content: "\f126" !important }
+button.on:before { content: "\f126" !important }
 button.whatsapp:before { content: "\f1a6" }
