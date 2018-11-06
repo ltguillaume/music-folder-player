@@ -384,8 +384,8 @@ function findItem(e) {
 }
 
 function prepareDrag(e) {
+	if (cfg.locked) return e.preventDefault();
 	e.stopPropagation();
-	if (cfg.locked) return;
 	dom.clear.className = 'drag';
 	dom.clear.textContent = '';
 	dom.playlist.appendChild(playlistItem({ 'id': 'last' }));
