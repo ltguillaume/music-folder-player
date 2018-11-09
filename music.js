@@ -789,15 +789,13 @@ function toggle(e) {
 		case 'repeatplaylist':
 		case 'playlibrary':
 		case 'randomlibrary':
-			if (!cfg.locked) {
-				cfg.after = button.id;
-				dom.afteroptions.style.display = 'none';
-				menu('after');
-				if (button.id == 'randomfiltered') {
-					dom.randomfiltered.firstElementChild.textContent = '['+ dom.filter.value +']';
-					buildFilteredLibrary();
-				} else dom.randomfiltered.firstElementChild.textContent = '';
-			}
+			cfg.after = button.id;
+			dom.afteroptions.style.display = 'none';
+			menu('after');
+			if (button.id == 'randomfiltered') {
+				dom.randomfiltered.firstElementChild.textContent = '['+ dom.filter.value +']';
+				buildFilteredLibrary();
+			} else dom.randomfiltered.firstElementChild.textContent = '';
 			return;
 		case 'lock':
 			return toggleLock();
@@ -808,10 +806,9 @@ function toggle(e) {
 			}
 			fade = null;	// Continue
 		default:
-			if (!cfg.locked) {
-				cfg[button.id] ^= true;
-				button.className = (cfg[button.id] ? 'on' : '');
-			}
+			if (cfg.locked) return;
+			cfg[button.id] ^= true;
+			button.className = (cfg[button.id] ? 'on' : '');
 		}
 }
 

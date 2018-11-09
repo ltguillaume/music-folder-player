@@ -58,7 +58,7 @@ body.locked #enqueue, body.locked #random, body.locked #crossfade, body.locked #
 	pointer-events: none;
 }
 	body.locked #seek { pointer-events: none }
-	body.locked #enqueue:before, body.locked #random:before { content: '\f126' }
+	body.locked #enqueue:before { content: '\f126' }
 	body.locked #playlistdiv #clear { display: none !important }
 body:not(.locked) #playlistdiv:hover #clear { display: block }
 
