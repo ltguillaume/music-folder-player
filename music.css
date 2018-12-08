@@ -5,11 +5,14 @@
 	box-sizing: border-box;
 }
 
-html.touch {
+html.touch body {
+	font-family: BarlowSC;
 	font-size: 1.1em;
-	line-height: 2.5em;
+	word-spacing: 1px;
 }
-	html.touch li {
+	html.touch button, html.touch li {
+		padding-top: .4em;
+		padding-bottom: .4em;
 		user-select: none;
 		-moz-user-select: none;
 		-ms-user-select: none;
@@ -18,7 +21,8 @@ html.touch {
 	}
 	html.touch input[type=range] { margin-top: -.1em }
 	html.touch u { text-decoration: none }
-	html.touch #current { line-height: 1.5em }
+	html.touch ul { margin-left: .5em }
+	html.touch #current { line-height: 1.3em }
 	html.touch #playlist {
 		overflow-x: auto;
 		white-space: nowrap;
@@ -29,9 +33,11 @@ html.splash > body > div:before { opacity: 0 }
 
 body, button, input {
 	background: #fefeff;
-	font-family: "Segoe UI", sans-serif;
-	letter-spacing: -.5px;
-	word-spacing: -.5px;
+	font-family: Barlow, "Segoe UI", sans-serif;
+	line-height: 1.3em;
+	word-spacing: .1em;
+	letter-spacing: -.04em;
+	font-variant-numeric: tabular-nums;
 	color: #444;
 }
 
@@ -139,9 +145,8 @@ input[type=range] {
 
 ul {
 	display: none;
-	margin: 0;
+	margin-left: 1.25em;
 	list-style: none;
-	padding-left: 1.25em;
 }
 
 li:hover, li:focus {
@@ -149,7 +154,7 @@ li:hover, li:focus {
 	outline: none;
 	transition: color .05s ease-in;
 }
-	li:hover *, li:focus * { color: #444}
+	#tree li:hover *, li:focus * { color: #444}
 
 li#last:before { visibility: hidden }
 
@@ -216,7 +221,10 @@ li.over { border-top: 1px dotted #ef6c00 }
 
 #folder, #song { cursor: alias }
 
-#song { font-weight: bold }
+#song {
+	font-weight: bold;
+	letter-spacing: -.02em;
+}
 
 #time { display: inline-block }
 
@@ -289,6 +297,7 @@ li.over { border-top: 1px dotted #ef6c00 }
 	min-height: 2.25em;
 	max-height: 10.25em;
 	overflow-y: auto;
+	list-style: none;
 }
 	#playlist.resize {
 		min-height: 4.5em;
@@ -296,10 +305,11 @@ li.over { border-top: 1px dotted #ef6c00 }
 		resize: vertical;
 	}
 
-#playlist > li {
-	list-style: none;
+#playlist li {
+	margin-left: 1.25em;
 	cursor: alias;
 }
+#playlist li:before { margin-left: -1.25em }
 
 #filterdiv { white-space: nowrap }
 
@@ -309,18 +319,24 @@ li.over { border-top: 1px dotted #ef6c00 }
 }
 
 #tree {
-	padding: 0;
+	margin-left: 1.25em;
 	list-style: none;
 }
 
 #tree li { cursor: pointer }
+#tree li:before { margin-left: -1.25em }
 #tree li:focus { text-decoration: underline solid #ef6c00 }
 #tree li:focus * { text-decoration: underline solid #fefeff }
 #tree li.open > ul { display: block }
 #tree li.parent:not(.filtered) { color: #ccc }
-#tree li.parent > ul { color: #444 }
+
+.artist {
+	opacity: .5;
+	pointer-events: none;
+}
 
 .dim { opacity: .5 }
+.dim .dim { opacity: 1 }
 
 .hide { display: none }
 
@@ -329,7 +345,7 @@ li.over { border-top: 1px dotted #ef6c00 }
 	body > div:before { display: none }
 }
 
-@media screen and (max-width: 570px) {
+@media screen and (max-width: 600px) {
 	#cover, #current, #current > div,
 	#player.zoom #cover, #player.zoom #current, #player.zoom #current > div {
 		display: block;
@@ -347,7 +363,17 @@ li.over { border-top: 1px dotted #ef6c00 }
 }
 
 @font-face {
-	font-family: "Foundation";
+	font-family: Barlow;
+	src: url("musictxt.woff") format("woff");
+}
+
+@font-face {
+	font-family: BarlowSC;
+	src: url("musictxtsc.woff") format("woff");
+}
+
+@font-face {
+	font-family: Foundation;
 	src: url("music.woff") format("woff");
 }
 

@@ -77,7 +77,8 @@ Shift-Enter | Play song next/Add folder to playlist
 
 ## Credits
 - Parts of this little project are heavily based on the excellent [HTML5 Music Player](https://github.com/GM-Script-Writer-62850/HTML5-Music-Player) by [GM-Script-Writer-62850](https://github.com/GM-Script-Writer-62850)
-- The [Foundation icon font](https://zurb.com/playground/foundation-icon-fonts-3) is used
+- The [Barlow font](https://github.com/jpt/barlow) (Regular and Semi Condensed Regular) is used for text
+- The [Foundation icon font](https://zurb.com/playground/foundation-icon-fonts-3) is used for all icons
 - Album art placeholder is based on a [design by CmdRobot](http://fav.me/d7kpm65)
 
 All credits are due, as well as my sincere thanks!
