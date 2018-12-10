@@ -367,7 +367,7 @@ function playlistItem(s) {
 	if (s.id == 'last') {
 		li.id = 'last';
 	} else {
-		li.innerHTML = getSong(s.path) +'<span class="dim">'+ getArtist(s.path, true) +'</span>';
+		li.innerHTML = getSong(s.path) +'<span class="artist">'+ getArtist(s.path, true) +'</span>';
 		li.title = getFolder(s.path) +'\n\n'+ playlistdesc;
 	}
 	return li;
@@ -622,7 +622,7 @@ function shareWhatsApp(type) {
 	}
 }
 
-function getPlaylists() {
+function prepPlaylists(action) {
 	var xhttp = new XMLHttpRequest();
 	xhttp.onload = function() {
 		playlists = JSON.parse(this.responseText);
@@ -634,7 +634,10 @@ function getPlaylists() {
 			}
 		} else playlistElements = '&nbsp;'+ noplaylists +'&nbsp;';
 		dom.playlists.innerHTML = playlistElements;
-		dom.playlists.style.display = 'block';
+		if (action == 'save')
+			savePlaylist();
+		else
+			dom.playlists.style.display = 'block';
 	};
 	xhttp.open('GET', 'music.php?pl', true);
 	xhttp.send();
@@ -650,9 +653,9 @@ function loadPlaylist(e) {
 }
 
 function savePlaylist() {
-	var name = prompt(exportdlg)
-	if (name) name = name.replace(/[\\\/:*?"<>|]/g, ' ');
+	var name = prompt(exportdlg);
 	if (name) {
+		name = name.replace(/[\\\/:*?"<>|]/g, ' ');
 		for (pl in playlists)
 			if (pl == name && !confirm(overwritedlg)) return;
 		var xhttp = new XMLHttpRequest();
@@ -868,7 +871,7 @@ function menu(e) {
 		el.left = left;
 		switch (el) {
 			case dom.playlists:
-				getPlaylists();
+				prepPlaylists('load');
 				break;
 			case dom.afteroptions:
 				dom.stopplayback.className = (cfg.after == 'stopplayback' ? 'on' : '');
@@ -887,10 +890,6 @@ function clearPlaylist() {
 		cfg.playlist = [];
 		cfg.index = -1;
 		dom.playlist.innerHTML = '';
-		for (s in songs) {
-			if (songs[s].className.indexOf('dim') != -1)
-				songs[s].className = 'song';
-		}
 		resizePlaylist();
 	}
 }
@@ -1055,7 +1054,8 @@ document.addEventListener('keydown', function(e) {
 			break;
 		case 32:	// space
 			e.preventDefault();
-			e.target.blur();
+			if (!dom.tree.contains(e.target))
+				e.target.blur();
 			playPause();
 			break;
 		case 219:	// [
@@ -1083,7 +1083,7 @@ document.addEventListener('keydown', function(e) {
 			menu('load');
 			break;
 		case 86:	// v
-			if (!cfg.locked && onlinepls) savePlaylist();
+			if (!cfg.locked && onlinepls) prepPlaylists('save');
 			break;
 		case 73:	// i
 			if (!cfg.locked) importPlaylist();

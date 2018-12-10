@@ -40,8 +40,10 @@
 	
 	$pl = json_decode(file_get_contents('php://input'), true);
 	if (isset($pl['name'])) {
+		$name = $playlistdir .'/'. $pl['name'] .'.mfp.json';
 		if (!is_dir($playlistdir)) mkdir($playlistdir);
-		die(file_put_contents($playlistdir .'/'. $pl['name'] .'.mfp.json', json_encode($pl['songs'])));
+		if (file_exists($name)) rename($name, $name .'.'. time());
+		die(file_put_contents($name, json_encode($pl['songs'])));
 	}
 
 	$dir = $root;
