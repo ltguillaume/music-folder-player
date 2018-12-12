@@ -36,7 +36,7 @@
 		<div id="playlistoptions">
 			<div id="playlistsdiv">
 				<button id="load" title="Add songs from online playlist (D)" onclick="menu(event)">Loa<u>d</u></button>
-				<div id="playlists" onmouseleave="menu(event)" onclick="loadPlaylist(event)">
+				<div id="playlists" onmouseleave="menu(event)" onclick="loadPlaylistBtn(event)">
 				</div>
 			</div>
 			<button id="save" title="Save playlist online (V)" onclick="savePlaylist()">Sa<u>v</u>e</button>
@@ -56,14 +56,14 @@
 		<div id="shares">
 			<div class="folder sharediv">
 				<input id="folderuri" onclick="this.select()" readonly>
-				<button id="folderdownload" class="download" title="Download album/folder" onclick="download('f')"></button>
-				<button id="foldershare" class="link" title="Share link to album/folder" onclick="share('f')"></button>
+				<button id="folderdownload" class="download" title="Download folder" onclick="download('f')"></button>
+				<button id="foldershare" class="link" title="Copy folder link to clipboard" onclick="share('f')"></button>
 				<button id="folderwhatsapp" class="whatsapp hide" title="Share folder link via WhatsApp" onclick="shareWhatsApp('f')"></button>
 			</div>
 			<div class="song sharediv">
 				<input id="songuri" onclick="this.select()" readonly>
 				<button id="songdownload" class="download" title="Download song" onclick="download('s')"></button>
-				<button id="songshare" class="link" title="Share link to song" onclick="share('s')"></button>
+				<button id="songshare" class="link" title="Copy song link to clipboard" onclick="share('s')"></button>
 				<button id="songwhatsapp" class="whatsapp hide" title="Share song link via WhatsApp" onclick="shareWhatsApp('s')"></button>
 			</div>
 			<a id="a" class="hide"></a>

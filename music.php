@@ -50,7 +50,7 @@
 	if (isset($_GET['play']) && !in_array('..', explode('/', $_GET['play']))) {
 		$dir = trim($_GET['play'], '/');
 		if (!file_exists($dir))
-			die('var library={"'. $notfound .'":""}');
+			die('var root="'. $root .'/"; var library={"'. $notfound .'":""}');
 		if (!is_dir($dir)) {
 			$files = array();
 			$files[$dir] = '';	// Add file

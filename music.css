@@ -154,7 +154,6 @@ li:hover, li:focus {
 	outline: none;
 	transition: color .05s ease-in;
 }
-	#tree li:hover *, li:focus * { color: #444}
 
 li#last:before { visibility: hidden }
 
@@ -328,7 +327,11 @@ li.over { border-top: 1px dotted #ef6c00 }
 #tree li:focus { text-decoration: underline solid #ef6c00 }
 #tree li:focus * { text-decoration: underline solid #fefeff }
 #tree li.open > ul { display: block }
-#tree li.parent:not(.filtered) { color: #ccc }
+#tree li.parent { color: #ccc }
+#tree li.parent .song, #tree li.filtered,
+#tree li:hover > ul, #tree li:focus > ul { color: #444 }
+#tree li.parent:hover { color: #ef6c0080 !important }
+#tree li.parent:focus, #tree li.filtered:hover { color: #ef6c00 !important }
 
 .artist {
 	opacity: .5;

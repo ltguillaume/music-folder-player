@@ -31,11 +31,14 @@ var
 	onplaylist,
 	url,
 	current = 0,
+	playlistonly = 0,
+	playlists,
 	played = Array(),
 	songs = Array();
 
 function init() {
 	url = document.URL.replace('?play=', '?').split('?', 2);
+	if (url.length > 1 && url[1].startsWith('pl:')) playlistonly = 1;
 	ls = ls();
 
 	var get = function(id) { return document.getElementById(id) };
@@ -78,7 +81,6 @@ function init() {
 		'tree': get('tree')
 	};
 
-
 	get('splash').className = 'show';
 	title.textContent = deftitle;
 	if (cfg.crossfade) dom.crossfade.className = 'on';
@@ -90,7 +92,7 @@ function init() {
 		dom.lock.textContent = 'Unlock';
 	}
 	if (url.length > 1) dom.load.style.display = 'none';
-	if (!onlinepls) dom.load.style.display = dom.save.style.display = 'none';
+	if (!onlinepls || playlistonly) dom.playlistsdiv.style.display = dom.save.style.display = 'none';
 	if (whatsapp) dom.options.className = 'whatsapp';
 	if (cfg.after == 'randomfiltered') cfg.after = 'randomlibrary';
 	
@@ -118,6 +120,13 @@ function init() {
 	audio = [get('audio'), audio1];
 	prepAudio(audio[0]);
 	if (audio[1]) prepAudio(audio[1]);
+	
+	if (playlistonly) {
+		prepPlaylists('playlistonly');
+		cfg.after = 'stopplayback';
+		dom.playlist.style.maxHeight = dom.library.style.display = 
+		dom.playlibrary.style.display = dom.randomlibrary.style.display = dom.randomfiltered.style.display = 'none';
+	}
 	
 	var lib = document.createElement('script');
 	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ url[1] : '');
@@ -225,6 +234,8 @@ function prepAudio(a) {
 		dom.playlist.childNodes[cfg.index].style.color = 'red';
 		next();
 	};
+	
+	a.preload = 'auto';
 }
 
 function buildLibrary(root, folder, element) {
@@ -328,7 +339,7 @@ function addSongNext(e) {
 }
 
 function buildPlaylist() {
-	if (cfg.playlist.length == 0 || url.length > 1) return;	// Only rebuild saved playlist for main library
+	if (cfg.playlist.length == 0 || (url.lenght > 1 && !playlistonly)) return;	// Only rebuild saved playlist for main library or shared playlist
 	cfg.index = Math.min(cfg.index, cfg.playlist.length - 1);
 	dom.playlist.innerHTML = '';
 
@@ -563,9 +574,13 @@ function next() {
 		if (cfg.locked || cfg.after == 'randomlibrary' || cfg.after == 'randomfiltered') {
 			var set = (cfg.after == 'randomlibrary' || cfg.locked
 				|| typeof filteredsongs == 'undefined' || filteredsongs.length == 0 ? songs : filteredsongs);
-			var next;
-			do { next = ~~((Math.random() * set.length)) }
-				while (played.indexOf(next.toString()) != -1);
+			var next = null;
+			do {
+				next = ~~((Math.random() * set.length));
+				if (played.indexOf(next.toString()) != -1)
+					next = null;
+			}
+				while (next == null);
 			load(set[next].id);
 		} else if (cfg.after == 'playlibrary')	{
 			if (cfg.index == -1) return load(songs[0].id);
@@ -636,6 +651,8 @@ function prepPlaylists(action) {
 		dom.playlists.innerHTML = playlistElements;
 		if (action == 'save')
 			savePlaylist();
+		else if (action == 'playlistonly')
+			loadPlaylist(decodeURIComponent(url[1].substring(3)));
 		else
 			dom.playlists.style.display = 'block';
 	};
@@ -643,13 +660,17 @@ function prepPlaylists(action) {
 	xhttp.send();
 }
 
-function loadPlaylist(e) {
-	if (e.target.className == 'on') return;
-	e.target.className = 'on';
-	var items = JSON.parse(playlists[e.target.textContent]);
+function loadPlaylist(name) {
+	var items = JSON.parse(playlists[name]);
 	for (i in items)
 		cfg.playlist.push(items[i]);
 	buildPlaylist();
+}
+
+function loadPlaylistBtn(e) {
+	if (e.target.className == 'on') return;
+	e.target.className = 'on';
+	loadPlaylist(e.target.textContent);
 }
 
 function savePlaylist() {
@@ -707,7 +728,7 @@ function add(id, next) {
 				if (cfg.index > -1) cfg.index--;
 				return;
 		}
-		i++;
+		if (cfg.index > -1) i++;
 		for (; i < cfg.playlist.length && (next ? cfg.playlist[i].playNext : true); i++) {
 			if (s.path == cfg.playlist[i].path) {
 				dom.tree.className = 'dim';
@@ -745,6 +766,7 @@ function play(index) {
 	cfg.index = index;
 	audio[current].src = esc(root + path);
 	audio[current].volume = 1;
+	audio[current].load();
 	audio[current].play();
 	dom.seek.disabled = 0;
 	
