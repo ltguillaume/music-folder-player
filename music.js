@@ -36,6 +36,7 @@ var
 	fade,
 	filteredsongs = Array(),
 	onplaylist,
+	onseek,
 	played = Array(),
 	playlists,
 	retry = Array();
@@ -89,6 +90,7 @@ function init() {
 	title.textContent = deftitle;
 	if (cfg.enqueue) dom.enqueue.className = 'on';
 	if (cfg.random) dom.random.className = 'on';
+	if (cfg.crossfade) dom.crossfade.className = 'on';
 	if (cfg.locked) {
 		document.body.className = 'locked';
 		dom.lock.className = 'on';
@@ -140,7 +142,6 @@ function init() {
 
 	audio = [get('audio'), null];
 	prepAudio(audio[0]);
-	if (cfg.crossfade) prepCrossfade();
 }
 
 function ls() {
@@ -210,7 +211,7 @@ function prepAudio(a) {
 	
 	a.ontimeupdate = function() {
 		if (this == audio[current]) {
-			if (document.activeElement != dom.seek) {
+			if (!onseek && document.activeElement != dom.seek) {
 				dom.time.textContent = timeTxt(~~this.currentTime) +' / '+ timeTxt(~~this.duration);
 				dom.seek.value = (this.duration ? this.currentTime / this.duration : 0);
 			}
@@ -243,25 +244,10 @@ function prepAudio(a) {
 
 function prepCrossfade() {
 	var a = new Audio();
-	a.src = 'data:audio/mpeg;base64,/+MYxAAJM1H8CABNTQ8AMx8C/mPICyAvxub/gRAUl////G5jeAY83v8YxAAINBAhBmkfr///z/////////rZOfwizdoclhPg/+MYxBYJC2YkCABHSg4GYtAQccSCMWBgC2gbqv/tfwUq8X8pTs7eRe7///+/X+vshnyI7Ec53DOwh5hxSXKSLFAItiodfX/+/+MYxCwJ014YAABFLd9PX//////6qvMyIXZGKKY48oCiGcWMJw8MrIORKSOR0mACQJUOH/mp//w9CJoRGv/////5epOJmGQh/+MYxD8KG2IkCACNTzEaNhwqCoa0STBRIWDKH///Mi//zIz/kX//mf+X/81aWfZZDIyZQwUGEdVVFT/aRFVMQU1FMy45OC4y/+MYxFEI21YYCABHTVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV/+MYxGgIiyWsCABHSVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV/+MYxIAAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV';
 	a.load();
-	var promise = a.play();
-	if (promise != undefined) {
-		promise.then(function() {
-			prepAudio(a);
-			audio[1] = a;
-			dom.crossfade.className = 'on';
-		}, function(e) {
-			alert(errorcf);
-			log(e);
-			cfg.crossfade = 0;
-			dom.crossfade.className = '';
-		});
-	} else {	// For old browsers, assume the best
-		prepAudio(a);
-		audio[1] = a;
-		dom.crossfade.className = 'on';
-	}
+	prepAudio(a);
+	audio[1] = a;
+	dom.crossfade.className = 'on';
 }
 
 function buildLibrary(root, folder, element) {
@@ -791,6 +777,8 @@ function add(id, next) {
 }
 
 function play(index) {
+	if (!audio[1] && cfg.crossfade)
+		prepCrossfade();
 	if (cfg.index != -1)
 		dom.playlist.childNodes[cfg.index].className = 'song';
 	if (index == -1) return next();
