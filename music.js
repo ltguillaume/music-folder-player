@@ -94,7 +94,7 @@ function init() {
 		dom.lock.className = 'on';
 		dom.lock.textContent = 'Unlock';
 	}
-	if (url.length > 1) dom.load.style.display = 'none';
+	if (url.length > 1) dom.playlistsdiv.style.display = 'none';
 	if (!onlinepls) dom.playlistsdiv.style.display = dom.save.style.display = 'none';
 	if (whatsapp) dom.options.className = 'whatsapp';
 	if (cfg.after == 'randomfiltered') cfg.after = 'randomlibrary';
@@ -257,6 +257,10 @@ function prepCrossfade() {
 			cfg.crossfade = 0;
 			dom.crossfade.className = '';
 		});
+	} else {	// For old browsers, assume the best
+		prepAudio(a);
+		audio[1] = a;
+		dom.crossfade.className = 'on';
 	}
 }
 
@@ -330,7 +334,7 @@ function addFolder(e) {
 	}
 }
 
-function setFocus (el, direction) {
+function setFocus (el, direction = 'open') {
 	el.focus();
 	const { top, bottom } = el.getBoundingClientRect();
 	if (top < 0 || bottom > (window.innerHeight || document.documentElement.clientHeight))
@@ -338,6 +342,15 @@ function setFocus (el, direction) {
 			block: (direction == 'left' || direction == 'open' ? 'start' : 'nearest'),
 			behavior: 'smooth'
 		});
+}
+
+function toast(el) {
+	var state = el.className;
+	const { top, bottom } = el.getBoundingClientRect();
+	if (top < 0 || bottom > (window.innerHeight || document.documentElement.clientHeight)) {
+		el.className += ' toast';
+		setTimeout(function() { el.className = state }, 2000);
+	}
 }
 
 function addSong(e) {
@@ -1121,21 +1134,26 @@ document.addEventListener('keydown', function(e) {
 			break;
 		case 69:	// e
 			dom.enqueue.click();
+			toast(dom.enqueue);
 			break;
 		case 82:	// r
 			dom.random.click();
+			toast(dom.random);
 			break;
 		case 79:	// o
 			dom.crossfade.click();
+			toast(dom.crossfade);
 			break;
 		case 80:	// p
 			dom.playlistbtn.click();
+			setFocus(dom.options);
 			break;
 		case 68:	// d
 			if (cfg.locked || !onlinepls || url.length > 1) return;
 			if (dom.options.className.indexOf('playlist') == -1)
 				dom.playlistbtn.click();
 			menu('load');
+			setFocus(dom.options);
 			break;
 		case 86:	// v
 			if (cfg.locked || !onlinepls || url.length > 1) return;
@@ -1152,9 +1170,11 @@ document.addEventListener('keydown', function(e) {
 			if (dom.options.className.indexOf('playlist') == -1)
 				dom.playlistbtn.click();
 			menu('after');
+			setFocus(dom.options);
 			break;
 		case 83:	// s
 			dom.share.click();
+			setFocus(dom.share);
 			break;
 		case 76:	// l
 			dom.lock.click();
