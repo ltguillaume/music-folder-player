@@ -31,7 +31,7 @@
 		<button id="random" title="Randomize upcoming playlist songs (R)" onclick="toggle(event)"><u>R</u>andom</button>
 		<button id="crossfade" title="Crossfade between songs (O)" onclick="toggle(event)">Cr<u>o</u>ssfade</button>
 		<button id="playlistbtn" title="Playlist options (P)" onclick="toggle(event)"><u>P</u>laylist</button>
-		<button id="share" title="Share or download current song or folder (S)" onclick="toggle(event)"><u>S</u>hare</button>
+		<button id="share" title="Share options (S)" onclick="toggle(event)"><u>S</u>hare</button>
 		<button id="lock" title="Lock playlist and playback controls (L)" onclick="toggleLock()"><u>L</u>ock</button>
 		<div id="playlistoptions">
 			<div id="playlistsdiv">
@@ -55,13 +55,13 @@
 		</div>
 		<div id="shares">
 			<div class="folder sharediv">
-				<input id="folderuri" onclick="this.select()" readonly>
+				<input id="folderuri" class="uri" onclick="this.select()" readonly>
 				<button id="folderdownload" class="download" title="Download folder" onclick="download('f')"></button>
 				<button id="foldershare" class="link" title="Copy folder link to clipboard" onclick="share('f')"></button>
 				<button id="folderwhatsapp" class="whatsapp hide" title="Share folder link via WhatsApp" onclick="shareWhatsApp('f')"></button>
 			</div>
 			<div class="song sharediv">
-				<input id="songuri" onclick="this.select()" readonly>
+				<input id="songuri" class="uri" onclick="this.select()" readonly>
 				<button id="songdownload" class="download" title="Download song" onclick="download('s')"></button>
 				<button id="songshare" class="link" title="Copy song link to clipboard" onclick="share('s')"></button>
 				<button id="songwhatsapp" class="whatsapp hide" title="Share song link via WhatsApp" onclick="shareWhatsApp('s')"></button>

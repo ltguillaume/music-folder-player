@@ -82,9 +82,17 @@ button {
 	button:hover { background: #ebf2f7 }
 	button:active, button:focus { outline: none }
 	button::-moz-focus-inner { border: none }
+	button.toast {
+		position: fixed;
+		bottom: 1em;
+		right: 1em;
+		background: #444;
+		color: #eee;
+		text-shadow: none;
+	}
 
 input {
-	width: 20em;
+	width: 29.5em;
 	max-width: calc(100% - 7.5em);
 	padding: .1em;
 	font-size: .8em;
@@ -231,10 +239,11 @@ li.over { border-top: 1px dotted #ef6c00 }
 	#controls > button:before { margin: .25em }
 
 #options button:before, li:before { margin-right: .25em }
+	#shares button:before { margin-right: 0 }
 
-#options.whatsapp #folderwhatsapp, #options.whatsapp #songwhatsapp { display: inline-block }
+#options.whatsapp button.whatsapp { display: inline-block }
 
-#options.whatsapp #folderuri, #options.whatsapp #songuri { max-width: calc(100% - 10em) }
+#options.whatsapp input.uri { max-width: calc(100% - 10em) }
 
 #playlistoptions, #shares {
 		max-height: 0;

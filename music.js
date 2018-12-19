@@ -39,7 +39,8 @@ var
 	onseek,
 	played = Array(),
 	playlists,
-	retry = Array();
+	retry = Array(),
+	toast;
 
 function init() {
 	url = document.URL.replace('?play=', '?').split('?', 2);
@@ -129,8 +130,8 @@ function init() {
 	}
 	
 	var lib = document.createElement('script');
-	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ url[1] : '');
 	log('PHP request = '+ lib.src);
+	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ url[1] : '');
 	lib.onload = function() {
 		buildLibrary('', library, dom.tree);
 		buildPlaylist();
@@ -330,13 +331,18 @@ function setFocus (el, direction = 'open') {
 		});
 }
 
-function toast(el) {
-	var state = el.className;
+function setToast(el) {
+	if (toast) clearTimeout(toast);
+	[dom.enqueue, dom.random, dom.crossfade].forEach(function(btn) { clearToast(btn) });
 	const { top, bottom } = el.getBoundingClientRect();
 	if (top < 0 || bottom > (window.innerHeight || document.documentElement.clientHeight)) {
 		el.className += ' toast';
-		setTimeout(function() { el.className = state }, 2000);
+		toast = setTimeout(function() { clearToast(el) }, 2000);
 	}
+}
+
+function clearToast(el) {
+	el.className = el.className.replace(' toast', '');
 }
 
 function addSong(e) {
@@ -1122,15 +1128,15 @@ document.addEventListener('keydown', function(e) {
 			break;
 		case 69:	// e
 			dom.enqueue.click();
-			toast(dom.enqueue);
+			setToast(dom.enqueue);
 			break;
 		case 82:	// r
 			dom.random.click();
-			toast(dom.random);
+			setToast(dom.random);
 			break;
 		case 79:	// o
 			dom.crossfade.click();
-			toast(dom.crossfade);
+			setToast(dom.crossfade);
 			break;
 		case 80:	// p
 			dom.playlistbtn.click();
