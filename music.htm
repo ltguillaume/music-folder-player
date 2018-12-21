@@ -16,7 +16,8 @@
 			<div id="folder" class="dim" onclick="setFilter(event)">Album Title</div>
 			<div id="song" class="dim" onclick="setFilter(event)">Track Title</div>
 			<div id="time" class="dim">00:00</div>
-			<input id="seek" type="range" min="0" max="1" value="0" step="any" onchange="seek('c')" oninput="seek('i')" ontouchstart="onseek=true" ontouchend="onseek=false" disabled>
+			<input id="seek" type="range" min="0" max="1" value="0" step="any"
+				onchange="seek('c')" oninput="seek('i')" ontouchstart="onseek=true" ontouchend="onseek=false" disabled>
 			<div id="controls">
 				<button id="stop" title="Stop playback (0)" onclick="stop()"></button>
 				<button id="playpause" title="Play or pause (Space)" onclick="playPause()"></button>
@@ -71,8 +72,12 @@
 	</div>
 	<div id="playlistdiv">
 		<div>
-			<button id="clear" title="Clear the playlist (C)" onclick="clearPlaylist()" ondragover="allowDrop(event)" ondrop="removeItem(event)">Clear</button>
-			<div id="playlist" onmouseenter="onplaylist=true" onmouseleave="onplaylist=false"></div>
+			<button id="clear" title="Clear the playlist (C)" onclick="clearPlaylist()"
+				ondragover="allowDrop(event)" ondrop="removeItem(event)">Clear</button>
+			<div id="playlist" onclick="playItem(event)" oncontextmenu="if (!playlistonly) findItem(e)"
+				ondragstart="prepDrag(event)" ondragover="allowDrop(event)" ondragend="endDrag()" ondrop="dropItem(event)"
+				ondragenter="event.target.className += ' over'" ondragleave="event.target.className = event.target.className.replace(' over', '')"
+				onmouseenter="onplaylist=true" onmouseleave="onplaylist=false"></div>
 		</div>
 	</div>
 	<div id="library">
@@ -81,7 +86,7 @@
 			<button id="setfilter" title="Apply filter (Enter)" onclick="filter()"></button>
 			<button id="clearfilter" title="Clear filter (Esc)" onclick="clearFilter()"></button>
 		</div>
-		<div id="tree"></div>
+		<div id="tree" onclick="libClick(event)" oncontextmenu="libClick(event, true)"></div>
 	</div>
 </body>
 </html>

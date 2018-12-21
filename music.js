@@ -259,8 +259,6 @@ function buildLibrary(root, folder, element) {
 			li.className = 'folder';
 			li.path = root + i;
 			li.textContent = i;
-			li.onclick = function(e) { openFolder(e) };
-			li.oncontextmenu = function(e) { addFolder(e) };
 			li.tabIndex = 1;
 			li.title = folderdesc;
 			element.appendChild(li);
@@ -281,8 +279,6 @@ function buildLibrary(root, folder, element) {
 				li.path = root + f;
 				if (cover) li.cover = cover;
 				li.textContent = getSong(f);
-				li.onclick = function(e) { addSong(e) };
-				li.oncontextmenu = function(e) { addSongNext(e) };
 				li.tabIndex = 1;
 				li.title = songdesc;
 				songs.push(li);
@@ -290,6 +286,13 @@ function buildLibrary(root, folder, element) {
 			}
 		}
 	}
+}
+
+function libClick(e, context = false) {
+	if (e.target.className.indexOf('folder') != -1)
+		(context ? addFolder(e) : openFolder(e));
+	else
+		(context ? addSongNext(e) : addSong(e));
 }
 
 function openFolder(e) {
@@ -393,15 +396,7 @@ function buildPlaylist() {
 function playlistItem(s) {
 	var li = document.createElement('li');
 	li.className = 'song';
-	li.draggable = 'true',
-	li.onclick = function(e) { playItem(e) };
-	if (!playlistonly) li.oncontextmenu = function(e) { findItem(e) };
-	li.ondragstart = function(e) { prepDrag(e) };
-	li.ondragenter = function() { this.classList.add('over') };
-	li.ondragleave = function() { this.classList.remove('over') };
-	li.ondragover = function(e) { allowDrop(e) };
-	li.ondragend = function() { endDrag() };
-	li.ondrop = function(e) { dropItem(e) };
+	li.draggable = 'true';
 	if (s.id == 'last') {
 		li.id = 'last';
 	} else {
@@ -427,7 +422,7 @@ function prepDrag(e) {
 	dom.clear.className = 'drag';
 	dom.clear.textContent = '';
 	dom.playlist.appendChild(playlistItem({ 'id': 'last' }));
-	if (cfg.index !=-1)
+	if (cfg.index != -1)
 		dom.playlist.childNodes[cfg.index].className = 'song';
 
 	drag = e.target;
@@ -456,7 +451,7 @@ function dropItem(e) {
 	var to = e.target;
 	if (to.tagName.toLowerCase() != 'li') to = to.parentNode;
 	log('Drag '+ drag.innerHTML +' to place of '+ to.innerHTML);
-	to.classList.remove('over');
+	to.className = to.className.replace(' over', '');
 	var indexfrom = e.dataTransfer.getData('text');
 	var indexto = getIndex(to);
 	if (indexto != indexfrom) moveItem(drag, to, indexfrom, indexto);
@@ -495,7 +490,9 @@ function removeItem(e) {
 function getIndex(li) {
 	if (li.id == 'last')	// Temporary last item for dragging
 		return cfg.playlist.length;
-	return Array.prototype.indexOf.call(li.parentNode.children, li);
+	for (var i = 0; i < li.parentNode.children.length; i++)
+		if (li == li.parentNode.children[i])
+			return i;
 }
 
 function fillShare(path) {
