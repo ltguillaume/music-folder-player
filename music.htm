@@ -74,7 +74,7 @@
 		<div>
 			<button id="clear" title="Clear the playlist (C)" onclick="clearPlaylist()"
 				ondragover="allowDrop(event)" ondrop="removeItem(event)">Clear</button>
-			<div id="playlist" onclick="playItem(event)" oncontextmenu="if (!playlistonly) findItem(e)"
+			<div id="playlist" onclick="playItem(event)" oncontextmenu="if (!playlistonly) findItem(event)"
 				ondragstart="prepDrag(event)" ondragover="allowDrop(event)" ondragend="endDrag()" ondrop="dropItem(event)"
 				ondragenter="event.target.className += ' over'" ondragleave="event.target.className = event.target.className.replace(' over', '')"
 				onmouseenter="onplaylist=true" onmouseleave="onplaylist=false"></div>
