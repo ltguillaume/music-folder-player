@@ -485,6 +485,7 @@ function removeItem(e) {
 		cfg.index--;
 	if (cfg.index != -1)
 		dom.playlist.childNodes[cfg.index].className = 'playing';
+	endDrag();
 }
 
 function getIndex(li) {
@@ -799,7 +800,7 @@ function play(index) {
 			log('No connection. Retrying... '+ dom.playlist.childNodes[cfg.index].textContent);
 			a.load();
 		}
-	}, 1000);
+	}, 2500);
 	a.oncanplaythrough = function() {
 		this.oncanplaythrough = null;
 		var promise = this.play();
