@@ -5,8 +5,7 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 
 ## Overview
 #### Player
-- Rebuilds the tree of a specified folder, showing only supported music files
-- Suggested folder structure: `Artist - (Year) Album/Track - Title.ext` (i.e. filename should contains track title, direct parent folder should contain artist and album title)
+- Rebuilds the tree of a specified folder, showing only files with supported extensions
 - Clicking to play a song directly will keep the rest of the playlist intact
 - Click on cover image to zoom (full size, click again for 300x300px)
 - Click on song or folder name to find it in the library
@@ -68,12 +67,7 @@ Enter | Play/Add to playlist
 Shift-Enter | Play song next/Add folder to playlist
 
 ## Installation
-1. Put `music.*` into a folder on your web server
-2. For online playlists, make sure the user (e.g. `http`) used by PHP has write permissions for the folder `music.pls` (or disable online playlists in `music.js`)
-3. For downloading folders, install zip on your server
-4. Edit `music.php` so that the variable `$root` corresponds with your music folder, relative to the folder with `music.*` (you could create a symbolic link here to a folder elsewhere).
-5. Edit the variables at the top of `music.js`
-6. Optionally rename `music.htm` to `index.html`
+You can have a test setup running within 2 minutes. For all the details, check the [Wiki](https://github.com/ltGuillaume/MusicFolderPlayer/wiki).
 
 ## Credits
 - Parts of this little project are heavily based on the excellent [HTML5 Music Player](https://github.com/GM-Script-Writer-62850/HTML5-Music-Player) by [GM-Script-Writer-62850](https://github.com/GM-Script-Writer-62850)
