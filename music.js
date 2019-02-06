@@ -39,7 +39,7 @@ var
 	onseek,
 	played = Array(),
 	playlists,
-	retry = Array(),
+	retry,
 	toast;
 
 function init() {
@@ -793,7 +793,8 @@ function play(index) {
 	var a = audio[current];
 	a.src = esc(root + path);
 	a.volume = 1;
-	retry[current] = setInterval(function() {
+	clearInterval(retry);
+	retry = setInterval(function() {
 		if (a.buffered.length > 0) {
 			clearInterval(retry);
 		} else {
