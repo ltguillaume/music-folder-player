@@ -1,0 +1,14 @@
+/* Dark Theme */
+* { text-shadow: -.0000001px 0 0 #aaa }
+	*:before { text-shadow: none }
+
+body, #cover {
+	filter: invert(94%);
+	background: #1a1a1a;
+}
+
+#cover {
+	filter: brightness(60%) grayscale(100%) invert(94%);
+	transition: filter 1s;
+}
+	#cover:hover { filter: brightness(100%) grayscale(0%) invert(94%) }
