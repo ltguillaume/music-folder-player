@@ -169,7 +169,7 @@ li.over { border-top: 1px dotted #ef6c00 }
 
 #splash {
 	position: absolute;
-	top: calc(50% - 1em);
+	top: 48%;
 	left: calc(50% - .5em);
 	font-size: 7.25em;
 	color: #eee;

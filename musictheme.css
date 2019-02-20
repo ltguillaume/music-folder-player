@@ -9,6 +9,15 @@ body, #cover {
 
 #cover {
 	filter: brightness(60%) grayscale(100%) invert(94%);
-	transition: filter 1s;
+	transition: filter .5s;
 }
 	#cover:hover { filter: brightness(100%) grayscale(0%) invert(94%) }
+
+#splash { color: #aaa }
+
+/* Display songs in tree horizontally 
+#tree li.song {
+	display: inline-block;
+	margin-right: 2.5em;
+}
+*/
