@@ -3,6 +3,8 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 
 ![Screenshot](SCREENSHOT.png)
 
+![Dark theme from `musictheme.css`](https://user-images.githubusercontent.com/4777345/53241327-a3f6b600-36a1-11e9-9628-b40521ccf445.png)
+
 ## Overview
 #### Player
 - Rebuilds the tree of a specified folder, showing only files with supported extensions
