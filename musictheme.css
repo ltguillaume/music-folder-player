@@ -1,6 +1,8 @@
 /* Dark Theme */
 * { text-shadow: -.0000001px 0 0 #aaa }
-	*:before { text-shadow: none }
+	*:before { text-shadow: none !important }
+
+#splash { color: #aaa }
 
 body, #cover {
 	filter: invert(94%);
@@ -13,7 +15,7 @@ body, #cover {
 }
 	#cover:hover { filter: brightness(100%) grayscale(0%) invert(94%) }
 
-#splash { color: #aaa }
+#playlist li[error="1"] { color: cyan }
 
 /* Display songs in tree horizontally 
 #tree li.song {

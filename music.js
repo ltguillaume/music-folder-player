@@ -1,4 +1,5 @@
 var
+	autoplay = false,	// Try to start playback on load
 	debug = false,	// Show some debug messages in console
 	defcover = 'music.png',	// Default cover image if none found
 	deftitle = 'Music',	// Default page title
@@ -129,6 +130,9 @@ function init() {
 			dom.clear.style.display = dom.playlist.style.maxHeight = dom.library.style.display = 'none';
 	}
 	
+	audio = [get('audio'), null];
+	prepAudio(audio[0]);
+
 	var lib = document.createElement('script');
 	log('PHP request = '+ lib.src);
 	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ url[1] : '');
@@ -138,11 +142,9 @@ function init() {
 		document.documentElement.className = '';
 		get('splash').className = '';
 		console.log('Song count: '+ songs.length +'\nhttps://github.com/ltGuillaume/MusicFolderPlayer');
+		if (autoplay) playPause();
 	};
 	document.body.appendChild(lib);
-
-	audio = [get('audio'), null];
-	prepAudio(audio[0]);
 }
 
 function ls() {
@@ -236,7 +238,7 @@ function prepAudio(a) {
 	
 	a.onerror = function() {
 		console.log(this.error);
-		dom.playlist.childNodes[cfg.index].style.color = 'red';
+		dom.playlist.childNodes[cfg.index].setAttribute('error', 1);
 		next();
 	};
 	
