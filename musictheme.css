@@ -9,6 +9,8 @@ body, #cover {
 	background: #1a1a1a;
 }
 
+button { filter: grayscale(100%) }
+
 #cover {
 	filter: brightness(60%) grayscale(100%) invert(94%);
 	transition: filter .5s;

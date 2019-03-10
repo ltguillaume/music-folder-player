@@ -3,7 +3,7 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 
 ![Screenshot](SCREENSHOT.png)
 
-![Dark theme from `musictheme.css`](https://user-images.githubusercontent.com/4777345/53241327-a3f6b600-36a1-11e9-9628-b40521ccf445.png)
+![Dark theme via `musictheme.css`](SCREENSHOT2.png)
 
 ## Overview
 #### Player
