@@ -104,7 +104,7 @@ input[type=range] {
 	width: 14em;
 	max-width: 80%;
 	height: 15px;
-	padding: 0 0 0 .1em;
+	padding: 0 0 0 .2em;
 	background: transparent;
 	vertical-align: text-top;
 	opacity: .5;
@@ -189,7 +189,7 @@ li.over { border-top: 1px dotted #ef6c00 }
 	#player > * {
 		display: inline-block;
 		vertical-align: middle;
-		transition: max-width .5s ease-out, max-height .5s ease-out, opacity .1s ease-in;
+		transition: max-width .5s, max-height .5s, min-width .5s, min-height .5s, opacity .1s;
 	}
 
 #cover {
@@ -208,13 +208,18 @@ li.over { border-top: 1px dotted #ef6c00 }
 		max-height: 300px;
 		cursor: zoom-out;
 	}
-	#player.zoom > #current { max-width: calc(100% - 300px) }
-	#player.fullzoom #cover {
+	#player.fullzoom #cover, #player.fullzoom #current, #player.fullzoom #current > * {
+		display: block;
+		min-width: 0;
+		min-height: 0;
 		max-width: 100%;
 		max-height: 100%;
 		margin: 0 auto;
-		cursor: zoom-out;
+		padding: 0;
+		text-align: center;
 	}
+		#player.fullzoom #cover { cursor: zoom-out }
+		#player.fullzoom #current, #player.fullzoom #seek { margin-top: .25em }
 
 #current {
 	max-width: calc(100% - 8.5em);
@@ -300,6 +305,7 @@ li.over { border-top: 1px dotted #ef6c00 }
 		padding: .5em 1em;
 		border-left: 1px solid #eee;
 	}
+	#clear.drop { color: #ef6c00 }
 
 #playlist {
 	min-height: 2.25em;
@@ -358,9 +364,8 @@ li.over { border-top: 1px dotted #ef6c00 }
 	body > div:before { display: none }
 }
 
-@media screen and (max-width: 600px) {
-	#cover, #current, #current > div,
-	#player.zoom #cover, #player.zoom #current, #player.zoom #current > div {
+@media screen and (max-width: 670px) {
+	#cover, #current, #current > * {
 		display: block;
 		min-width: 0;
 		min-height: 0;
@@ -371,8 +376,13 @@ li.over { border-top: 1px dotted #ef6c00 }
 		text-align: center;
 	}
 		#cover { max-height: 10em }
+		#current, #seek { margin-top: .25em }
 	
 	#options { text-align: center }
+}
+
+@media screen and (min-width: 671px) {
+	#player.zoom > #current { max-width: calc(100% - 310px) }
 }
 
 @font-face {

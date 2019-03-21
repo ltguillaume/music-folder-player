@@ -9,11 +9,11 @@ body, #cover {
 	background: #1a1a1a;
 }
 
-button { filter: grayscale(100%) }
+button:not(.drop) { filter: grayscale(100%) }
 
 #cover {
-	filter: brightness(60%) grayscale(100%) invert(94%);
-	transition: filter .5s;
+	filter: brightness(60%) grayscale(60%) invert(94%);
+	transition: filter .5s, max-width .5s, max-height .5s, min-width .5s, min-height .5s, opacity .1s;
 }
 	#cover:hover { filter: brightness(100%) grayscale(0%) invert(94%) }
 

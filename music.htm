@@ -12,7 +12,7 @@
 <body onload="init()">
 	<span id="splash"></span>
 	<div id="player">
-		<img id="cover" src="music.png" title="Zoom to full size, 300px (Z)" onclick="zoom()"/>
+		<img id="cover" src="music.png" title="Zoom to 300px, full size (Z)" onclick="zoom()"/>
 		<div id="current">
 			<div id="folder" class="dim" onclick="setFilter(event)">Album Title</div>
 			<div id="song" class="dim" onclick="setFilter(event)">Track Title</div>
@@ -74,7 +74,8 @@
 	<div id="playlistdiv">
 		<div>
 			<button id="clear" title="Clear the playlist (C)" onclick="clearPlaylist()"
-				ondragover="allowDrop(event)" ondrop="removeItem(event)">Clear</button>
+				ondragover="allowDrop(event)" ondrop="removeItem(event)"
+				ondragenter="this.className = 'drag drop'" ondragleave="this.className = 'drag'">Clear</button>
 			<div id="playlist" onclick="playItem(event)" oncontextmenu="if (!playlistonly) findItem(event)"
 				ondragstart="prepDrag(event)" ondragover="allowDrop(event)" ondragend="endDrag()" ondrop="dropItem(event)"
 				ondragenter="event.target.className += ' over'" ondragleave="event.target.className = event.target.className.replace(' over', '')"

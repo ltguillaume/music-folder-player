@@ -409,7 +409,8 @@ function playlistItem(s) {
 }
 
 function playItem(e) {
-	if (!cfg.locked) play(getIndex(e.target));
+	if (!cfg.locked && e.target.tagName.toLowerCase() == 'li')
+		play(getIndex(e.target));
 }
 
 function findItem(e) {
@@ -539,8 +540,8 @@ function timeTxt(t) {
 }
 
 function zoom() {
-	dom.player.className = (dom.player.className == '' ? 'fullzoom' : 
-		(dom.player.className == 'zoom' ? '' : 'zoom'));
+	dom.player.className = (dom.player.className == '' ? 'zoom' : 
+		(dom.player.className == 'zoom' ? 'fullzoom' : ''));
 }
 
 function seek(e) {
