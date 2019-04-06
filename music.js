@@ -3,6 +3,7 @@ var
 	debug = false,	// Show some debug messages in console
 	defcover = 'music.png',	// Default cover image if none found
 	deftitle = 'Music',	// Default page title
+	lsid = 'asymm_music',	// Local storage ID for this instance
 	nodupes = false,		// Don't add already played songs to playlist
 	onlinepls = true,	// Show buttons to load/save playlists online
 	whatsapp = true,	// Add button to share directly to WhatsApp
@@ -118,7 +119,7 @@ function init() {
 	
 	window.onunload = function() {
 		if (ls) {
-			localStorage.setItem('asymm_music', JSON.stringify(cfg));
+			localStorage.setItem(lsid, JSON.stringify(cfg));
 			log('Session saved');
 		}
 	}
@@ -165,7 +166,7 @@ function ls() {
 	}
 
 	try {
-		var sav = localStorage.getItem('asymm_music');
+		var sav = localStorage.getItem(lsid);
 		if (sav != null) {
 			cfg = JSON.parse(sav);
 			for (c in def)
@@ -174,8 +175,8 @@ function ls() {
 		}
 		cfg = def;
 		def = JSON.stringify(def);
-		localStorage.setItem('asymm_music', def);
-		if (localStorage.getItem('asymm_music') == def) return true;
+		localStorage.setItem(lsid, def);
+		if (localStorage.getItem(lsid) == def) return true;
 		log('LocalStorage WTF');
 		return false;
 	} catch(e) {
@@ -556,6 +557,8 @@ function seek(e) {
 
 function stop() {
 	if (cfg.locked) return;
+	clearInterval(retry);
+	audio[current].oncanplaythrough = null;
 	audio[current].pause();
 	audio[current].currentTime = 0;
 	dom.seek.disabled = 1;
@@ -567,8 +570,11 @@ function playPause() {
 	else if (audio[current].paused) {
 		audio[current].play();
 		dom.seek.disabled = 0;
-	} else
+	} else {
+		clearInterval(retry);
+		audio[current].oncanplaythrough = null;
 		audio[current].pause();
+	}
 }
 
 function previous() {
@@ -606,8 +612,7 @@ function next() {
 				next = ~~((Math.random() * set.length));
 				if (played.indexOf(next.toString()) != -1)
 					next = null;
-			}
-				while (next == null);
+			} while (next == null);
 			load(set[next].id);
 		} else if (cfg.after == 'playlibrary')	{
 			if (cfg.index == -1) return load(songs[0].id);
@@ -808,7 +813,7 @@ function play(index) {
 	a.oncanplaythrough = function() {
 		this.oncanplaythrough = null;
 		var promise = this.play();
-		if (promise != undefined)
+		if (typeof promise != 'undefined')
 			promise.catch(function(e) { console.log(e) });
 	};
 	a.load();
