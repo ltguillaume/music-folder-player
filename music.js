@@ -146,6 +146,12 @@ function init() {
 		if (autoplay) playPause();
 	};
 	document.body.appendChild(lib);
+	
+	if ('mediaSession' in navigator) {
+		navigator.mediaSession.setActionHandler('previoustrack', previous);
+		navigator.mediaSession.setActionHandler('nexttrack', nextBtn);
+		navigator.mediaSession.metadata = new MediaMetadata();
+	}
 }
 
 function ls() {
@@ -839,6 +845,11 @@ function play(index) {
 	
 	title.textContent = getSong(path) + getArtist(path, true);
 	fillShare(path);
+	if ('mediaSession' in navigator) {
+		navigator.mediaSession.metadata.title =  getSong(path);
+		navigator.mediaSession.metadata.artist = getArtist(path);
+		navigator.mediaSession.metadata.artwork = [{ src: c }];
+	}
 }
 
 function toggle(e) {
