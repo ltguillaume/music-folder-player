@@ -855,6 +855,10 @@ function play(index) {
 function toggle(e) {
 	var button = (e.target.tagName.toLowerCase() == 'u' ? e.target.parentNode : e.target);
 	switch(button.id) {
+		case 'cover':
+			e.preventDefault();
+			dom.cover.className = dom.cover.className == '' ? 'nofade' : '';
+			return;
 		case 'playlistbtn':
 			if (cfg.locked) return;
 			dom.playlists.style.display = 'none';

@@ -205,7 +205,6 @@ li.over { border-top: 1px dotted #ef6c00 }
 		min-height: 300px;
 		max-width: 300px;
 		max-height: 300px;
-		cursor: zoom-out;
 	}
 	#player.fullzoom #cover, #player.fullzoom #current, #player.fullzoom #current > * {
 		display: block;
@@ -325,6 +324,7 @@ li.over { border-top: 1px dotted #ef6c00 }
 }
 #playlist li:before { margin-left: -1.25em }
 #playlist li[error="1"] { color: red }
+#playlist li * { pointer-events: none }
 
 #filterdiv { white-space: nowrap }
 
@@ -349,12 +349,7 @@ li.over { border-top: 1px dotted #ef6c00 }
 #tree li.parent:hover { color: #ef6c0080 !important }
 #tree li.parent:focus, #tree li.filtered:hover { color: #ef6c00 !important }
 
-.artist {
-	opacity: .5;
-	pointer-events: none;
-}
-
-.dim { opacity: .5 }
+.artist, .dim { opacity: .5 }
 .dim .dim { opacity: 1 }
 
 .hide { display: none }

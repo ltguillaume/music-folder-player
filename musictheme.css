@@ -4,7 +4,7 @@
 
 #splash { color: #aaa }
 
-body, #cover {
+body {
 	filter: invert(94%);
 	background: #1a1a1a;
 }
@@ -12,10 +12,10 @@ body, #cover {
 button:not(.drop) { filter: grayscale(100%) }
 
 #cover {
-	filter: brightness(60%) grayscale(60%) invert(94%);
+	filter: brightness(60%) grayscale(40%) invert(100%);
 	transition: filter .5s, max-width .5s, max-height .5s, min-width .5s, min-height .5s, opacity .1s;
 }
-	#cover:hover { filter: brightness(100%) grayscale(0%) invert(94%) }
+	#cover:hover, #cover.nofade { filter: brightness(100%) grayscale(0%) invert(100%) }
 
 #playlist li[error="1"] { color: cyan }
 
@@ -24,4 +24,8 @@ button:not(.drop) { filter: grayscale(100%) }
 	display: inline-block;
 	margin-right: 2.5em;
 }
+*/
+
+/* Set a fixed height for the playlist
+#playlist { height: 7.75em !important }
 */
