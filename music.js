@@ -10,8 +10,6 @@ var
 	whatsappmsg = 'Have a listen to',	// Default WhatsApp message
 
 	errorcf = 'Your browser is set to disable autoplay: re-enable crossfade manually',
-	folderdesc = 'L: Expand/collapse (Enter)\nR: Enqueue (Shift-Enter)',
-	songdesc = 'L: Play/enqueue (Enter)\nR: Play next (Shift-Enter)',
 	playlistdesc = 'L: Play now\nR: Find in library',
 	addfolderdlg = 'Add this folder to playlist?',
 	whatsappdlg = 'Your message via WhatApp (the url will be added at the end):',
@@ -269,7 +267,6 @@ function buildLibrary(root, folder, element) {
 			li.path = root + i;
 			li.textContent = i;
 			li.tabIndex = 1;
-			li.title = folderdesc;
 			element.appendChild(li);
 			var ul = li.appendChild(document.createElement('ul'));
 			buildLibrary(root + i +'/', folder[i], ul);
@@ -289,7 +286,6 @@ function buildLibrary(root, folder, element) {
 				if (cover) li.cover = cover;
 				li.textContent = getSong(f);
 				li.tabIndex = 1;
-				li.title = songdesc;
 				songs.push(li);
 				element.appendChild(li);
 			}
@@ -1015,6 +1011,8 @@ function filter() {
 				}
 				
 				for (var p = f.parentNode; p && p !== dom.tree; p = p.parentNode) {
+					if (p.className.indexOf('parent') != -1)
+						break;
 					if (p.style.display != '')
 						p.style.display = '';
 					if (p.className.indexOf('folder') != -1)
