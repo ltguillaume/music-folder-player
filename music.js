@@ -173,7 +173,7 @@ function ls() {
 		var sav = localStorage.getItem(lsid);
 		if (sav != null) {
 			cfg = JSON.parse(sav);
-			for (c in def)
+			for (var c in def)
 				if (typeof cfg[c] == 'undefined') cfg[c] = def[c];
 			return true;
 		}
@@ -677,7 +677,7 @@ function prepPlaylists(action) {
 		log(playlists);
 		var playlistElements = '';
 		if (playlists.length != []) {
-			for (p in playlists) {
+			for (var p in playlists) {
 				playlistElements += '<button class="add">'+ p +'</button>';
 			}
 		} else playlistElements = '&nbsp;'+ noplaylists +'&nbsp;';
@@ -695,7 +695,7 @@ function prepPlaylists(action) {
 
 function loadPlaylist(name) {
 	var items = JSON.parse(playlists[name]);
-	for (i in items)
+	for (var i in items)
 		cfg.playlist.push(items[i]);
 	buildPlaylist();
 }
@@ -710,7 +710,7 @@ function savePlaylist() {
 	var name = prompt(exportdlg);
 	if (name) {
 		name = name.replace(/[\\\/:*?"<>|]/g, ' ');
-		for (pl in playlists)
+		for (var pl in playlists)
 			if (pl == name && !confirm(overwritedlg)) return;
 		var xhttp = new XMLHttpRequest();
 		xhttp.onload = function() {
@@ -731,7 +731,7 @@ function importPlaylist() {
 		var reader = new FileReader();
 		reader.onload = function(e) {
 			var items = JSON.parse(e.target.result);
-			for (i in items)
+			for (var i in items)
 				cfg.playlist.push(items[i]);
 			buildPlaylist();
 		};
@@ -896,7 +896,7 @@ function toggle(e) {
 function buildFilteredLibrary() {
 	filteredsongs = [];
 	var term = dom.filter.value.toLowerCase();
-	for (s in songs)
+	for (var s in songs)
 		if (songs[s].path.toLowerCase().indexOf(term) != -1)
 			filteredsongs.push(songs[s]);
 }
