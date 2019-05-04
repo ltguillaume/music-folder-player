@@ -302,15 +302,13 @@ function libClick(e, context = false) {
 
 function openFolder(e) {
 	e.stopPropagation();
-	var open, li = e.target, dim = (li.className.indexOf('dim') != -1 ? ' dim' : '');
+	var li = e.target, dim = (li.className.indexOf('dim') != -1 ? ' dim' : '');
 	if (li.className.indexOf('filtered') != -1 || li.className.indexOf('parent') != -1) {
-		li.querySelectorAll('ul > *').forEach(function(f) {
-			if (f.style.display != '') f.style.display = '';
-			else if (!open) open = f;
-		});
-		li.className = 'open folder'+ dim;
+		for (var c of li.querySelectorAll('ul > *'))
+			if (c.style.display != '') c.style.display = '';
+		li.className = 'folder open'+ dim;
 	} else {
-		li.className = (li.className.indexOf('open') != -1 ? 'folder' : 'open folder') + dim;
+		li.className = (li.className.indexOf('open') != -1 ? 'folder' : 'folder open') + dim;
 	}
 	setFocus(li, (li.className.indexOf('open') != -1 ? 'open' : 'close'));
 	if (audio[current].paused) fillShare(li.path +'/');
@@ -322,10 +320,10 @@ function addFolder(e) {
 	var li = e.target;
 	if (confirm(addfolderdlg +'\n'+ li.path.substring(li.path.lastIndexOf('/') + 1))) {
 		li.className += ' dim';
-		li.querySelectorAll('li.song').forEach(function(f, i) {
-			add(f.id);
-			f.className += ' dim';
-		});
+		for (var s of li.querySelectorAll('li.song')) {
+			add(s.id);
+			s.className += ' dim';
+		}
 	}
 }
 
@@ -341,7 +339,8 @@ function setFocus (el, direction = 'open') {
 
 function setToast(el) {
 	if (toast) clearTimeout(toast);
-	[dom.enqueue, dom.random, dom.crossfade].forEach(function(btn) { clearToast(btn) });
+	for (var btn of [dom.enqueue, dom.random, dom.crossfade])
+		clearToast(btn);
 	const { top, bottom } = el.getBoundingClientRect();
 	if (top < 0 || bottom > (window.innerHeight || document.documentElement.clientHeight)) {
 		el.className += ' toast';
@@ -988,24 +987,23 @@ function resizePlaylist() {
 function filter() {
 	var clear = (dom.filter.value == '' ? '' : 'none');
 	var items = dom.tree.querySelectorAll('li');
-	items.forEach(function(f) {
+	for (var f of items) {
 		f.style.display = clear;
 		if (f.className.indexOf('open') != -1)
 			f.className = 'folder'+ (f.className.indexOf('dim') != -1 ? ' dim' : '');
-	});
+	}
 	
 	if (clear != '') {
 		var term = dom.filter.value.toLowerCase();
-		items.forEach(function(f) {
+		for (var f of items) {
 			var path = f.path.substring(f.path.lastIndexOf('/') + 1);
 			if (path.toLowerCase().indexOf(term) != -1) {
 				f.style.display = '';
 				
 				if (f.className.indexOf('folder') != -1) {
 					if (path == dom.filter.value) {
-						f.querySelectorAll('ul > *').forEach(function(f) {
-							f.style.display = '';
-						});
+						for (var c of f.querySelectorAll('ul > *'))
+							c.style.display = '';
 						f.className = 'folder open filtered'+ (f.className.indexOf('dim') != -1 ? ' dim' : '');
 					} else f.className = 'folder filtered'+ (f.className.indexOf('dim') != -1 ? ' dim' : '');
 				}
@@ -1016,13 +1014,12 @@ function filter() {
 					if (p.style.display != '')
 						p.style.display = '';
 					if (p.className.indexOf('folder') != -1)
-						p.className = 'folder open'+
-							(p.className.indexOf('filtered') != -1 ? ' filtered' : '')
-							+' parent'
+						p.className = 'parent folder open'
+							+ (p.className.indexOf('filtered') != -1 ? ' filtered' : '')
 							+ (p.className.indexOf('dim') != -1 ? ' dim' : '');
 				}
 			}
-		});
+		}
 	}
 	
 	keyNav(null, 'down');
