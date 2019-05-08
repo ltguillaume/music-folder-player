@@ -29,6 +29,7 @@ var
 	ls,
 	playlistonly = 0,
 	songs = Array(),
+	tree,
 	url,
 
 	current = 0,
@@ -304,8 +305,9 @@ function openFolder(e) {
 	e.stopPropagation();
 	var li = e.target, dim = (li.className.indexOf('dim') != -1 ? ' dim' : '');
 	if (li.className.indexOf('filtered') != -1 || li.className.indexOf('parent') != -1) {
-		for (var c of li.querySelectorAll('ul > *'))
+		ffor (li.querySelectorAll('ul > *'), function(c) {
 			if (c.style.display != '') c.style.display = '';
+		});
 		li.className = 'folder open'+ dim;
 	} else {
 		li.className = (li.className.indexOf('open') != -1 ? 'folder' : 'folder open') + dim;
@@ -320,10 +322,10 @@ function addFolder(e) {
 	var li = e.target;
 	if (confirm(addfolderdlg +'\n'+ li.path.substring(li.path.lastIndexOf('/') + 1))) {
 		li.className += ' dim';
-		for (var s of li.querySelectorAll('li.song')) {
+		ffor (li.querySelectorAll('li.song'), function(s) {
 			add(s.id);
 			s.className += ' dim';
-		}
+		});
 	}
 }
 
@@ -339,8 +341,9 @@ function setFocus (el, direction = 'open') {
 
 function setToast(el) {
 	if (toast) clearTimeout(toast);
-	for (var btn of [dom.enqueue, dom.random, dom.crossfade])
-		clearToast(btn);
+	ffor ([dom.enqueue, dom.random, dom.crossfade], function(b) {
+		clearToast(b);
+	});
 	const { top, bottom } = el.getBoundingClientRect();
 	if (top < 0 || bottom > (window.innerHeight || document.documentElement.clientHeight)) {
 		el.className += ' toast';
@@ -986,24 +989,25 @@ function resizePlaylist() {
 
 function filter() {
 	var clear = (dom.filter.value == '' ? '' : 'none');
-	var items = dom.tree.querySelectorAll('li');
-	for (var f of items) {
+	if (!tree) tree = dom.tree.querySelectorAll('li');
+	ffor (tree, function(f) {
 		f.style.display = clear;
 		if (f.className.indexOf('open') != -1)
 			f.className = 'folder'+ (f.className.indexOf('dim') != -1 ? ' dim' : '');
-	}
+	});
 	
 	if (clear != '') {
 		var term = dom.filter.value.toLowerCase();
-		for (var f of items) {
+		ffor (tree, function(f) {
 			var path = f.path.substring(f.path.lastIndexOf('/') + 1);
 			if (path.toLowerCase().indexOf(term) != -1) {
 				f.style.display = '';
 				
 				if (f.className.indexOf('folder') != -1) {
 					if (path == dom.filter.value) {
-						for (var c of f.querySelectorAll('ul > *'))
+						ffor (f.querySelectorAll('ul > *'), function(c) {
 							c.style.display = '';
+						});
 						f.className = 'folder open filtered'+ (f.className.indexOf('dim') != -1 ? ' dim' : '');
 					} else f.className = 'folder filtered'+ (f.className.indexOf('dim') != -1 ? ' dim' : '');
 				}
@@ -1019,10 +1023,17 @@ function filter() {
 							+ (p.className.indexOf('dim') != -1 ? ' dim' : '');
 				}
 			}
-		}
+		});
 	}
 	
 	keyNav(null, 'down');
+}
+
+function ffor(items, callback, scope) {
+	var length = items.length;
+	for (var i = 0; i < length; i++) {
+		callback.call(scope, items[i]);
+	}
 }
 
 function setFilter(f) {
