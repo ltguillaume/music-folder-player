@@ -23,11 +23,12 @@ var
 	clearplaylistdlg = 'Clear the playlist?',
 	
 	audio,
+	base,
 	cfg,
 	dom,
 	library,
 	ls,
-	playlistonly = 0,
+	playlistonly,
 	songs = Array(),
 	tree,
 	url,
@@ -45,7 +46,8 @@ var
 
 function init() {
 	url = document.URL.replace('?play=', '?').split('?', 2);
-	if (url.length > 1 && url[1].startsWith('pl:')) playlistonly = 1;
+	base = window.location.protocol +'//'+ window.location.host + window.location.pathname;
+	playlistonly = url.length > 1 && url[1].startsWith('pl:');
 	ls = ls();
 
 	var get = function(id) { return document.getElementById(id) };
@@ -80,6 +82,8 @@ function init() {
 		'lock': get('lock'),
 		'folderuri': get('folderuri'),
 		'songuri': get('songuri'),
+		'playlisturi': get('playlisturi'),
+		'playlistdata': get('playlistdata'),
 		'a': get('a'),
 		'clear': get('clear'),
 		'playlist': get('playlist'),
@@ -126,8 +130,10 @@ function init() {
 	if (playlistonly) {
 		prepPlaylists('playlistonly');
 		cfg.after = 'stopplayback';
-		dom.enqueue.style.display = dom.save.style.display = dom.playlibrary.style.display = dom.randomlibrary.style.display = dom.randomfiltered.style.display =
-			dom.clear.style.display = dom.playlist.style.maxHeight = dom.library.style.display = 'none';
+		ffor(['enqueue','save','share','playlibrary','randomlibrary','randomfiltered','clear','library'], function(el) {
+			dom[el].style.display = 'none';
+		});
+		dom.playlist.style.maxHeight = 'none';
 	}
 	
 	audio = [get('audio'), null];
@@ -141,7 +147,7 @@ function init() {
 		buildPlaylist();
 		document.documentElement.className = '';
 		get('splash').className = '';
-		console.log('Song count: '+ songs.length +'\nhttps://github.com/ltGuillaume/MusicFolderPlayer');
+		console.log('https://github.com/ltGuillaume/MusicFolderPlayer'+ (playlistonly ? '' : '\nSong count: '+ songs.length));
 		if (autoplay) playPause();
 	};
 	document.body.appendChild(lib);
@@ -305,7 +311,7 @@ function openFolder(e) {
 	e.stopPropagation();
 	var li = e.target, dim = (li.className.indexOf('dim') != -1 ? ' dim' : '');
 	if (li.className.indexOf('filtered') != -1 || li.className.indexOf('parent') != -1) {
-		ffor (li.querySelectorAll('ul > *'), function(c) {
+		ffor(li.querySelectorAll('ul > *'), function(c) {
 			if (c.style.display != '') c.style.display = '';
 		});
 		li.className = 'folder open'+ dim;
@@ -322,7 +328,7 @@ function addFolder(e) {
 	var li = e.target;
 	if (confirm(addfolderdlg +'\n'+ li.path.substring(li.path.lastIndexOf('/') + 1))) {
 		li.className += ' dim';
-		ffor (li.querySelectorAll('li.song'), function(s) {
+		ffor(li.querySelectorAll('li.song'), function(s) {
 			add(s.id);
 			s.className += ' dim';
 		});
@@ -341,7 +347,7 @@ function setFocus (el, direction = 'open') {
 
 function setToast(el) {
 	if (toast) clearTimeout(toast);
-	ffor ([dom.enqueue, dom.random, dom.crossfade], function(b) {
+	ffor([dom.enqueue, dom.random, dom.crossfade], function(b) {
 		clearToast(b);
 	});
 	const { top, bottom } = el.getBoundingClientRect();
@@ -505,13 +511,19 @@ function getIndex(li) {
 }
 
 function fillShare(path) {
-	var base = window.location.protocol +'//'+ window.location.host + window.location.pathname;
 	if (path.endsWith('/')) {
 		dom.folderuri.value = dom.songuri.value = base +'?play='+ esc(root + path);
 	} else {
 		dom.folderuri.value = base +'?play='+ esc(root + path.substring(0, path.lastIndexOf('/')));
 		dom.songuri.value = base +'?play='+ esc(root + path);
 	}
+}
+
+function fillPlaylistUri() {
+	ffor(document.querySelectorAll('#playlistdata > option'), function(o) {
+		if (o.value.toLowerCase() == dom.playlisturi.value.toLowerCase())
+			dom.playlisturi.value = base +'?play=pl:'+ esc(o.value);
+	});
 }
 
 function esc(s) {
@@ -645,18 +657,19 @@ function load(id) {
 }
 
 function download(type) {
-	var uri = (type == 'f' ? dom.folderuri.value : dom.songuri.value);
-	if (uri) {
+	var uri = dom[type +'uri'].value;
+	if (uri.indexOf(base) == 0) {
 		dom.a.href = 'music.php?dl='+ uri.substring(uri.indexOf('?play=') + 6);
 		dom.a.click();
 	}
 }
 
 function share(type) {
-	var share = (type == 'f' ? dom.folderuri : dom.songuri);
-	if (share.value) {
+	var share = dom[type +'uri'];
+	if (share.value.indexOf(base) == 0) {
 		share.select();
 		document.execCommand('copy');
+		share.blur();
 		share.nextElementSibling.nextElementSibling.className = 'copied';
 		setTimeout(function() {
 			share.nextElementSibling.nextElementSibling.className = 'link';
@@ -665,8 +678,8 @@ function share(type) {
 }
 
 function shareWhatsApp(type) {
-	var share = (type == 'f' ? dom.folderuri : dom.songuri);
-	if (share.value) {
+	var share = dom[type +'uri'];
+	if (share.value.indexOf(base) == 0) {
 		msg = prompt(whatsappdlg, whatsappmsg);
 		whatsappmsg = (msg ? msg : '');
 		window.open('https://api.whatsapp.com/send?text='+ whatsappmsg +' '+ encodeURIComponent(share.value));
@@ -680,17 +693,23 @@ function prepPlaylists(action) {
 		log(playlists);
 		var playlistElements = '';
 		if (playlists.length != []) {
-			for (var p in playlists) {
-				playlistElements += '<button class="add">'+ p +'</button>';
-			}
+			for (var p in playlists)
+				playlistElements += action == 'share' ? '<option value="'+ p +'">' : '<button class="add">'+ p +'</button>';
 		} else playlistElements = '&nbsp;'+ noplaylists +'&nbsp;';
-		dom.playlists.innerHTML = playlistElements;
-		if (action == 'save')
-			savePlaylist();
-		else if (action == 'playlistonly')
-			loadPlaylist(decodeURIComponent(url[1].substring(3)));
-		else
-			dom.playlists.style.display = 'block';
+		switch (action) {
+			case 'save':
+				savePlaylist();
+				break;
+			case 'share':
+				dom.playlistdata.innerHTML = playlistElements;
+				break;
+			case 'playlistonly':
+				loadPlaylist(decodeURIComponent(url[1].substring(3)));
+				break;
+			default:
+				dom.playlists.innerHTML = playlistElements;
+				dom.playlists.style.display = 'block';
+		}
 	};
 	xhttp.open('GET', 'music.php?pl', true);
 	xhttp.send();
@@ -852,7 +871,7 @@ function play(index) {
 
 function toggle(e) {
 	var button = (e.target.tagName.toLowerCase() == 'u' ? e.target.parentNode : e.target);
-	switch(button.id) {
+	switch (button.id) {
 		case 'cover':
 			e.preventDefault();
 			dom.cover.className = dom.cover.className == '' ? 'nofade' : '';
@@ -990,7 +1009,7 @@ function resizePlaylist() {
 function filter() {
 	var clear = (dom.filter.value == '' ? '' : 'none');
 	if (!tree) tree = dom.tree.querySelectorAll('li');
-	ffor (tree, function(f) {
+	ffor(tree, function(f) {
 		f.style.display = clear;
 		if (f.className.indexOf('open') != -1)
 			f.className = 'folder'+ (f.className.indexOf('dim') != -1 ? ' dim' : '');
@@ -998,14 +1017,14 @@ function filter() {
 	
 	if (clear != '') {
 		var term = dom.filter.value.toLowerCase();
-		ffor (tree, function(f) {
+		ffor(tree, function(f) {
 			var path = f.path.substring(f.path.lastIndexOf('/') + 1);
 			if (path.toLowerCase().indexOf(term) != -1) {
 				f.style.display = '';
 				
 				if (f.className.indexOf('folder') != -1) {
 					if (path == dom.filter.value) {
-						ffor (f.querySelectorAll('ul > *'), function(c) {
+						ffor(f.querySelectorAll('ul > *'), function(c) {
 							c.style.display = '';
 						});
 						f.className = 'folder open filtered'+ (f.className.indexOf('dim') != -1 ? ' dim' : '');
@@ -1115,7 +1134,7 @@ function keyNav(el, direction) {
 }
 
 document.addEventListener('keydown', function(e) {
-	if (e.altKey || e.ctrlKey) return;
+	if (e.altKey || e.ctrlKey || e.target.tagName.toLowerCase() == 'input') return;
 	var el = document.activeElement;
 	
 	if (e.which == 27) {	// esc

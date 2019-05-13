@@ -6,7 +6,7 @@
 }
 
 html.touch body {
-	font-family: BarlowSC;
+	font-family: BarlowSC, "Segoe UI", sans-serif;
 	font-size: 1.1em;
 	word-spacing: 1px;
 }
@@ -405,7 +405,6 @@ li.over { border-top: 1px dotted #ef6c00 }
 
 #after:before { content: "\f182" }
 #clear:before { content: "\f204" }
-#clearfilter:before { content: "\f217" }
 #crossfade:before { content: "\f1b2" }
 #enqueue:before, .add:before { content: "\f199" }
 #export:before { content: "\f188" }
@@ -424,14 +423,16 @@ li.over { border-top: 1px dotted #ef6c00 }
 	#playpause.playing:before { content: "\f191" }
 #previous:before { content: "\f19c" }
 #random:before, #randomlibrary:before { content: "\f13a" }
-#randomfiltered:before, #setfilter:before { content: "\f14b" }
+#randomfiltered:before { content: "\f14b" }
 #repeatplaylist:before { content: "\f1a5" }
 #save:before { content: "\f184" }
 #share:before { content: "\f1ad" }
 #stop:before, #stopplayback:before { content: "\f1ef" }
 
+.clear:before { content: "\f217" }
 .copied:before { content: "\f129" }
 .download:before { content: "\f143" }
+.filter:before { content: "\f14b" }
 .folder:before { content: "\f150" }
 .folder.open:before { content: "\f14e" }
 .playing:before { content: "\f198" }

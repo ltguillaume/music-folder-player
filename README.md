@@ -37,7 +37,7 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 - Do not add previously played songs to playlist (optional setting in music.js)
 #### Sharing
 - Download a song or zipped folder (only tested on a Linux server)
-- Share a song or folder link
+- Share a song, folder or playlist link
 - Share links directly to WhatsApp (optional)
 
 ## List of hotkeys
