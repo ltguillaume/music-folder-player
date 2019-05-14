@@ -78,10 +78,11 @@ function init() {
 		'randomlibrary': get('randomlibrary'),
 		'randomfiltered': get('randomfiltered'),
 		'share': get('share'),
-		'shares': get('shares'),
 		'lock': get('lock'),
+		'shares': get('shares'),
 		'folderuri': get('folderuri'),
 		'songuri': get('songuri'),
+		'shareplaylist': get('shareplaylist'),
 		'playlisturi': get('playlisturi'),
 		'playlistdata': get('playlistdata'),
 		'a': get('a'),
@@ -89,7 +90,14 @@ function init() {
 		'playlist': get('playlist'),
 		'library': get('library'),
 		'filter': get('filter'),
-		'tree': get('tree')
+		'tree': get('tree'),
+		'hide': function(el) {
+			if (el.constructor === Array)
+				for (var i = 0; i < el.length; i++)
+					dom[el[i]].style.display = 'none';
+			else
+				dom[el].style.display = 'none';
+		}
 	};
 
 	get('splash').className = 'show';
@@ -102,8 +110,8 @@ function init() {
 		dom.lock.className = 'on';
 		dom.lock.textContent = 'Unlock';
 	}
-	if (url.length > 1) dom.playlistsdiv.style.display = 'none';
-	if (!onlinepls) dom.playlistsdiv.style.display = dom.save.style.display = 'none';
+	if (url.length > 1) dom.hide(['playlistsdiv', 'save', 'share']);
+	if (!onlinepls) dom.hide(['playlistsdiv', 'save', 'shareplaylist']);
 	if (whatsapp) dom.options.className = 'whatsapp';
 	if (cfg.after == 'randomfiltered') cfg.after = 'randomlibrary';
 	
@@ -130,9 +138,7 @@ function init() {
 	if (playlistonly) {
 		prepPlaylists('playlistonly');
 		cfg.after = 'stopplayback';
-		ffor(['enqueue','save','share','playlibrary','randomlibrary','randomfiltered','clear','library'], function(el) {
-			dom[el].style.display = 'none';
-		});
+		dom.hide(['enqueue', 'save', 'share', 'playlibrary', 'randomlibrary', 'randomfiltered', 'clear', 'library']);
 		dom.playlist.style.maxHeight = 'none';
 	}
 	
@@ -382,7 +388,7 @@ function addSongNext(e) {
 }
 
 function buildPlaylist() {
-	if (cfg.playlist.length == 0 || (url.lenght > 1 && !playlistonly)) return;	// Only rebuild saved playlist for main library or shared playlist
+	if (cfg.playlist.length == 0 || (url.length > 1 && !playlistonly)) return;	// Only rebuild saved playlist for main library or shared playlist
 	cfg.index = Math.min(cfg.index, cfg.playlist.length - 1);
 	dom.playlist.innerHTML = '';
 
@@ -878,8 +884,7 @@ function toggle(e) {
 			return;
 		case 'playlistbtn':
 			if (cfg.locked) return;
-			dom.playlists.style.display = 'none';
-			dom.afteroptions.style.display = 'none';	// Continue
+			dom.hide(['playlists', 'afteroptions']);	// Continue
 		case 'share':
 			if (button.className == 'on') {
 				dom.options.className = dom.options.className.replace(' '+ button.id, '');
@@ -896,7 +901,7 @@ function toggle(e) {
 		case 'playlibrary':
 		case 'randomlibrary':
 			cfg.after = button.id;
-			dom.afteroptions.style.display = 'none';
+			dom.hide('afteroptions');
 			menu('after');
 			if (button.id == 'randomfiltered') {
 				dom.randomfiltered.firstElementChild.textContent = '['+ dom.filter.value +']';
@@ -1214,6 +1219,7 @@ document.addEventListener('keydown', function(e) {
 			setFocus(dom.options);
 			break;
 		case 83:	// s
+			if (url.length > 1) return;
 			dom.share.click();
 			setFocus(dom.share);
 			break;
