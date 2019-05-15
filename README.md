@@ -1,19 +1,18 @@
 # Music Folder Player
 An elegant HTML5 web folder player for parties and/or private music collections, with a playlist system that all players should have had. It does not use a database (so it's alway up-to-date), but can easily handle folders with 25,000 songs or more. It has no dependencies other than PHP and installation costs less than 2 minutes. The design should be fully responsive on CSS3-compatible browsers.
 
-![Screenshot](SCREENSHOT.png)
-
 ![Dark theme via `musictheme.css`](SCREENSHOT2.png)
+
+![Screenshot](SCREENSHOT.png)
 
 ## Overview
 #### Player
 - Rebuilds the tree of a specified folder, showing only files with supported extensions
-- Clicking to play a song directly will keep the rest of the playlist intact
-- Click on cover image to zoom (full size, click again for 300x300px)
-- Click on song or folder name to find it in the library
+- Click on cover image to zoom (300x300px, again for full size)
+- Click on current song or folder name to find it in the library
 #### Playlist
-- Drag and drop to change the playlist order or drag to bin to remove a song
-- Random playback will prevent choosing already played songs (unless "Play next" is chosen)
+- Drag and drop to change the playlist order or drag to bin to remove
+- Random playback will prevent choosing already played songs (unless "Play next" is used)
 - Click on a song to play directly
 - Right-click (long-press) a song to find it in the library
 - Choose how to continue when the playlist is exhausted:
@@ -22,19 +21,20 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 	- Continue from last song's position in library
 	- Randomly select unplayed songs from the (filtered) library
 - Playlist and configuration will be saved to the browser's Local Storage if possible
-- Load/save online playlists
+- Load/save online playlists (optional)
 - Import/export playlists from/to a local file
 #### Library
-- Filter the library to quickly find songs
+- Sports a library filter to quickly find songs
 - Click a song to play (or enqueue when "Enqueue" mode is enabled)
+- Clicking on a song will always keep the playlist intact
 - Right-click (long-press) a song to play it next
 - Right-click (long-press) a folder to add all its songs to the playlist
-- Use arrow keys to traverse the library tree, Enter to play/enqueue, or Shift-Enter to play next
+- Use arrow keys to traverse the library tree, Enter to play/enqueue, or Shift-Enter to play next/add folder
 #### Parties
 - Password lock the playlist and playlist controls (allowing only Enqueue, Play next, Play/pause and Share)
 - Tip: use [OpenKiosk](http://openkiosk.mozdevgroup.com) and disable _Set inactive terminal_
 - Prevents adding a song if it's already queued up
-- Do not add previously played songs to playlist (optional setting in music.js)
+- Do not add previously played songs to playlist (optional)
 #### Sharing
 - Download a song or zipped folder (only tested on a Linux server)
 - Share a song, folder or playlist link

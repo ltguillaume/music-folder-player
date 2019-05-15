@@ -5,7 +5,7 @@
 	$notfound = 'Error! Location not found.';
 	$ext = array('jpg','png','aac','fla','flac','m4a','mp3','mp4','ogg','opus','wav');
 	$img = array('jpg','png');
-	
+
 	header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 	header('Cache-Control: post-check=0, pre-check=0', false);
 	header('Pragma: no-cache');
@@ -37,7 +37,7 @@
 		}
 		die(json_encode($playlists));
 	}
-	
+
 	$pl = json_decode(file_get_contents('php://input'), true);
 	if (isset($pl['name'])) {
 		$name = $playlistdir .'/'. $pl['name'] .'.mfp.json';
@@ -66,15 +66,15 @@
 			exit;
 		}
 	}
-	
+
 	echo 'var root="'. $dir .'/"; var library='. json_encode(tree($dir, 0));
-	
+
 	function tree($dir, $depth) {
 		$scan = scandir($dir);
 		$files = array();
 		$tree = array();
 		$hasmusic = false;
-		
+	
 		foreach ($scan as $f) {
 			if (substr($f, 0, 1) == '.')
 				continue;
@@ -93,7 +93,7 @@
 					}
 			}
 		}
-		
+	
 		if ($hasmusic)
 			$tree['/'] = $files;
 		if (count((array) $tree) > 0)

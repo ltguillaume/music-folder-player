@@ -21,7 +21,7 @@ var
 	noplaylists = 'No playlists available',
 	errorsave = 'Error on saving:',
 	clearplaylistdlg = 'Clear the playlist?',
-	
+
 	audio,
 	base,
 	cfg,
@@ -114,9 +114,9 @@ function init() {
 	if (!onlinepls) dom.hide(['playlistsdiv', 'save', 'shareplaylist']);
 	if (whatsapp) dom.options.className = 'whatsapp';
 	if (cfg.after == 'randomfiltered') cfg.after = 'randomlibrary';
-	
+
 	dom.cover.onload = function() { dom.cover.style.opacity = 1 }	// Flickering appearance of old cover src is Firefox bug
-	
+
 	window.addEventListener('touchstart', function() {
 		window.addEventListener('touchend', function(e) {
 			e.preventDefault();
@@ -127,21 +127,21 @@ function init() {
 		document.documentElement.className = 'touch';
 		if (!playlistonly) dom.clear.style.display = 'initial';
 	}, { once: true, passive: true });
-	
+
 	window.onunload = function() {
 		if (ls) {
 			localStorage.setItem(lsid, JSON.stringify(cfg));
 			log('Session saved');
 		}
 	}
-	
+
 	if (playlistonly) {
 		prepPlaylists('playlistonly');
 		cfg.after = 'stopplayback';
 		dom.hide(['enqueue', 'save', 'share', 'playlibrary', 'randomlibrary', 'randomfiltered', 'clear', 'library']);
 		dom.playlist.style.maxHeight = 'none';
 	}
-	
+
 	audio = [get('audio'), null];
 	prepAudio(audio[0]);
 
@@ -157,7 +157,7 @@ function init() {
 		if (autoplay) playPause();
 	};
 	document.body.appendChild(lib);
-	
+
 	if ('mediaSession' in navigator) {
 		navigator.mediaSession.setActionHandler('previoustrack', previous);
 		navigator.mediaSession.setActionHandler('nexttrack', nextBtn);
@@ -176,7 +176,7 @@ function ls() {
 		'playlist': [],
 		'index': -1
 	};
-	
+
 	if (url.length > 1) {	// Don't use saved options & playlist when not in main library
 		cfg = def;
 		return false;
@@ -217,7 +217,7 @@ function prepAudio(a) {
 				dom.playlist.scrollTop = dom.playlist.childNodes[cfg.index].offsetTop - dom.playlist.offsetTop;
 		}
 	};
-	
+
 	a.onpause = function(e) {
 		if (this == audio[current]) {
 			dom.playpause.className = '';
@@ -229,7 +229,7 @@ function prepAudio(a) {
 		if (audio[current].ended)	// For crossfade
 			next();
 	};
-	
+
 	a.ontimeupdate = function() {
 		if (this == audio[current]) {
 			if (!onseek && document.activeElement != dom.seek) {
@@ -253,13 +253,13 @@ function prepAudio(a) {
 			}
 		}
 	};
-	
+
 	a.onerror = function() {
 		console.log(this.error);
 		dom.playlist.childNodes[cfg.index].setAttribute('error', 1);
 		next();
 	};
-	
+
 	a.preload = 'auto';
 }
 
@@ -403,7 +403,7 @@ function buildPlaylist() {
 			dom.song.textContent = getSong(path);
 		}
 	}
-	
+
 	resizePlaylist();
 
 	if (cfg.index != -1) {
@@ -782,7 +782,7 @@ function add(id, next) {
 		'path': songs[id].path,
 		'cover': songs[id].cover
 	};
-	
+
 	var i = (nodupes || cfg.index == -1 ? 0 : cfg.index);
 	if (cfg.playlist.length > 0) {
 		if (next && s.path == cfg.playlist[i].path) {	// Currently playing
@@ -798,7 +798,7 @@ function add(id, next) {
 			}
 		}
 	}
-	
+
 	var li = playlistItem(s);
 	if (next) {
 		s.playNext = 1;
@@ -808,7 +808,7 @@ function add(id, next) {
 		cfg.playlist.push(s);
 		dom.playlist.appendChild(li);
 	}
-	
+
 	resizePlaylist();
 	log('Added to playlist (#'+ i +'): '+ s.path);
 	if (!played.includes(id)) {
@@ -847,7 +847,7 @@ function play(index) {
 	};
 	a.load();
 	dom.seek.disabled = 0;
-	
+
 	var prevcover = dom.cover.src || defcover;
 	c = (c ? esc(root + path.substring(0, path.lastIndexOf('/') + 1) + c) : defcover);
 	if (prevcover.indexOf(c) == -1) {
@@ -865,7 +865,7 @@ function play(index) {
 		dom.folder.textContent = getFolder(path);
 		dom.song.textContent = getSong(path);
 	}
-	
+
 	title.textContent = getSong(path) + getArtist(path, true);
 	fillShare(path);
 	if ('mediaSession' in navigator) {
@@ -949,7 +949,7 @@ function password() {
 	var pass = 0;
 	for (var i = 0; i < p.length; i++)
 		pass = pass * 7 + p.charCodeAt(i);
-	
+
 	if (cfg.locked && cfg.password != pass) {
 		alert(wrongpassdlg);
 		return false;
@@ -969,7 +969,7 @@ function menu(e) {
 		el = dom.afteroptions;
 		btn = dom.after;
 	}
-	
+
 	if (el.style.display == 'none' && e.type !== 'mouseleave') {
 		const { bottom, left } = btn.getBoundingClientRect();
 		el.top = bottom;
@@ -1019,14 +1019,14 @@ function filter() {
 		if (f.className.indexOf('open') != -1)
 			f.className = 'folder'+ (f.className.indexOf('dim') != -1 ? ' dim' : '');
 	});
-	
+
 	if (clear != '') {
 		var term = dom.filter.value.toLowerCase();
 		ffor(tree, function(f) {
 			var path = f.path.substring(f.path.lastIndexOf('/') + 1);
 			if (path.toLowerCase().indexOf(term) != -1) {
 				f.style.display = '';
-				
+
 				if (f.className.indexOf('folder') != -1) {
 					if (path == dom.filter.value) {
 						ffor(f.querySelectorAll('ul > *'), function(c) {
@@ -1035,7 +1035,7 @@ function filter() {
 						f.className = 'folder open filtered'+ (f.className.indexOf('dim') != -1 ? ' dim' : '');
 					} else f.className = 'folder filtered'+ (f.className.indexOf('dim') != -1 ? ' dim' : '');
 				}
-				
+
 				for (var p = f.parentNode; p && p !== dom.tree; p = p.parentNode) {
 					if (p.className.indexOf('parent') != -1)
 						break;
@@ -1049,7 +1049,7 @@ function filter() {
 			}
 		});
 	}
-	
+
 	keyNav(null, 'down');
 }
 
@@ -1077,7 +1077,7 @@ function clearFilter() {
 
 function keyNav(el, direction) {
 	var to;
-	
+
 	if (dom.tree.contains(el)) {
 		switch (direction) {
 			case 'up':
@@ -1121,7 +1121,7 @@ function keyNav(el, direction) {
 				direction = 'up';
 		}
 	}
-	
+
 	if (!to || !dom.tree.contains(to)) {
 		if (direction == 'up') {
 			to = dom.tree.lastElementChild;
@@ -1131,7 +1131,7 @@ function keyNav(el, direction) {
 			to = dom.tree.querySelector('li');
 		}
 	}
-	
+
 	if (to.style.display == 'none')
 		return keyNav(to, direction);
 
@@ -1139,16 +1139,22 @@ function keyNav(el, direction) {
 }
 
 document.addEventListener('keydown', function(e) {
-	if (e.altKey || e.ctrlKey || e.target.tagName.toLowerCase() == 'input') return;
+	if (e.altKey || e.ctrlKey) return;
 	var el = document.activeElement;
-	
+
 	if (e.which == 27) {	// esc
 		e.preventDefault();
-		clearFilter();
+		if (el != dom.filter && el.tagName.toLowerCase() == 'input') {
+			el.value = '';
+			el.blur();
+			el.focus();
+		}
+		else clearFilter();
 		return;
-	} else if (el == dom.filter) return false;
+	}
 
-	
+	if (el.tagName.toLowerCase() == 'input') return;
+
 	switch (e.keyCode) {
 		case 90:	// z
 			zoom();
@@ -1232,7 +1238,7 @@ document.addEventListener('keydown', function(e) {
 		case 70:	// f
 			e.preventDefault();
 			dom.filter.focus();
-			dom.filter.select();
+			if (dom.filter.value != '') dom.filter.select();
 			break;
 		case 36:	// Home
 			e.preventDefault();
