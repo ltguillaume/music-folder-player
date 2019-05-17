@@ -13,7 +13,7 @@ var
 	playlistdesc = 'L: Play now\nR: Find in library',
 	addfolderdlg = 'Add this folder to playlist?',
 	whatsappdlg = 'Your message via WhatApp (the url will be added at the end):',
-	exportdlg = 'Playlist name:',
+	exportdlg = 'Save playlist as:',
 	overwritedlg = 'Playlist already exists. Overwrite?',
 	prevpassdlg = '[Use previously set password]',
 	passdlg = 'Enter password:',
@@ -28,7 +28,7 @@ var
 	dom,
 	library,
 	ls,
-	playlistonly,
+	mode,
 	songs = Array(),
 	tree,
 	url,
@@ -47,7 +47,6 @@ var
 function init() {
 	url = document.URL.replace('?play=', '?').split('?', 2);
 	base = window.location.protocol +'//'+ window.location.host + window.location.pathname;
-	playlistonly = url.length > 1 && url[1].startsWith('pl:');
 	ls = ls();
 
 	var get = function(id) { return document.getElementById(id) };
@@ -125,7 +124,7 @@ function init() {
 			onplaylist = dom.playlist.contains(e.targetTouches[0].target);
 		}, { passive: true });
 		document.documentElement.className = 'touch';
-		if (!playlistonly) dom.clear.style.display = 'initial';
+		if (!mode) dom.clear.style.display = 'initial';
 	}, { once: true, passive: true });
 
 	window.onunload = function() {
@@ -135,11 +134,9 @@ function init() {
 		}
 	}
 
-	if (playlistonly) {
-		prepPlaylists('playlistonly');
-		cfg.after = 'stopplayback';
-		dom.hide(['enqueue', 'save', 'share', 'playlibrary', 'randomlibrary', 'randomfiltered', 'clear', 'library']);
-		dom.playlist.style.maxHeight = 'none';
+	if (url.length > 1 && url[1].startsWith('pl:')) {
+		prepPlaylistMode();
+		prepPlaylists(mode);
 	}
 
 	audio = [get('audio'), null];
@@ -153,7 +150,8 @@ function init() {
 		buildPlaylist();
 		document.documentElement.className = '';
 		get('splash').className = '';
-		console.log('https://github.com/ltGuillaume/MusicFolderPlayer'+ (playlistonly ? '' : '\nSong count: '+ songs.length));
+		console.log('https://github.com/ltGuillaume/MusicFolderPlayer'+ (!mode ? '' : '\nSong count: '+ songs.length));
+		if (songs.length == 1) prepSongMode();
 		if (autoplay) playPause();
 	};
 	document.body.appendChild(lib);
@@ -205,6 +203,13 @@ function ls() {
 
 function log(s) {
 	if (debug) console.log(s);
+}
+
+function prepPlaylistMode() {
+	cfg.after = 'stopplayback';
+	dom.hide(['enqueue', 'save', 'share', 'playlibrary', 'randomlibrary', 'randomfiltered', 'clear', 'library']);
+	dom.playlist.style.minHeight = dom.playlist.style.maxHeight = 'unset';
+	mode = 'playlist';
 }
 
 function prepAudio(a) {
@@ -306,6 +311,13 @@ function buildLibrary(root, folder, element) {
 	}
 }
 
+function prepSongMode() {
+	prepPlaylistMode();
+	add(0, false);
+	dom.hide('options');
+	mode = 'song';
+}
+
 function libClick(e, context = false) {
 	if (e.target.className.indexOf('folder') != -1)
 		(context ? addFolder(e) : openFolder(e));
@@ -388,7 +400,7 @@ function addSongNext(e) {
 }
 
 function buildPlaylist() {
-	if (cfg.playlist.length == 0 || (url.length > 1 && !playlistonly)) return;	// Only rebuild saved playlist for main library or shared playlist
+	if (cfg.playlist.length == 0 || (url.length > 1 && !mode)) return;	// Only rebuild saved playlist in library mode
 	cfg.index = Math.min(cfg.index, cfg.playlist.length - 1);
 	dom.playlist.innerHTML = '';
 
@@ -420,7 +432,7 @@ function playlistItem(s) {
 		li.id = 'last';
 	} else {
 		li.innerHTML = getSong(s.path) +'<span class="artist">'+ getArtist(s.path, true) +'</span>';
-		li.title = getFolder(s.path) + (playlistonly ? '' : '\n\n'+ playlistdesc);
+		li.title = getFolder(s.path) + (mode ? '' : '\n\n'+ playlistdesc);
 	}
 	return li;
 }
@@ -703,18 +715,18 @@ function prepPlaylists(action) {
 				playlistElements += action == 'share' ? '<option value="'+ p +'">' : '<button class="add">'+ p +'</button>';
 		} else playlistElements = '&nbsp;'+ noplaylists +'&nbsp;';
 		switch (action) {
+			case 'load':
+				dom.playlists.innerHTML = playlistElements;
+				dom.playlists.style.display = 'block';
+				break;
 			case 'save':
 				savePlaylist();
 				break;
 			case 'share':
 				dom.playlistdata.innerHTML = playlistElements;
 				break;
-			case 'playlistonly':
+			case 'playlist':
 				loadPlaylist(decodeURIComponent(url[1].substring(3)));
-				break;
-			default:
-				dom.playlists.innerHTML = playlistElements;
-				dom.playlists.style.display = 'block';
 		}
 	};
 	xhttp.open('GET', 'music.php?pl', true);
@@ -1061,7 +1073,7 @@ function ffor(items, callback, scope) {
 }
 
 function setFilter(f) {
-	if (playlistonly) return;
+	if (mode) return;
 	if (typeof f === 'string')
 		dom.filter.value = f;
 	else
@@ -1212,10 +1224,10 @@ document.addEventListener('keydown', function(e) {
 			prepPlaylists('save');
 			break;
 		case 73:	// i
-			if (!cfg.locked) importPlaylist();
+			if (!cfg.locked && mode != 'song') importPlaylist();
 			break;
 		case 88:	// x
-			if (!cfg.locked) exportPlaylist();
+			if (!cfg.locked && mode != 'song') exportPlaylist();
 			break;
 		case 65:	// a
 			if (cfg.locked) return;
@@ -1233,7 +1245,7 @@ document.addEventListener('keydown', function(e) {
 			dom.lock.click();
 			break;
 		case 67:	// c
-			if (!cfg.locked && !playlistonly) clearPlaylist();
+			if (!cfg.locked && !mode) clearPlaylist();
 			break;
 		case 70:	// f
 			e.preventDefault();
