@@ -316,7 +316,7 @@ function buildLibrary(root, folder, element) {
 
 function prepSongMode() {
 	prepPlaylistMode();
-	add(0, false);
+	add(0);
 	dom.hide(['previous', 'next', 'options']);
 	mode = 'song';
 }
@@ -792,7 +792,7 @@ function exportPlaylist() {
 	}
 }
 
-function add(id, next) {
+function add(id, next = false) {
 	var s = {
 		'path': songs[id].path,
 		'cover': songs[id].cover
