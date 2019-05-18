@@ -59,6 +59,8 @@ function init() {
 		'time': get('time'),
 		'seek': get('seek'),
 		'playpause': get('playpause'),
+		'previous': get('previous'),
+		'next': get('next'),
 		'options': get('options'),
 		'crossfade': get('crossfade'),
 		'enqueue': get('enqueue'),
@@ -123,8 +125,9 @@ function init() {
 		window.addEventListener('touchmove', function(e) {
 			onplaylist = dom.playlist.contains(e.targetTouches[0].target);
 		}, { passive: true });
+		if (mode) resizePlaylist();
+		else dom.clear.style.display = 'initial';
 		document.documentElement.className = 'touch';
-		if (!mode) dom.clear.style.display = 'initial';
 	}, { once: true, passive: true });
 
 	window.onunload = function() {
@@ -150,7 +153,7 @@ function init() {
 		buildPlaylist();
 		document.documentElement.className = '';
 		get('splash').className = '';
-		console.log('https://github.com/ltGuillaume/MusicFolderPlayer'+ (!mode ? '' : '\nSong count: '+ songs.length));
+		console.log('https://github.com/ltGuillaume/MusicFolderPlayer'+ (mode ? '' : '\nSong count: '+ songs.length));
 		if (songs.length == 1) prepSongMode();
 		if (autoplay) playPause();
 	};
@@ -314,7 +317,7 @@ function buildLibrary(root, folder, element) {
 function prepSongMode() {
 	prepPlaylistMode();
 	add(0, false);
-	dom.hide('options');
+	dom.hide(['previous', 'next', 'options']);
 	mode = 'song';
 }
 
@@ -1012,7 +1015,7 @@ function clearPlaylist() {
 }
 
 function resizePlaylist() {
-	if (cfg.playlist.length > 7) {
+	if (!mode && cfg.playlist.length > 7) {
 		if (dom.playlist.className != 'resize') {
 			dom.playlist.style.height = dom.playlist.offsetHeight +'px';
 			dom.playlist.className = 'resize';

@@ -37,7 +37,7 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 - Do not add previously played songs to playlist (optional)
 #### Sharing
 - Download a song or zipped folder (only tested on a Linux server)
-- Share a song, folder or playlist link
+- Share a song, folder or playlist link (library features/options will be hidden)
 - Share links directly to WhatsApp (optional)
 
 ## List of hotkeys
@@ -72,7 +72,7 @@ Shift-Enter | Play song next/Add folder to playlist
 You can have a test setup running within 2 minutes. For all the details, check the [Wiki](https://github.com/ltGuillaume/MusicFolderPlayer/wiki).
 
 ## Credits
-- Parts of this little project are heavily based on the excellent [HTML5 Music Player](https://github.com/GM-Script-Writer-62850/HTML5-Music-Player) by [GM-Script-Writer-62850](https://github.com/GM-Script-Writer-62850)
+- Some concepts of this project are based on the excellent [HTML5 Music Player](https://github.com/GM-Script-Writer-62850/HTML5-Music-Player) by [GM-Script-Writer-62850](https://github.com/GM-Script-Writer-62850)
 - The [Barlow font](https://github.com/jpt/barlow) (Regular and Semi Condensed Regular) is used for text
 - The [Foundation icon font](https://zurb.com/playground/foundation-icon-fonts-3) is used for all icons
 - Album art placeholder is based on a [design by CmdRobot](http://fav.me/d7kpm65)
