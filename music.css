@@ -18,6 +18,7 @@ html.touch body {
 		-ms-user-select: none;
 		-webkit-user-select: none;
 		-webkit-touch-callout: none;
+		-webkit-tap-highlight-color: transparent;
 	}
 	html.touch u { text-decoration: none }
 	html.touch ul { margin-left: .5em }
