@@ -50,8 +50,8 @@ Space | Play/pause
 \] | Play next
 \- | Jump back 5s
 \+ | Jump forward 5s
-Shift \+ | Volume up
 Shift \- | Volume down
+Shift \+ | Volume up
 E | Toggle "Enqueue songs on click"
 R | Toggle "Randomize upcoming playlist items"
 O | Toggle "Crossfade between songs"

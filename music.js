@@ -232,25 +232,25 @@ function prepAudio(a) {
 	};
 
 	a.onpause = function(e) {
-		if (this == audio[current]) {
+		if (this == audio[track]) {
 			dom.playpause.className = '';
 			dom.folder.className = dom.song.className = 'dim';
 		}
 	};
 
 	a.onended = function() {
-		if (audio[current].ended)	// For crossfade
+		if (audio[track].ended)	// For crossfade
 			next();
 	};
 
 	a.ontimeupdate = function() {
-		if (this == audio[current]) {
+		if (this == audio[track]) {
 			if (!onseek && document.activeElement != dom.seek) {
 				dom.time.textContent = timeTxt(~~this.currentTime) +' / '+ timeTxt(~~this.duration);
 				dom.seek.value = (this.duration ? this.currentTime / this.duration : 0);
 			}
 			if (cfg.crossfade && !fade && (this.duration - this.currentTime) < 10) {
-				var fading = current;
+				var fading = track;
 				log('Fading out '+ audio[fading].src);
 				fade = setInterval(function() {
 					if (audio[fading].ended) {
@@ -261,7 +261,7 @@ function prepAudio(a) {
 					else if (audio[fading].volume > 0)
 						audio[fading].volume = 0;
 				}, 200);
-				current ^= 1;
+				track ^= 1;
 				next();
 			}
 		}
@@ -345,7 +345,7 @@ function openFolder(e) {
 		li.className = (li.className.indexOf('open') != -1 ? 'folder' : 'folder open') + dim;
 	}
 	setFocus(li, (li.className.indexOf('open') != -1 ? 'open' : 'close'));
-	if (audio[current].paused) fillShare(li.path +'/');
+	if (audio[track].paused) fillShare(li.path +'/');
 }
 
 function addFolder(e) {
@@ -395,7 +395,7 @@ function addSong(e) {
 	else
 		load(li.id);
 	li.className += ' dim';
-	if (audio[current].paused) fillShare(li.path);
+	if (audio[track].paused) fillShare(li.path);
 }
 
 function addSongNext(e) {
@@ -404,7 +404,7 @@ function addSongNext(e) {
 	var li = e.target;
 	add(li.id, true);
 	li.className += ' dim';
-	if (audio[current].paused) fillShare(li.path);
+	if (audio[track].paused) fillShare(li.path);
 }
 
 function buildPlaylist() {
@@ -589,33 +589,33 @@ function zoom() {
 
 function seek(e) {
 	if (e == 'c') {
-		audio[current].currentTime = dom.seek.value * audio[current].duration;
+		audio[track].currentTime = dom.seek.value * audio[track].duration;
 		dom.seek.blur();
 	}	else {
-		dom.time.textContent = timeTxt(~~(dom.seek.value * audio[current].duration))
-			+' / '+ timeTxt(~~audio[current].duration);
+		dom.time.textContent = timeTxt(~~(dom.seek.value * audio[track].duration))
+			+' / '+ timeTxt(~~audio[track].duration);
 	}
 }
 
 function stop() {
 	if (cfg.locked) return;
 	clearInterval(retry);
-	audio[current].oncanplaythrough = null;
-	audio[current].pause();
-	audio[current].currentTime = 0;
+	audio[track].oncanplaythrough = null;
+	audio[track].pause();
+	audio[track].currentTime = 0;
 	dom.seek.disabled = 1;
 }
 
 function playPause() {
-	if (!audio[current].src)
+	if (!audio[track].src)
 		play(cfg.index);
-	else if (audio[current].paused) {
-		audio[current].play();
+	else if (audio[track].paused) {
+		audio[track].play();
 		dom.seek.disabled = 0;
 	} else {
 		clearInterval(retry);
-		audio[current].oncanplaythrough = null;
-		audio[current].pause();
+		audio[track].oncanplaythrough = null;
+		audio[track].pause();
 	}
 }
 
@@ -685,7 +685,6 @@ function load(id) {
 function setVolume(input) {
 	var v = input.target ? input.target.value : input;
 	audio[track].volume = cfg.volume = dom.volumeslider.value = +parseFloat(v).toPrecision(2);
-	if (!input.target) dom.volumeslider.blur();
 }
 
 function download(type) {
@@ -853,7 +852,7 @@ function play(index) {
 	var c = cfg.playlist[index].cover;
 
 	cfg.index = index;
-	var a = audio[current];
+	var a = audio[track];
 	a.src = esc(root + path);
 	a.volume = cfg.volume;
 	clearInterval(retry);
@@ -1173,7 +1172,9 @@ document.addEventListener('keydown', function(e) {
 
 	if (e.which == 27) {	// esc
 		e.preventDefault();
-		if (el != dom.filter && el.tagName.toLowerCase() == 'input') {
+		if (el == dom.volume || el == dom.volumeslider)
+			dom.volume.click();
+		else if (el != dom.filter && el.tagName.toLowerCase() == 'input') {
 			el.value = '';
 			el.blur();
 			el.focus();
