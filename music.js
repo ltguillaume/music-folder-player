@@ -8,6 +8,7 @@ var
 	onlinepls = true,	// Show buttons to load/save playlists online
 	whatsapp = true,	// Add button to share directly to WhatsApp
 	whatsappmsg = 'Have a listen to',	// Default WhatsApp message
+	maxvolume = .9,	// Default volume (.9 might prevent clipping during playback)
 
 	errorcf = 'Your browser is set to disable autoplay: re-enable crossfade manually',
 	playlistdesc = 'L: Play now\nR: Find in library',
@@ -28,21 +29,21 @@ var
 	dom,
 	library,
 	ls,
-	mode,
 	songs = Array(),
-	tree,
 	url,
 
-	current = 0,
 	drag,
 	fade,
 	filteredsongs = Array(),
+	mode,
 	onplaylist,
 	onseek,
 	played = Array(),
 	playlists,
 	retry,
-	toast;
+	toast,
+	track = 0,
+	tree;
 
 function init() {
 	url = document.URL.replace('?play=', '?').split('?', 2);
@@ -58,6 +59,8 @@ function init() {
 		'song': get('song'),
 		'time': get('time'),
 		'seek': get('seek'),
+		'volume': get('volume'),
+		'volumeslider': get('volumeslider'),
 		'playpause': get('playpause'),
 		'previous': get('previous'),
 		'next': get('next'),
@@ -103,6 +106,7 @@ function init() {
 
 	get('splash').className = 'show';
 	title.textContent = deftitle;
+	dom.volumeslider.max = maxvolume;
 	if (cfg.enqueue) dom.enqueue.className = 'on';
 	if (cfg.random) dom.random.className = 'on';
 	if (cfg.crossfade) dom.crossfade.className = 'on';
@@ -175,7 +179,8 @@ function ls() {
 		'locked': false,
 		'password': false,
 		'playlist': [],
-		'index': -1
+		'index': -1,
+		'volume': maxvolume
 	};
 
 	if (url.length > 1) {	// Don't use saved options & playlist when not in main library
@@ -677,6 +682,12 @@ function load(id) {
 	play(cfg.index + 1);
 }
 
+function setVolume(input) {
+	var v = input.target ? input.target.value : input;
+	audio[track].volume = cfg.volume = dom.volumeslider.value = +parseFloat(v).toPrecision(2);
+	if (!input.target) dom.volumeslider.blur();
+}
+
 function download(type) {
 	var uri = dom[type +'uri'].value;
 	if (uri.indexOf(base) == 0) {
@@ -690,8 +701,8 @@ function share(type) {
 	if (share.value.indexOf(base) == 0) {
 		share.select();
 		document.execCommand('copy');
-		share.blur();
 		share.nextElementSibling.nextElementSibling.className = 'copied';
+		share.blur();
 		setTimeout(function() {
 			share.nextElementSibling.nextElementSibling.className = 'link';
 		}, 1500);
@@ -844,7 +855,7 @@ function play(index) {
 	cfg.index = index;
 	var a = audio[current];
 	a.src = esc(root + path);
-	a.volume = 1;
+	a.volume = cfg.volume;
 	clearInterval(retry);
 	retry = setInterval(function() {
 		if (a.buffered.length > 0) {
@@ -896,6 +907,9 @@ function toggle(e) {
 		case 'cover':
 			e.preventDefault();
 			dom.cover.className = dom.cover.className == '' ? 'nofade' : '';
+			return;
+		case 'volume':
+			dom.volumeslider.style.display = dom.volumeslider.style.display == '' ? 'initial' : '';
 			return;
 		case 'playlistbtn':
 			if (cfg.locked) return;
@@ -1177,12 +1191,18 @@ document.addEventListener('keydown', function(e) {
 		case 61:	// = Firefox
 		case 187:	// =
 			e.preventDefault();
-			audio[current].currentTime += 5;
+			if (e.shiftKey)
+				setVolume(Math.min(cfg.volume + .05, maxvolume));
+			else
+				audio[track].currentTime += 5;
 			break;
 		case 173:	// - Firefox
 		case 189:	// -
 			e.preventDefault();
-			audio[current].currentTime -= 5;
+			if (e.shiftKey)
+				setVolume(Math.max(cfg.volume - .05, 0));
+			else
+				audio[track].currentTime -= 5;
 			break;
 		case 48:	// 0
 			stop();

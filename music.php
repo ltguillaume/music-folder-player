@@ -74,7 +74,7 @@
 		$files = array();
 		$tree = array();
 		$hasmusic = false;
-	
+
 		foreach ($scan as $f) {
 			if (substr($f, 0, 1) == '.')
 				continue;
@@ -93,7 +93,7 @@
 					}
 			}
 		}
-	
+
 		if ($hasmusic)
 			$tree['/'] = $files;
 		if (count((array) $tree) > 0)

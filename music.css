@@ -60,7 +60,7 @@ body > div {
 body.locked #stop, body.locked #previous, body.locked #next,
 body.locked #enqueue, body.locked #random, body.locked #crossfade, body.locked #playlistbtn {
 	background: #fefeff !important;
-	opacity: .5;
+	color: #aaa;
 	pointer-events: none;
 }
 	body.locked #seek { pointer-events: none }
@@ -102,7 +102,7 @@ input, select {
 
 input[type=range] {
 	width: 14em;
-	max-width: 80%;
+	max-width: 90%;
 	height: 15px;
 	padding: 0 0 0 .2em;
 	background: transparent;
@@ -149,6 +149,11 @@ input[type=range] {
 		height: 1px;
 		background: #444;
 		border: none;
+	}
+	input#volumeslider {
+		display: none;
+		width: 7em;
+		margin-top: 2.5px;
 	}
 
 ul {
@@ -350,8 +355,7 @@ li.over { border-top: 1px dotted #ef6c00 }
 #tree li.parent:hover { color: #ef6c0080 !important }
 #tree li.parent:focus, #tree li.filtered:hover { color: #ef6c00 !important }
 
-.artist, .dim { opacity: .5 }
-.dim .dim { opacity: 1 }
+.artist, .dim { color: #999 }
 
 .hide { display: none }
 
@@ -425,10 +429,11 @@ li.over { border-top: 1px dotted #ef6c00 }
 #previous:before { content: "\f19c" }
 #random:before, #randomlibrary:before { content: "\f13a" }
 #randomfiltered:before { content: "\f14b" }
-#repeatplaylist:before { content: "\f1a5" }
+#repeatplaylist:before { content: "\f1a5"; margin-left: 1px; transform: scale(-1, 1) }
 #save:before { content: "\f184" }
 #share:before { content: "\f1ad" }
 #stop:before, #stopplayback:before { content: "\f1ef" }
+#volume:before { content: "\f211" }
 
 .clear:before { content: "\f217" }
 .copied:before { content: "\f129" }
@@ -439,6 +444,6 @@ li.over { border-top: 1px dotted #ef6c00 }
 .playing:before { content: "\f198" }
 .playlist:before { content: "\f18e" }
 .link:before { content: "\f165" }
-.song:before { content: "\f17b"; opacity: .6 }
+.song:before { content: "\f17b"; color: #999 }
 button.on:before { content: "\f126" !important }
 button.whatsapp:before { content: "\f1a6" }
