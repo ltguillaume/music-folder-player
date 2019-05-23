@@ -20,7 +20,8 @@
 			<input id="seek" type="range" min="0" max="1" value="0" step="any"
 				onchange="seek('c')" oninput="seek('i')" ontouchstart="onseek=true" ontouchend="onseek=false" disabled>
 			<div id="controls">
-				<button id="volume" title="Volume" onclick="toggle(event)">
+				<button id="volume" title="Volume" onclick="mute(event)"
+						onmouseenter="dom.show('volumeslider')" onmouseleave="dom.hide('volumeslider')">
 					<input id="volumeslider" type="range" min="0" step=".05" onchange="setVolume(event)" oninput="setVolume(event)">
 				</button>
 				<button id="stop" title="Stop playback (0)" onclick="stop()"></button>
@@ -72,7 +73,7 @@
 				<button id="songwhatsapp" class="whatsapp hide" title="Share song link via WhatsApp" onclick="shareWhatsApp('song')"></button>
 			</div>
 			<div id="shareplaylist" class="playlist sharediv">
-				<input id="playlisturi" class="uri" placeholder="&#x25BE;" list="playlistdata" onchange="fillPlaylistUri()" onclick="this.select()" onfocus="prepPlaylists('share')"></input>
+				<input id="playlisturi" class="uri" placeholder="&#x25BE;" list="playlistdata" onchange="fillPlaylistUri()" onclick="this.select()" onfocus="prepPlaylists('share')">
 				<button id="clearuri" class="clear" title="Clear playlist field" onclick="dom.playlisturi.value = ''"></button>
 				<button id="playlistshare" class="link" title="Copy playlist link to clipboard" onclick="share('playlist')"></button>
 				<button id="playlistwhatsapp" class="whatsapp hide" title="Share playlist link via WhatsApp" onclick="shareWhatsApp('playlist')"></button>

@@ -1,6 +1,6 @@
 /* Dark Theme */
 * { text-shadow: -.0000001px 0 0 #aaa }
-	*:before { text-shadow: none !important }
+	*:before, #tree li.parent { text-shadow: none !important }
 
 #splash { color: #aaa }
 

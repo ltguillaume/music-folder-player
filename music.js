@@ -95,12 +95,13 @@ function init() {
 		'library': get('library'),
 		'filter': get('filter'),
 		'tree': get('tree'),
-		'hide': function(el) {
+		'hide': function(el) { dom.show(el, false) },
+		'show': function(el, show = true) {
 			if (el.constructor === Array)
 				for (var i = 0; i < el.length; i++)
-					dom[el[i]].style.display = 'none';
+					dom[el[i]].style.display = show ? 'initial' : 'none';
 			else
-				dom[el].style.display = 'none';
+				dom[el].style.display = show ? 'initial' : 'none';
 		}
 	};
 
@@ -280,6 +281,7 @@ function prepCrossfade() {
 	var a = new Audio();
 	a.load();
 	prepAudio(a);
+	a.muted = audio[0].muted;
 	audio[1] = a;
 	dom.crossfade.className = 'on';
 }
@@ -364,7 +366,7 @@ function addFolder(e) {
 function setFocus (el, direction = 'open') {
 	el.focus();
 	const { top, bottom } = el.getBoundingClientRect();
-	if (top < 0 || bottom > (window.innerHeight || document.documentElement.clientHeight))
+	if (top < 0 || bottom > window.innerHeight)
 		el.scrollIntoView({
 			block: (direction == 'left' || direction == 'open' ? 'start' : 'nearest'),
 			behavior: 'smooth'
@@ -377,8 +379,9 @@ function setToast(el) {
 		clearToast(b);
 	});
 	const { top, bottom } = el.getBoundingClientRect();
-	if (top < 0 || bottom > (window.innerHeight || document.documentElement.clientHeight)) {
+	if (top < 0 || bottom > window.innerHeight) {
 		el.className += ' toast';
+		el.style.top = window.innerHeight + window.scrollY +'px';
 		toast = setTimeout(function() { clearToast(el) }, 2000);
 	}
 }
@@ -682,9 +685,17 @@ function load(id) {
 	play(cfg.index + 1);
 }
 
+function mute(e) {
+	if (e.constructor != KeyboardEvent && e.target == dom.volumeslider) return;
+	if (document.documentElement.className == 'touch') return toggle(e);
+	dom.volume.className = (audio[track].muted ^= true) ? 'muted' : '';
+	if (audio[+!track]) audio[+!track].muted = audio[track].muted;
+}
+
 function setVolume(input) {
 	var v = input.target ? input.target.value : input;
 	audio[track].volume = cfg.volume = dom.volumeslider.value = +parseFloat(v).toPrecision(2);
+	if (audio[track].muted) mute(input);
 }
 
 function download(type) {
@@ -908,7 +919,7 @@ function toggle(e) {
 			dom.cover.className = dom.cover.className == '' ? 'nofade' : '';
 			return;
 		case 'volume':
-			dom.volumeslider.style.display = dom.volumeslider.style.display == '' ? 'initial' : '';
+			dom.volumeslider.style.display = dom.volumeslider.style.display == 'initial' ? '' : 'initial';
 			return;
 		case 'playlistbtn':
 			if (cfg.locked) return;
@@ -1090,7 +1101,7 @@ function ffor(items, callback, scope) {
 
 function setFilter(f) {
 	if (mode) return;
-	if (typeof f === 'string')
+	if (f.constructor === String)
 		dom.filter.value = f;
 	else
 		dom.filter.value = f.target.textContent;
@@ -1170,22 +1181,28 @@ document.addEventListener('keydown', function(e) {
 	if (e.altKey || e.ctrlKey) return;
 	var el = document.activeElement;
 
-	if (e.which == 27) {	// esc
-		e.preventDefault();
-		if (el == dom.volume || el == dom.volumeslider)
-			dom.volume.click();
-		else if (el != dom.filter && el.tagName.toLowerCase() == 'input') {
-			el.value = '';
-			el.blur();
-			el.focus();
+	if (el.tagName.toLowerCase() == 'input') {
+		if (el == dom.volumeslider) {
+			if (e.keyCode > 36 && e.keyCode < 41) return;	// Arrow keys
+		} else {
+			if (e.keyCode == 27) {	// Esc
+				if (el == dom.filter)
+					clearFilter();
+				else {
+					e.preventDefault();
+					el.value = '';
+					el.blur();
+					el.focus();
+				}
+			}
+			return;
 		}
-		else clearFilter();
-		return;
 	}
 
-	if (el.tagName.toLowerCase() == 'input') return;
-
 	switch (e.keyCode) {
+		case 27:	// Esc
+			clearFilter();
+			break;
 		case 90:	// z
 			zoom();
 			break;
@@ -1205,19 +1222,31 @@ document.addEventListener('keydown', function(e) {
 			else
 				audio[track].currentTime -= 5;
 			break;
+		case 85:	// U
+			if ((dom.volumeslider.style.display = dom.volumeslider.style.display == 'initial' ? '' : 'initial') == 'initial')
+				dom.volumeslider.focus();
+			break;
+		case 77:	// M
+			e.preventDefault();
+			mute(e);
+			break;
 		case 48:	// 0
+		case 'MediaStop':
 			stop();
 			break;
 		case 32:	// space
+		case 179:	// MediaPlayPause
 			e.preventDefault();
 			if (!dom.tree.contains(e.target))
 				e.target.blur();
 			playPause();
 			break;
 		case 219:	// [
+		case 177:	// MediaTrackPrevious
 			previous();
 			break;
 		case 221:	// ]
+		case 176:	// MediaTrackNext
 			nextBtn();
 			break;
 		case 69:	// e
@@ -1298,11 +1327,11 @@ document.addEventListener('keydown', function(e) {
 			else
 				keyNav(el, 'down');
 			break;
-		case 37:	// LeftArrow
+		case 37:	// ArrowLeft
 			e.preventDefault();
 			keyNav(el, 'left');
 			break;
-		case 39:	// RightArrow
+		case 39:	// ArrowRight
 			e.preventDefault();
 			keyNav(el, 'right');
 			break;
@@ -1315,6 +1344,21 @@ document.addEventListener('keydown', function(e) {
 			}
 			break;
 		default:
+			switch (e.code) {
+				case 'MediaStop':
+					stop();
+					break;
+				case 'MediaPlayPause':
+					e.preventDefault();
+					playPause();
+					break;
+				case 'MediaTrackPrevious':
+					previous();
+					break;
+				case 'MediaTrackNext':
+					next();
+					break;
+			}
 			return false;
 	}
 }, false);

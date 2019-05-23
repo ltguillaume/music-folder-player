@@ -52,11 +52,13 @@ Space | Play/pause
 \+ | Jump forward 5s
 Shift \- | Volume down
 Shift \+ | Volume up
+U | Show/hide volume
+M | Toggle Mute
 E | Toggle "Enqueue songs on click"
 R | Toggle "Randomize upcoming playlist items"
 O | Toggle "Crossfade between songs"
-P | Toggle "Playlist options"
-S | Toggle "Share or download current song or folder"
+P | Show/hide "Playlist options"
+S | Show/hide "Share options"
 L | Toggle "Lock playlist and playback controls"
 D | Load playlist: Add songs from saved playlist
 V | Save playlist: Save playlist online
