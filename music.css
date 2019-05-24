@@ -11,7 +11,7 @@ html.touch body {
 	font-size: 1.1em;
 	word-spacing: 1px;
 }
-	html.touch button, html.touch li {
+	html.touch button, html.touch input, html.touch li {
 		padding-top: .4em;
 		padding-bottom: .4em;
 		user-select: none;
@@ -83,9 +83,9 @@ button {
 	button:hover { background: #ebf2f7 }
 	button::-moz-focus-inner { border: none }
 	button.toast {
-		position: fixed;
-		bottom: 1em;
+		position: absolute;
 		right: 1em;
+		margin-top: -4em;
 		background: #444;
 		color: #eee;
 		text-shadow: none;
@@ -163,7 +163,7 @@ ul {
 	list-style: none;
 }
 
-li:hover, li:focus {
+li:hover, li:focus, li:hover:before, li:focus:before {
 	color: #ef6c00 !important;
 	transition: color .05s ease-in;
 }

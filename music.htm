@@ -20,7 +20,7 @@
 			<input id="seek" type="range" min="0" max="1" value="0" step="any"
 				onchange="seek('c')" oninput="seek('i')" ontouchstart="onseek=true" ontouchend="onseek=false" disabled>
 			<div id="controls">
-				<button id="volume" title="Volume" onclick="mute(event)"
+				<button id="volume" title="Volume" onclick="mute(event)" oncontextmenu="mute(event)"
 						onmouseenter="dom.show('volumeslider')" onmouseleave="dom.hide('volumeslider')">
 					<input id="volumeslider" type="range" min="0" step=".05" onchange="setVolume(event)" oninput="setVolume(event)">
 				</button>
@@ -95,7 +95,7 @@
 	</div>
 	<div id="library">
 		<div id="filterdiv">
-			<input id="filter" title="Filter library (F)" placeholder="Filter..." onchange="filter()" onclick="this.scrollIntoView();this.select()">
+			<input id="filter" title="Filter library (F)" placeholder="Filter..." onchange="filter()" onclick="this.select();setFocus(this)">
 			<button class="filter" title="Apply filter (Enter)" onclick="filter()"></button>
 			<button class="clear" title="Clear filter (Esc)" onclick="clearFilter()"></button>
 		</div>

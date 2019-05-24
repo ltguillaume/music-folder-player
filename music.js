@@ -687,7 +687,8 @@ function load(id) {
 
 function mute(e) {
 	if (e.constructor != KeyboardEvent && e.target == dom.volumeslider) return;
-	if (document.documentElement.className == 'touch') return toggle(e);
+	if (document.documentElement.className == 'touch' && e.type != 'contextmenu') return toggle(e);
+	e.preventDefault();
 	dom.volume.className = (audio[track].muted ^= true) ? 'muted' : '';
 	if (audio[+!track]) audio[+!track].muted = audio[track].muted;
 }
