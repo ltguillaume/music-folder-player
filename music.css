@@ -154,8 +154,9 @@ input[type=range] {
 	input#volumeslider {
 		display: none;
 		width: 7em;
-		margin-top: 2.5px;
+		margin: 3px 0 0 -3px;
 	}
+		input#volumeslider::-webkit-slider-runnable-track { margin-top: 0px }
 
 ul {
 	display: none;

@@ -108,6 +108,7 @@ function init() {
 	get('splash').className = 'show';
 	title.textContent = deftitle;
 	dom.volumeslider.max = maxvolume;
+	dom.volumeslider.value = cfg.volume;
 	if (cfg.enqueue) dom.enqueue.className = 'on';
 	if (cfg.random) dom.random.className = 'on';
 	if (cfg.crossfade) dom.crossfade.className = 'on';
@@ -131,7 +132,7 @@ function init() {
 			onplaylist = dom.playlist.contains(e.targetTouches[0].target);
 		}, { passive: true });
 		if (mode) resizePlaylist();
-		else dom.clear.style.display = 'initial';
+		else dom.show('clear');
 		document.documentElement.className = 'touch';
 	}, { once: true, passive: true });
 
@@ -685,18 +686,17 @@ function load(id) {
 	play(cfg.index + 1);
 }
 
-function mute(e) {
-	if (e.constructor != KeyboardEvent && e.target == dom.volumeslider) return;
-	if (document.documentElement.className == 'touch' && e.type != 'contextmenu') return toggle(e);
-	e.preventDefault();
+function mute(e = null) {
+	if (e) e.preventDefault();
 	dom.volume.className = (audio[track].muted ^= true) ? 'muted' : '';
 	if (audio[+!track]) audio[+!track].muted = audio[track].muted;
 }
 
 function setVolume(input) {
-	var v = input.target ? input.target.value : input;
-	audio[track].volume = cfg.volume = dom.volumeslider.value = +parseFloat(v).toPrecision(2);
-	if (audio[track].muted) mute(input);
+	if (input.target) input = input.target.value;
+	else dom.volumeslider.value = input;
+	cfg.volume = audio[track].volume = +parseFloat(input).toPrecision(2);
+	if (audio[track].muted) mute();
 }
 
 function download(type) {
@@ -1224,8 +1224,12 @@ document.addEventListener('keydown', function(e) {
 				audio[track].currentTime -= 5;
 			break;
 		case 85:	// U
-			if ((dom.volumeslider.style.display = dom.volumeslider.style.display == 'initial' ? '' : 'initial') == 'initial')
-				dom.volumeslider.focus();
+			if (el == dom.volumeslider)
+				dom.hide('volumeslider');
+			else {
+				dom.show('volumeslider');
+				setFocus(dom.volumeslider);
+			}
 			break;
 		case 77:	// M
 			e.preventDefault();

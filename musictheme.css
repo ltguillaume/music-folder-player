@@ -1,5 +1,5 @@
 /* Dark Theme */
-* { text-shadow: -.0000001px 0 0 #aaa }
+body:not(.touch) * { text-shadow: -.0000001px 0 0 #aaa }
 	*:before, #tree li.parent { text-shadow: none !important }
 
 #splash { color: #aaa }
