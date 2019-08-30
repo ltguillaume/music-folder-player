@@ -1,24 +1,3 @@
-/* Dark Theme */
-body:not(.touch) * { text-shadow: -.0000001px 0 0 #aaa }
-	*:before, #tree li.parent { text-shadow: none !important }
-
-#splash { color: #aaa }
-
-body {
-	filter: invert(94%);
-	background: #1a1a1a;
-}
-
-button:not(.drop) { filter: grayscale(100%) }
-
-#cover {
-	filter: brightness(60%) grayscale(40%) invert(100%);
-	transition: filter .5s, max-width .5s, max-height .5s, min-width .5s, min-height .5s, opacity .1s;
-}
-	#cover:hover, #cover.nofade { filter: brightness(100%) grayscale(0%) invert(100%) }
-
-#playlist li[error="1"] { color: cyan }
-
 /* Display songs in tree horizontally 
 #tree li.song {
 	display: inline-block;
@@ -27,5 +6,126 @@ button:not(.drop) { filter: grayscale(100%) }
 */
 
 /* Set a fixed height for the playlist
-#playlist { height: 7.75em !important }
-*/
+#playlist { height: 7.75em !important }*/
+
+/* Dark Theme */
+*, *:before { text-shadow: none !important }
+
+body { background: #1a1a1a }
+
+#cover { opacity: .6 }
+	#cover:hover, #cover.nofade { opacity: 1 }
+
+/*
+ * rgba(254, 254, 255, .8) => rgba(16, 16, 15, .8)
+ * #fefeff => #10100f
+ *    #444 => #b4b4b4 / #696969
+ *    #eee => #1e1e1e / #212121
+ *    #ddd => #2d2d2d / #1f1f1f
+ *    #aaa => #5a5a5a
+ * #ebf2f7 => #1c1c1c
+ * #ef6c00 => #1d91f0
+ * #f3934d => #1a6eac
+ *    #ccc => #3c3c3c
+ * #fafafa => #949494
+ * #fcfcfd => #121211
+ *    #999 => #696969
+ */
+
+/* #fefeff => #10100f */
+#clear:not(:hover) { background: rgba(16, 16, 15, .8) }
+
+button, input,
+body > div,
+body.locked #stop, body.locked #previous, body.locked #next,
+body.locked #enqueue, body.locked #random, body.locked #crossfade, body.locked #playlistbtn,
+#playlists, #afteroptions { background-color: #10100f }
+
+#player.fix { box-shadow: 0 0 2px 1px #10100f }
+#playlists, #afteroptions { box-shadow: 0 1px 2px 2px #10100f }
+#clear { box-shadow: 0 0 2px 2px #10100f }
+#tree li:focus * { text-decoration-color: #10100f}
+
+/* #444 => #b4b4b4 */
+body, button, input,
+#tree li.parent .song, #tree li.filtered,
+#tree li:hover > ul, #tree li:focus > ul { color: #b4b4b4 }
+
+input, select { border-bottom-color: #b4b4b4 }
+
+input[type="range"]::-moz-range-track { background: #b4b4b4 }
+input[type="range"]::-webkit-slider-runnable-track { background: #b4b4b4 }
+input[type="range"]::-ms-track { background: #b4b4b4 }
+
+/* #444 => #696969 */
+input[type="range"]::-moz-range-thumb { border-color: #b4b4b4 }
+input[type="range"]::-webkit-slider-thumb { border-color: #b4b4b4 }
+
+/* #eee => #1e1e1e */
+body > div { border-color: #1e1e1e }
+
+#options.playlistbtn #playlistoptions, #options.share #shares,
+#playlists, #afteroptions,
+#clear.drag { border-color: #1e1e1e }
+
+/* #eee => #212121 */
+input[type="range"]::-moz-range-thumb { background: #212121 }
+input[type="range"]::-webkit-slider-thumb { background: #212121 }
+
+#splash { color: #212121 }
+
+/* #ddd => #313131 */
+input[type="range"]:hover::-moz-range-thumb { background: #313131 }
+input[type="range"]:hover::-webkit-slider-thumb { background: #313131 }
+
+/* #aaa => #5a5a5a */
+body.locked #stop, body.locked #previous, body.locked #next,
+body.locked #enqueue, body.locked #random, body.locked #crossfade, body.locked #playlistbtn { color: #5a5a5a !important }
+
+/* #ebf2f7 => #1c1c1c */
+button:hover { background: #1c1c1c }
+
+/* #ef6c00 => #1d91f0 */
+li:hover, li:focus, li:hover:before, li:focus:before,
+#clear.drop { color: #1d91f0 !important }
+
+li.over { border-top-color: #1d91f0 }
+#tree li:focus { text-decoration: underline solid #1d91f0 }
+
+/* #f3934d => #1a6eac */
+#tree li.dim:focus, li.dim:focus:before { color: #1a6eac !important }
+#tree li.dim:focus { text-decoration: underline solid #1a6eac }
+
+/* #ccc => #3c3c3c */
+#tree li.parent { color: #3c3c3c }
+
+/* #fafafa => #949494 */
+#cover { border-color: #949494 }
+
+/* #fcfcfd => #121211 */
+#player.fix, #player.fix button:not(:hover) { background: #121211 }
+
+#toast { background: #121211 !important; box-shadow: 0 0 2px 2px #121211 }
+
+/* #999 => #696969 */
+body > div:before,
+.artist, .dim,
+.song:before { color: #696969 }
+
+/* Scrollbars */
+::-webkit-scrollbar { width: 12px }
+::-webkit-scrollbar-track { background: #141414; border-radius: 2px }
+::-webkit-scrollbar-thumb { background: #212121; border-radius: 2px }
+::-webkit-scrollbar-thumb:hover { background: #313131 }
+::-webkit-resizer { background: #171717 }
+
+html, #playlist {
+	scrollbar-color: #212121 #171717;
+  scrollbar-width: thin;
+}
+
+/* Dark Snow */
+@media (min-width: 541px) {
+	body { background-image: url("musictheme.svg") }
+	body > div { box-shadow: 0 0 3px #242424 }
+}
