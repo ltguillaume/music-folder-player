@@ -960,6 +960,13 @@ function toggle(e) {
 		}
 }
 
+function logOut() {
+	var xhttp = new XMLHttpRequest();
+	xhttp.onload = function() { location.replace('about:blank') }
+	xhttp.open("GET", base.replace('//', '//0:0@'), true);
+	xhttp.send();
+}
+
 function buildFilteredLibrary() {
 	filteredsongs = [];
 	var term = dom.filter.value.toLowerCase();

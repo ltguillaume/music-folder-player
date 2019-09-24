@@ -420,6 +420,7 @@ li.over { border-top: 1px dotted #ef6c00 }
 #library:before { content: "\f17b" }
 #lock:before { content: "\f16a" !important }
 	#lock.on:before { content: "\f20a" !important }
+#logout:before { content: "\f19b" }
 #next:before { content: "\f17c" }
 #options:before { content: "\f214" }
 #player:before { content: "\f153" }
