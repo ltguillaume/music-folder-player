@@ -301,7 +301,7 @@ function buildLibrary(root, folder, element) {
 			buildLibrary(root + i +'/', folder[i], ul);
 		} else {
 			for (f in folder[i]) {
-				if (f.toLowerCase().endsWith('.jpg') || f.toLowerCase().endsWith('.png')) {
+				if (folder[i][f] && f.endsWith(folder[i][f])) {	// Is image
 					if (!cover || f.toLowerCase().startsWith('cover'))
 						cover = f;
 					delete(folder[i][f]);
@@ -312,7 +312,8 @@ function buildLibrary(root, folder, element) {
 				li.id = songs.length;
 				li.className = 'song';
 				li.path = root + f;
-				if (cover) li.cover = cover;
+				if (folder[i][f]) li.cover = getSong(f) + folder[i][f];	// Single-file cover
+				else if (cover) li.cover = cover;	// Folder cover
 				li.textContent = getSong(f);
 				li.tabIndex = 1;
 				songs.push(li);

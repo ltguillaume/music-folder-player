@@ -88,6 +88,9 @@
 					$ext = strtolower(substr($f, strrpos($f, '.') + 1));
 					if (in_array($ext, $GLOBALS['ext'])) {
 						$files[$f] = '';
+						foreach ($GLOBALS['img'] as $e)
+							if (file_exists((rtrim("$dir/$f", $ext)) . $e))
+								$files[$f] = '.'. $e;
 						if (!in_array($ext, $GLOBALS['img']))
 							$hasmusic = true;
 					}
