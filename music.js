@@ -867,7 +867,7 @@ function play(index) {
 	cfg.index = index;
 	var a = audio[track];
 	a.src = esc(root + path);
-	a.volume = cfg.volume;
+	a.volume = cfg.playlist[index].volume / 100 || cfg.volume;
 	clearInterval(retry);
 	retry = setInterval(function() {
 		if (a.buffered.length > 0) {
