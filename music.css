@@ -22,6 +22,7 @@ html.touch body {
 	}
 	html.touch u { text-decoration: none }
 	html.touch ul { margin-left: .5em }
+	html.touch input[type=range] { width: 18em }
 	html.touch #current { line-height: 1.25em }
 	html.touch #playlist {
 		overflow-x: auto;
@@ -144,7 +145,7 @@ input[type=range] {
 	}
 	input#volumeslider {
 		display: none;
-		width: 6em;
+		width: unset;
 		margin: 3px 0 0 -3px;
 	}
 		input#volumeslider::-webkit-slider-runnable-track { margin-top: 0px }
@@ -396,7 +397,7 @@ li.over { border-top: 1px dotted #ef6c00 }
 }
 
 @media (max-width: 670px) {
-	#player:not(.fix) #cover, #player:not(.fix) #current, #player:not(.fix) #current > * {
+	#player:not(.fix) #cover, #player:not(.fix) #current, #player:not(.fix) #current > *:not(#seek) {
 		display: block;
 		min-width: 0;
 		min-height: 0;
@@ -410,7 +411,10 @@ li.over { border-top: 1px dotted #ef6c00 }
 	}
 		#player:not(.fix) #cover { max-height: 10em }
 		#current:not(.fix) { margin-top: .25em }
-		#player:not(.fix) #seek { padding: .5em 0 1em 0 }
+		#player:not(.fix) #seek {
+			margin-bottom: .5em;
+			padding: .5em;
+		}
 
 	#options { text-align: center }
 }
