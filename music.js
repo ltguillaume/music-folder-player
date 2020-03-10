@@ -9,6 +9,7 @@ var
 	whatsapp = true,	// Add button to share directly to WhatsApp
 	whatsappmsg = 'Have a listen to',	// Default WhatsApp message
 	maxvolume = .9,	// Default volume (.9 might prevent clipping during playback)
+	shuffleplaylist = false,	// Shuffle the playlist upon start
 
 	errorcf = 'Your browser is set to disable autoplay: re-enable crossfade manually',
 	playlistdesc = 'L: Play now\nR: Find in library',
@@ -156,6 +157,7 @@ function init() {
 	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ url[1] : '');
 	lib.onload = function() {
 		buildLibrary('', library, dom.tree);
+		if (shuffleplaylist) shufflePlaylist();
 		buildPlaylist();
 		document.documentElement.className = '';
 		get('splash').className = '';
@@ -220,6 +222,16 @@ function prepPlaylistMode() {
 	dom.hide(['enqueue', 'save', 'share', 'playlibrary', 'randomlibrary', 'randomfiltered', 'clear', 'library']);
 	dom.playlist.style.minHeight = dom.playlist.style.maxHeight = 'unset';
 	mode = 'playlist';
+}
+
+function shufflePlaylist() {
+	for (var i = cfg.playlist.length - 1; i > 0; i--) {
+		var j = Math.floor(Math.random() * (i + 1));
+		var temp = cfg.playlist[i];
+		cfg.playlist[i] = cfg.playlist[j];
+		cfg.playlist[j] = temp;
+	}
+	cfg.index = 0;
 }
 
 function prepAudio(a) {
