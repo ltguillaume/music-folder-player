@@ -4,6 +4,7 @@ var
 	defcover = 'music.png',	// Default cover image if none found
 	deftitle = 'Music',	// Default page title
 	lsid = 'asymm_music',	// Local storage ID for this instance
+	maxerrors = 5,	// Maximum amount of error before playback stops
 	nodupes = false,		// Don't add already played songs to playlist
 	onlinepls = true,	// Show buttons to load/save playlists online
 	whatsapp = true,	// Add button to share directly to WhatsApp
@@ -11,6 +12,7 @@ var
 	maxvolume = .9,	// Default volume (.9 might prevent clipping during playback)
 
 	errorautoplay = 'Your browser is blocking autoplay',
+	errorfile = 'File not found',
 	playlistdesc = 'L: Play now\nR: Find in library',
 	skipartistdlg = 'Skip this artist, unless manually added to playlist?',
 	addfolderdlg = 'Add this folder to playlist?',
@@ -34,6 +36,7 @@ var
 	url,
 
 	drag,
+	errorcount = 0,
 	filteredsongs = Array(),
 	mode,
 	onplaylist,
@@ -310,7 +313,11 @@ function prepAudio(a) {
 	a.onerror = function() {
 		console.log(a.error);
 		dom.playlist.childNodes[cfg.index].setAttribute('error', 1);
-		playNext();
+		errorcount++;
+		if (errorcount < maxerrors)
+			playNext();
+		else
+			errorcount = 0;
 	};
 
 	a.preload = 'auto';
@@ -413,11 +420,11 @@ function setFocus (el) {
 
 function setToast(el) {
 	if (toast) clearTimeout(toast);
-	if (cls(dom.player, 'fix')) {
+	if (cls(el, 'error') || cls(dom.player, 'fix')) {
 		dom.toast.className = el.className;
 		dom.toast.textContent = el.textContent;
-		dom.toast.style.display = 'unset';
-		toast = setTimeout(function() { dom.toast.style.display = 'none' }, 2000);
+		dom.show('toast');
+		toast = setTimeout(function() { dom.hide('toast') }, 4000);
 	}
 }
 
@@ -994,7 +1001,14 @@ function start(a) {
 		}, 250);
 	var promise = a.play();
 	if (typeof promise != 'undefined')
-		promise.catch(function(e) { console.log(e) });
+		promise.catch(function(e) {
+			error = e;
+			console.log(e);
+			if (e.code == 9)
+				setToast({ 'className': 'error', 'textContent': errorfile });
+			else if (autoplay && e.name == 'NotAllowedError')
+				setToast({ 'className': 'error', 'textContent': errorautoplay });
+		});
 	dom.seek.disabled = 0;
 }
 

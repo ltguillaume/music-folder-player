@@ -271,6 +271,7 @@ li.over { border-top: 1px dotted #ef6c00 }
 	box-shadow: 0 0 2px 2px #fcfcfd;
 	cursor: default;
 }
+	#toast.error { background: #911d1d !important }
 	#options button:before, #toast:before, li:before { margin-right: .25em }
 
 #player.fix {
