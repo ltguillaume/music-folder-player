@@ -1,5 +1,5 @@
 var
-	autoplay = false,	// Try to start playback on load
+	autoplay = 1,	// Try to start playback on load (0 = off, 1 = for shared links, 2 = also in main library)
 	debug = false,	// Show some debug messages in console
 	defcover = 'music.png',	// Default cover image if none found
 	deftitle = 'Music',	// Default page title
@@ -10,7 +10,7 @@ var
 	whatsappmsg = 'Have a listen to',	// Default WhatsApp message
 	maxvolume = .9,	// Default volume (.9 might prevent clipping during playback)
 
-	errorcf = 'Your browser is set to disable autoplay: re-enable crossfade manually',
+	errorautoplay = 'Your browser is blocking autoplay',
 	playlistdesc = 'L: Play now\nR: Find in library',
 	skipartistdlg = 'Skip this artist, unless manually added to playlist?',
 	addfolderdlg = 'Add this folder to playlist?',
@@ -181,7 +181,7 @@ function init() {
 		console.log('https://github.com/ltGuillaume/MusicFolderPlayer'+ (mode ? '' : '\nSong count: '+ songs.length));
 		log('PHP request = '+ lib.src);
 		if (songs.length == 1) prepSongMode();
-		if (autoplay) playPause();
+		if (autoplay > 1 || autoplay && url[1]) playPause();
 	};
 	document.body.appendChild(lib);
 
@@ -190,6 +190,7 @@ function init() {
 		navigator.mediaSession.setActionHandler('nexttrack', next);
 		navigator.mediaSession.metadata = new MediaMetadata();
 	}
+	
 	if (window.innerWidth > 360)
 		dom.library.className = 'unfold';
 }
