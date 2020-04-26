@@ -1,3 +1,18 @@
+@font-face {
+	font-family: Barlow;
+	src: url("musictxt.woff") format("woff");
+}
+
+@font-face {
+	font-family: BarlowSC;
+	src: url("musictxtsc.woff") format("woff");
+}
+
+@font-face {
+	font-family: Foundation;
+	src: url("music.woff") format("woff");
+}
+
 * {
 	max-width: 100%;
 	margin: 0;
@@ -415,6 +430,8 @@ li.over { border-top: 1px dotted #ef6c00 }
 }
 
 @media (max-width: 670px) {
+	body { font-family: BarlowSC, "Segoe UI", sans-serif }
+	
 	#player:not(.fix) #cover, #player:not(.fix) #current, #player:not(.fix) #current > *:not(#seek) {
 		display: block;
 		min-width: 0;
@@ -435,21 +452,6 @@ li.over { border-top: 1px dotted #ef6c00 }
 		}
 
 	#options { text-align: center }
-}
-
-@font-face {
-	font-family: Barlow;
-	src: url("musictxt.woff") format("woff");
-}
-
-@font-face {
-	font-family: BarlowSC;
-	src: url("musictxtsc.woff") format("woff");
-}
-
-@font-face {
-	font-family: Foundation;
-	src: url("music.woff") format("woff");
 }
 
 *:before {
