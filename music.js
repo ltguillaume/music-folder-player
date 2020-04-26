@@ -138,11 +138,9 @@ function init() {
 
 	dom.cover.onload = function() { dom.cover.style.opacity = 1 }
 
-	window.addEventListener('touchstart', function() {
-		dom.doc.className = 'touch';
-		if (mode) resizePlaylist();
-		else dom.show('clear');
-
+	if ('maxTouchPoints' in navigator && navigator.maxTouchPoints > 0) touchUI();
+	else window.addEventListener('touchstart', function() {
+		touchUI();
 		window.addEventListener('touchend', function(e) {
 			e.preventDefault();
 /*			dom.playlist.className = dom.playlist.style.height = '';
@@ -181,7 +179,8 @@ function init() {
 	lib.onload = function() {
 		buildLibrary('', library, dom.tree);
 		buildPlaylist();
-		dom.doc.className = get('splash').className = '';
+		get('splash').className = '';
+		dom.doc.className = cls(dom.doc, 'touch') ? 'touch' : '';
 		console.log('https://github.com/ltGuillaume/MusicFolderPlayer'+ (mode ? '' : '\nSong count: '+ songs.length));
 		log('PHP request = '+ lib.src);
 		if (songs.length == 1) prepSongMode();
@@ -197,6 +196,12 @@ function init() {
 	
 	if (window.innerWidth > 360)
 		dom.library.className = 'unfold';
+}
+
+function touchUI() {
+	dom.doc.className += ' touch';
+	if (mode) resizePlaylist();
+	else dom.show('clear');
 }
 
 function fixPlayer() {
