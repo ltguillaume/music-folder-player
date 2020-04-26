@@ -269,7 +269,7 @@ li.over { border-top: 1px dotted #ef6c00 }
 	animation-duration: .4s;
 	z-index: 2;
 }
-	@keyframes fix { from { transform: translateY(-50%) }}
+	@keyframes fix { from { transform: translateY(-100%) }}
 	#player.fix #cover {
 		min-width: 5.25em;
 		max-width: 5.25em;
@@ -282,6 +282,7 @@ li.over { border-top: 1px dotted #ef6c00 }
 		width: calc(100% - 5.5em);
 		padding: 0 0 0 .25em;
 	}
+	#player.fix #cover { transition: none }
 	#player.fix:before, #player.fix #time, #player.fix #seek { display: none }
 	#player.fix, #player.fix button:not(:hover) { background: #fcfcfd }
 
@@ -327,12 +328,13 @@ li.over { border-top: 1px dotted #ef6c00 }
 	overflow: hidden;
 }
 
-#playlistdiv > div { position: relative }
+#playlistdiv > div,
+#library > div { position: relative }
 
 #clear {
 	display: none;
 	position: absolute;
-	top: .0;
+	top: 0;
 	right: 0;
 	box-shadow: 0 0 2px 2px #fefeff;
 	z-index: 1;
@@ -419,7 +421,7 @@ li.over { border-top: 1px dotted #ef6c00 }
 		min-height: 0;
 		max-width: 100%;
 		max-height: 100%;
-		width: unset;
+		width: unset !important;
 		height: unset;
 		margin: 0 auto;
 		padding: 0;

@@ -38,6 +38,7 @@ var
 	mode,
 	onplaylist,
 	onseek,
+	onscrollwait,
 	played = Array(),
 	playlists,
 	retry,
@@ -147,13 +148,12 @@ function init() {
 	}, { once: true, passive: true });
 
 	window.onscroll = function() {
-		if (window.pageYOffset > 80 && !cls(dom.player, 'fix') && dom.doc.offsetHeight - dom.player.offsetHeight > window.innerHeight) {
-			dom.player.className += ' fix';
-			dom.doc.style.paddingTop = '7.5em';
-		} else if (window.pageYOffset == 0) {
-			dom.player.className = dom.player.className.replace(' fix', '');
-			dom.doc.style.paddingTop = '';
-		}
+		if (onscrollwait) return;
+		onscrollwait = true;
+		setTimeout(function() {
+			fixPlayer();
+			onscrollwait = false;
+		}, 400);
 	}
 
 	window.onunload = function() {
@@ -189,6 +189,16 @@ function init() {
 		navigator.mediaSession.setActionHandler('previoustrack', previous);
 		navigator.mediaSession.setActionHandler('nexttrack', next);
 		navigator.mediaSession.metadata = new MediaMetadata();
+	}
+}
+
+function fixPlayer() {
+	if (window.pageYOffset > 2 * dom.player.offsetHeight && !cls(dom.player, 'fix') && dom.doc.offsetHeight - dom.player.offsetHeight > window.innerHeight) {
+		dom.player.className += ' fix';
+		dom.doc.style.paddingTop = '7.5em';
+	} else if (window.pageYOffset == 0) {
+		dom.player.className = dom.player.className.replace(' fix', '');
+		dom.doc.style.paddingTop = '';
 	}
 }
 
@@ -254,7 +264,7 @@ function prepAudio(a) {
 		if (cfg.index != -1) {
 			dom.playlist.childNodes[cfg.index].className = 'playing';
 			if (!onplaylist)
-				dom.playlist.scrollTop = dom.playlist.childNodes[cfg.index].offsetTop - dom.playlist.offsetTop;
+				dom.playlist.scrollTop = dom.playlist.childNodes[cfg.index > 0 ? cfg.index - 1 : cfg.index].offsetTop - dom.playlist.offsetTop;
 		}
 	};
 
@@ -385,9 +395,9 @@ function setFocus (el) {
 	el.focus();
 	const { top, bottom } = el.getBoundingClientRect(),
 		offset = dom.player.offsetHeight;
-	if (top < offset || bottom - top + offset > window.innerHeight) {
+	if (top < offset || bottom - top + offset > window.innerHeight - offset) {
 		window.scrollTo({
-			'top': el.offsetTop - offset,
+			'top': window.scrollY + top - offset,
 			'behavior': 'smooth'
 		});
 	} else if (bottom > window.innerHeight) {
