@@ -47,7 +47,7 @@ var
 	tree;
 
 function init() {
-	url = document.URL.replace('?play=', '?').split('?', 2);
+	url = document.URL.split('?play=', 2);
 	if (url[1] && url[1].startsWith('c:')) url[1] = atob(decodeURIComponent(url[1].substring(2)));
 	base = window.location.protocol +'//'+ window.location.host + window.location.pathname;
 	ls = ls();
@@ -127,6 +127,11 @@ function init() {
 	if (whatsapp) dom.options.className = 'whatsapp';
 	if (cfg.after == 'randomfiltered') cfg.after = 'randomlibrary';
 
+	if (url.length > 1 && url[1].startsWith('pl:')) {
+		prepPlaylistMode();
+		prepPlaylists(mode);
+	}
+
 	dom.cover.onload = function() { dom.cover.style.opacity = 1 }
 
 	window.addEventListener('touchstart', function() {
@@ -163,11 +168,6 @@ function init() {
 		}
 	}
 
-	if (url.length > 1 && url[1].startsWith('pl:')) {
-		prepPlaylistMode();
-		prepPlaylists(mode);
-	}
-
 	audio = [get('audio'), new Audio()];
 	prepAudio(audio[0]);
 	prepAudio(audio[1]);
@@ -190,6 +190,8 @@ function init() {
 		navigator.mediaSession.setActionHandler('nexttrack', next);
 		navigator.mediaSession.metadata = new MediaMetadata();
 	}
+	if (window.innerWidth > 360)
+		dom.library.className = 'unfold';
 }
 
 function fixPlayer() {
@@ -551,12 +553,13 @@ function removeItem(e) {
 	e.preventDefault();
 	e.stopPropagation();
 	var index = getIndex(drag);
+	var playing = index == cfg.index;
 	cfg.playlist.splice(index, 1);
 	dom.playlist.removeChild(dom.playlist.childNodes[index]);
 	resizePlaylist();
 	if (cfg.index != -1 && index <= cfg.index)
 		cfg.index--;
-	if (cfg.index != -1)
+	if (cfg.index != -1 && !playing)
 		dom.playlist.childNodes[cfg.index].className = 'playing';
 	endDrag();
 }
@@ -750,9 +753,9 @@ function load(id, addtoplaylist = false) {
 	a.prepped = !addtoplaylist;
 	a.index = addtoplaylist ? cfg.index + 1 : id;
 	log('a.index = '+ a.index);
+	a.canplaythrough = false;
 	a.src = esc(root + cfg.playlist[a.index].path);
 	a.load();
-	a.canplaythrough = false;
 	clearInterval(a.fade);
 	a.fade = null;
 	a.volume = cfg.volume;
@@ -838,7 +841,7 @@ function prepPlaylists(action) {
 				loadPlaylist(decodeURIComponent(url[1].substring(3)));
 		}
 	};
-	xhttp.open('GET', 'music.php?pl', true);
+	xhttp.open('GET', 'music.php?pl=1', true);
 	xhttp.send();
 }
 
@@ -942,6 +945,7 @@ function playNext() {
 	if (cfg.index != -1) dom.playlist.childNodes[cfg.index].className = 'song';
 	if (cfg.index + 1 == cfg.playlist.length && !audio[+!track].prepped && cfg.after == 'stopplayback') return;
 	if (cfg.index == -1 || !audio[+!track].prepped) {
+		log('PlayNext: not prepped');
 		prepNext();
 		stop();
 	}
@@ -1081,7 +1085,7 @@ function password() {
 }
 
 function menu(e) {
-	if (e.type == 'mouseleave' && dom.doc.className == 'touch') return;
+	if (e.type == 'mouseleave' && cls(dom.doc, 'touch')) return;
 
 	var btn, el;
 	if (e == 'load' || dom.playlistsdiv.contains(e.target)) {
