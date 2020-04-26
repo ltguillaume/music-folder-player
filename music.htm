@@ -95,6 +95,8 @@
 		</div>
 	</div>
 	<div id="library">
+		<div>
+			<button id="unfold" title="Show/hide library tree (T)" onclick="toggle(event)"></button>
 		<div id="filterdiv">
 			<input id="filter" title="Filter library (F)" placeholder="Filter..." onchange="filter()" onclick="this.select();setFocus(this)">
 			<button class="filter" title="Apply filter (Enter)" onclick="filter()"></button>
@@ -102,6 +104,7 @@
 		</div>
 		<div id="tree" onclick="libClick(event)" oncontextmenu="libClick(event, true)"
 			title="L: Open folder | Play/Enqueue song (Enter)&#xA;R: Enqueue folder | Play next (Shift-Enter)"></div>
+	</div>
 	</div>
 </body>
 </html>

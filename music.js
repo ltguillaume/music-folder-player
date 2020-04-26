@@ -97,6 +97,7 @@ function init() {
 		'playlist': get('playlist'),
 		'library': get('library'),
 		'filter': get('filter'),
+		'unfold': get('unfold'),
 		'tree': get('tree'),
 		'hide': function(el) { dom.show(el, false) },
 		'show': function(el, show = true) {
@@ -1020,6 +1021,8 @@ function toggle(e) {
 			return;
 		case 'lock':
 			return toggleLock();
+		case 'unfold':
+			return dom.library.className = cls(dom.library, 'unfold') ? '' : 'unfold';
 		case 'crossfade':
 			fade = null;	// Continue
 		default:
@@ -1159,6 +1162,7 @@ function filter() {
 		});
 	}
 
+	dom.library.className = 'unfold';
 	keyNav(null, 'down');
 }
 
@@ -1385,6 +1389,10 @@ document.addEventListener('keydown', function(e) {
 			e.preventDefault();
 			dom.filter.focus();
 			if (dom.filter.value != '') dom.filter.select();
+			break;
+		case 84:	// T
+			e.preventDefault();
+			if (!cfg.locked && !mode) dom.unfold.click();
 			break;
 		case 36:	// Home
 			e.preventDefault();

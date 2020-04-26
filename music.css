@@ -28,6 +28,7 @@ html.touch body {
 		overflow-x: auto;
 		white-space: nowrap;
 	}
+	html.touch #unfold { display: block }
 
 html.splash > body > div,
 html.splash > body > div:before { opacity: 0 }
@@ -67,7 +68,8 @@ body.locked #enqueue, body.locked #random, body.locked #crossfade, body.locked #
 	body.locked #seek { pointer-events: none }
 	body.locked #enqueue:before { content: "\f126" }
 	body.locked #playlistdiv #clear { display: none !important }
-body:not(.locked) #playlistdiv:hover #clear { display: block }
+body:not(.locked) #playlistdiv:hover #clear,
+body:not(.locked) #library:hover #unfold { display: block }
 
 button {
 	display: inline-block;
@@ -364,7 +366,10 @@ li.over { border-top: 1px dotted #ef6c00 }
 #playlist li[error="1"] { color: red }
 #playlist li * { pointer-events: none }
 
-#filterdiv { white-space: nowrap }
+#filterdiv {
+	margin-right: 2em;
+	white-space: nowrap;
+}
 
 #filterdiv input {
 	width: 21.5em;
@@ -372,9 +377,11 @@ li.over { border-top: 1px dotted #ef6c00 }
 }
 
 #tree {
+	display: none;
 	margin-left: 1.25em;
 	list-style: none;
 }
+	#library.unfold #tree { display: block }
 
 #tree li { cursor: pointer }
 #tree li:before { margin-left: -1.25em }
@@ -386,6 +393,15 @@ li.over { border-top: 1px dotted #ef6c00 }
 #tree li.parent { color: #ccc }
 #tree li.parent .song, #tree li.filtered,
 #tree li:hover > ul, #tree li:focus > ul { color: #444 }
+
+#unfold {
+	display: none;
+	position: absolute;
+	top: 0;
+	right: 0;
+	background: none;
+	z-index: 1;
+}
 
 .artist, .dim { color: #999 }
 
@@ -467,6 +483,8 @@ li.over { border-top: 1px dotted #ef6c00 }
 #share:before { content: "\f1ad" }
 #stop:before, #stopplayback:before { content: "\f1ef" }
 #toast:before { content: "\f217" }
+#unfold:before { content: "\25c1" }
+	#library.unfold #unfold:before { content: '\25bd' }
 #volume:before { content: "\f211" }
 #volume.muted:before { content: "\f210" }
 
