@@ -1,5 +1,6 @@
 var
 	autoplay = 1,	// Try to start playback on load (0 = off, 1 = for shared links, 2 = also in main library)
+	buffersec = .42,	// Start next song (.44)s before ending the current (for near-gapless playback)
 	debug = false,	// Show some debug messages in console
 	defcover = 'music.png',	// Default cover image if none found
 	deftitle = 'Music',	// Default page title
@@ -282,21 +283,17 @@ function prepAudio(a) {
 	};
 
 	a.onended = function() {
-		if (audio[track].ended)	// For crossfade
+		if (audio[track].ended)	// For crossfade/"gapless"
 			playNext();
 	};
 
 	a.ontimeupdate = function() {
 		if (a != audio[track]) return;
 
-		if (!onseek && document.activeElement != dom.seek) {
-			dom.time.textContent = timeTxt(~~a.currentTime) +' / '+ timeTxt(~~a.duration);
-			dom.seek.value = a.duration ? a.currentTime / a.duration : 0;
-		}
+		if (a.currentTime >= a.duration - buffersec) return playNext();
 
 		if ((a.duration - a.currentTime) < 20) {
 			if (!audio[+!track].prepped) prepNext();
-
 			if (cfg.crossfade && !a.fade && a.duration - a.currentTime < 10) {
 				log('Fade out: '+ dom.song.textContent);
 				a.fade = setInterval(function() {
@@ -307,6 +304,11 @@ function prepAudio(a) {
 				}, 200);
 				playNext();
 			}
+		}
+
+		if (!onseek && document.activeElement != dom.seek) {
+			dom.time.textContent = timeTxt(~~a.currentTime) +' / '+ timeTxt(~~a.duration);
+			dom.seek.value = a.duration ? a.currentTime / a.duration : 0;
 		}
 	};
 
@@ -994,11 +996,11 @@ function playNext() {
 
 function start(a) {
 	a.prepped = false;
-	if (!a.canplaythrough)
+/*	if (!a.canplaythrough)
 		return setTimeout(function() {
 			start(a);
 			log('Playback was delayed: no "canplaythrough" yet');
-		}, 250);
+		}, 1000);*/
 	var promise = a.play();
 	if (typeof promise != 'undefined')
 		promise.catch(function(e) {
