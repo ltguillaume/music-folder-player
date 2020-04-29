@@ -189,6 +189,8 @@ function init() {
 	document.body.appendChild(lib);
 
 	if ('mediaSession' in navigator) {
+		navigator.mediaSession.setActionHandler('play', playPause);
+		navigator.mediaSession.setActionHandler('pause', playPause);
 		navigator.mediaSession.setActionHandler('previoustrack', previous);
 		navigator.mediaSession.setActionHandler('nexttrack', next);
 		navigator.mediaSession.metadata = new MediaMetadata();
