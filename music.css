@@ -76,7 +76,6 @@ body > div {
 
 body.locked #stop, body.locked #previous, body.locked #next,
 body.locked #enqueue, body.locked #random, body.locked #crossfade, body.locked #playlistbtn {
-	background: #fefeff !important;
 	color: #aaa;
 	pointer-events: none;
 }
