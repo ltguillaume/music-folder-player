@@ -791,8 +791,8 @@ function play(id) {
 
 function mute(e = null) {
 	if (e) e.preventDefault();
-	dom.volume.className = audio[track].muted ^= true ? 'muted' : '';
-	if (audio[+!track]) audio[+!track].muted = audio[track].muted;
+	audio[+!track].muted = audio[track].muted ^= true;
+	dom.volume.className = audio[track].muted ? 'muted' : '';
 }
 
 function setVolume(input) {
