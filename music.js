@@ -170,7 +170,7 @@ function init() {
 		}
 	}
 
-	audio = [get('audio'), new Audio()];
+	audio = [new Audio(), new Audio()];
 	prepAudio(audio[0]);
 	prepAudio(audio[1]);
 
