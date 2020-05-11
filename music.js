@@ -966,6 +966,7 @@ function playNext() {
 		prepNext();
 		stop();
 	}
+	if (!cfg.crossfade) stop();
 
 	track ^= 1;
 	var a = audio[track];
