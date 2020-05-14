@@ -1,6 +1,6 @@
 var
 	autoplay = 1,	// Try to start playback on load (0 = off, 1 = for shared links, 2 = also in main library)
-	buffersec = .42,	// Start next song (.44)s before ending the current (for near-gapless playback)
+	buffersec = .44,	// Start next song (.44)s before ending the current (for near-gapless playback)
 	debug = false,	// Show some debug messages in console
 	defcover = 'music.png',	// Default cover image if none found
 	deftitle = 'Music',	// Default page title
@@ -44,6 +44,7 @@ var
 	onseek,
 	onscrollwait,
 	played = Array(),
+	playerheight,
 	playlists,
 	retry,
 	toast,
@@ -208,9 +209,10 @@ function touchUI() {
 
 function fixPlayer() {
 	if (window.pageYOffset > 2 * dom.player.offsetHeight && !cls(dom.player, 'fix') && dom.doc.offsetHeight - dom.player.offsetHeight > window.innerHeight) {
+		playerheight = dom.player.offsetHeight + parseInt(window.getComputedStyle(dom.player).getPropertyValue('margin-top'));
 		dom.player.className += ' fix';
-		dom.doc.style.paddingTop = '7.5em';
-	} else if (window.pageYOffset == 0) {
+		dom.doc.style.paddingTop = playerheight +'px';
+	} else if (window.pageYOffset < playerheight) {
 		dom.player.className = dom.player.className.replace(' fix', '');
 		dom.doc.style.paddingTop = '';
 	}
