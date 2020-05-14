@@ -415,7 +415,7 @@ function addFolder(e) {
 function setFocus (el) {
 	el.focus();
 	const { top, bottom } = el.getBoundingClientRect(),
-		offset = dom.player.offsetHeight;
+		offset = cls(dom.player, 'fix') ? dom.player.offsetHeight : 0;
 	if (top < offset || bottom - top + offset > window.innerHeight - offset) {
 		window.scrollTo({
 			'top': window.scrollY + top - offset,
@@ -427,6 +427,9 @@ function setFocus (el) {
 			'behavior': 'smooth'
 		});
 	}
+	if (!offset) setTimeout(function() {
+		if (cls(dom.player, 'fix')) setFocus(el);
+	}, 500, el);
 }
 
 function setToast(el) {
