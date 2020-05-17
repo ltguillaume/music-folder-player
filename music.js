@@ -45,6 +45,7 @@ var
 	onscrollwait,
 	played = Array(),
 	playerheight,
+	playlistloaded,
 	playlists,
 	retry,
 	toast,
@@ -872,6 +873,7 @@ function loadPlaylist(name) {
 	for (var i in items)
 		cfg.playlist.push(items[i]);
 	buildPlaylist();
+	playlistloaded = name;
 }
 
 function loadPlaylistBtn(e) {
@@ -881,7 +883,7 @@ function loadPlaylistBtn(e) {
 }
 
 function savePlaylist() {
-	var name = prompt(exportdlg);
+	var name = prompt(exportdlg, playlistloaded);
 	if (name) {
 		name = name.replace(/[\\\/:*?"<>|]/g, ' ');
 		for (var pl in playlists)
