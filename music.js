@@ -18,7 +18,9 @@ var
 	skipartistdlg = 'Skip this artist, unless manually added to playlist?',
 	addfolderdlg = 'Add this folder to playlist?',
 	whatsappdlg = 'Your message via WhatApp (the url will be added at the end):',
+	restoreposition = 'Restore the saved playlist position?',
 	exportdlg = 'Save playlist as:',
+	saveposition = 'Store the current playlist position?',
 	overwritedlg = 'Playlist already exists. Overwrite?',
 	prevpassdlg = '[Use previously set password]',
 	passdlg = 'Enter password:',
@@ -870,6 +872,11 @@ function prepPlaylists(action) {
 
 function loadPlaylist(name) {
 	var items = JSON.parse(playlists[name]);
+	if (items.constructor !== Array) {
+		if (confirm(restoreposition))
+			cfg.index = items.index + cfg.playlist.length;
+		items = items.playlist;
+	}
 	for (var i in items)
 		cfg.playlist.push(items[i]);
 	buildPlaylist();
@@ -885,6 +892,8 @@ function loadPlaylistBtn(e) {
 function savePlaylist() {
 	var name = prompt(exportdlg, playlistloaded);
 	if (name) {
+		var position = cfg.index && confirm(saveposition) ? cfg.index : 0;
+		var playlist = position ? { playlist: cfg.playlist, index: position } : cfg.playlist;
 		name = name.replace(/[\\\/:*?"<>|]/g, ' ');
 		for (var pl in playlists)
 			if (pl == name && !confirm(overwritedlg)) return;
@@ -895,7 +904,7 @@ function savePlaylist() {
 		}
 		xhttp.open('POST', 'music.php', true);
 		xhttp.setRequestHeader('Content-type', 'application/json');
-		xhttp.send(JSON.stringify({ 'name': name, 'songs': JSON.stringify(cfg.playlist) }));
+		xhttp.send(JSON.stringify({ 'name': name, 'songs': JSON.stringify(playlist) }));
 	}
 }
 
