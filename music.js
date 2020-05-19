@@ -241,7 +241,7 @@ function ls() {
 	try {
 		var sav = localStorage.getItem(lsid);
 		if (sav != null) {
-			cfg = JSON.parse(sav);
+			cfg = JSON.parse(sav) || {};
 			for (var c in def)
 				if (typeof cfg[c] == 'undefined') cfg[c] = def[c];
 			return true;
