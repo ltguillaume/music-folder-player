@@ -1,34 +1,4 @@
 var
-	autoplay = 1,	// Try to start playback on load (0 = off, 1 = for shared links, 2 = also in main library)
-	buffersec = .44,	// Start next song (.44)s before ending the current (for near-gapless playback)
-	debug = false,	// Show some debug messages in console
-	defcover = 'music.png',	// Default cover image if none found
-	deftitle = 'Music',	// Default page title
-	lsid = 'asymm_music',	// Local storage ID for this instance
-	maxerrors = 5,	// Maximum amount of error before playback stops
-	nodupes = false,		// Don't add already played songs to playlist
-	onlinepls = true,	// Show buttons to load/save playlists online
-	whatsapp = true,	// Add button to share directly to WhatsApp
-	whatsappmsg = 'Have a listen to',	// Default WhatsApp message
-	maxvolume = .9,	// Default volume (.9 might prevent clipping during playback)
-
-	errorautoplay = 'Your browser is blocking autoplay',
-	errorfile = 'File not found',
-	playlistdesc = 'L: Play now\nR: Find in library',
-	skipartistdlg = 'Skip this artist, unless manually added to playlist?',
-	addfolderdlg = 'Add this folder to playlist?',
-	whatsappdlg = 'Your message via WhatApp (the url will be added at the end):',
-	restoreposition = 'Restore the saved playlist position?',
-	exportdlg = 'Save playlist as:',
-	saveposition = 'Store the current playlist position?',
-	overwritedlg = 'Playlist already exists. Overwrite?',
-	prevpassdlg = '[Use previously set password]',
-	passdlg = 'Enter password:',
-	wrongpassdlg = 'Intruder alert!',
-	noplaylists = 'No playlists available',
-	errorsave = 'Error on saving:',
-	clearplaylistdlg = 'Clear the playlist?',
-
 	audio,
 	base,
 	cfg,
@@ -58,7 +28,6 @@ function init() {
 	url = document.URL.split('?play=', 2);
 	if (url[1] && url[1].startsWith('c:')) url[1] = atob(decodeURIComponent(url[1].substring(2)));
 	base = window.location.protocol +'//'+ window.location.host + window.location.pathname;
-	ls = ls();
 
 	var get = function(id) { return document.getElementById(id) };
 	dom = {
@@ -119,6 +88,25 @@ function init() {
 	};
 
 	get('splash').className = 'show';
+
+	var lib = document.createElement('script');
+	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ url[1] : '');
+	lib.onload = function() {
+		prepUI();
+		buildLibrary('', library, dom.tree);
+		buildPlaylist();
+		get('splash').className = '';
+		dom.doc.className = cls(dom.doc, 'touch') ? 'touch' : '';
+		console.log('https://github.com/ltGuillaume/MusicFolderPlayer'+ (mode ? '' : '\nSong count: '+ songs.length));
+		log('PHP request = '+ lib.src);
+		if (songs.length == 1) prepSongMode();
+		if (autoplay > 1 || autoplay && url[1]) playPause();
+	};
+	document.body.appendChild(lib);
+}
+
+function prepUI() {
+	ls = ls();
 	title.textContent = deftitle;
 	dom.volumeslider.max = maxvolume;
 	dom.volumeslider.value = cfg.volume;
@@ -177,20 +165,6 @@ function init() {
 	audio = [new Audio(), new Audio()];
 	prepAudio(audio[0]);
 	prepAudio(audio[1]);
-
-	var lib = document.createElement('script');
-	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ url[1] : '');
-	lib.onload = function() {
-		buildLibrary('', library, dom.tree);
-		buildPlaylist();
-		get('splash').className = '';
-		dom.doc.className = cls(dom.doc, 'touch') ? 'touch' : '';
-		console.log('https://github.com/ltGuillaume/MusicFolderPlayer'+ (mode ? '' : '\nSong count: '+ songs.length));
-		log('PHP request = '+ lib.src);
-		if (songs.length == 1) prepSongMode();
-		if (autoplay > 1 || autoplay && url[1]) playPause();
-	};
-	document.body.appendChild(lib);
 
 	if ('mediaSession' in navigator) {
 		navigator.mediaSession.setActionHandler('play', playPause);
@@ -943,8 +917,8 @@ function add(id, next = false) {
 	var i = nodupes || cfg.index == -1 ? 0 : cfg.index;
 	if (cfg.playlist.length > 0) {
 		if (next && s.path == cfg.playlist[i].path) {	// Currently playing
-				if (cfg.index > -1) cfg.index--;
-				return;
+			if (cfg.index > -1) cfg.index--;
+			return;
 		}
 		if (cfg.index > -1) i++;
 		for (; i < cfg.playlist.length && (next ? cfg.playlist[i].playNext : true); i++) {
