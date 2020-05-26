@@ -951,7 +951,7 @@ function add(id, next = false) {
 function playNext() {
 	if (cfg.index != -1) dom.playlist.childNodes[cfg.index].className = 'song';
 	if (cfg.index + 1 == cfg.playlist.length && !audio[+!track].prepped && cfg.after == 'stopplayback') return;
-	if (cfg.index == -1 || !audio[+!track].prepped) {
+	if (!audio[+!track].prepped) {
 		log('PlayNext: not prepped');
 		prepNext();
 		stop();
