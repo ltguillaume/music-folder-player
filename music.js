@@ -864,6 +864,7 @@ function loadPlaylistBtn(e) {
 }
 
 function savePlaylist() {
+	if (!cfg.playlist.length) return;
 	var name = prompt(exportdlg, playlistloaded);
 	if (name) {
 		var position = cfg.index && confirm(saveposition) ? cfg.index : 0;
@@ -900,6 +901,7 @@ function importPlaylist() {
 }
 
 function exportPlaylist() {
+	if (!cfg.playlist.length) return;
 	var filename = prompt(exportdlg);
 	if (filename) {
 		dom.a.href = 'data:text/json;charset=utf-8,'+ esc(JSON.stringify(cfg.playlist));
