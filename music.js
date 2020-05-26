@@ -90,7 +90,7 @@ function init() {
 	get('splash').className = 'show';
 
 	var lib = document.createElement('script');
-	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ url[1] : '');
+	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ esc(url[1]) : '');
 	lib.onload = function() {
 		prepUI();
 		buildLibrary('', library, dom.tree);
