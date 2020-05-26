@@ -1,6 +1,5 @@
 <?php
 	$ini  = parse_ini_file(file_exists('music.ini') ? 'music.ini' : 'music.ini.template', true, INI_SCANNER_RAW);
-
 	$cfg  = $ini['server'];
 	$ext  = explode(',', $cfg['ext_images'] .','. $cfg['ext_songs']);
 	$img  = explode(',', $cfg['ext_images']);
@@ -10,9 +9,6 @@
 	header('Pragma: no-cache');
 	header('Content-Type: application/javascript; charset=utf-8');
 
-	foreach($ini['client'] as $key => $value)
-		echo 'var '. $key .'='. $value .';'. PHP_EOL;
-	
 	if (isset($_GET['dl']) && !in_array('..', explode('/', $_GET['dl']))) {
 		$dl = urldecode(trim($_GET['dl'], '/'));
 		if (is_dir($dl)) {
@@ -48,6 +44,9 @@
 		die(file_put_contents($name, json_encode($pl['songs'])));
 	}
 
+	foreach($ini['client'] as $key => $value)
+		echo 'var '. $key .'='. $value .';'. PHP_EOL;
+	
 	$dir = $cfg['root'];
 	if (isset($_GET['play']) && !in_array('..', explode('/', $_GET['play']))) {
 		$dir = trim($_GET['play'], '/');
