@@ -378,7 +378,7 @@ li.over { border-top: 1px dotted var(--focus) }
 	position: absolute;
 	top: 0;
 	right: 0;
-	box-shadow: 0 0 2px 2px var(--box-shadow);
+	box-shadow: 0 0 2px 2px var(--bg-clear);
 	z-index: 1;
 }
 	#clear:not(:hover) { background: var(--bg-clear) }
