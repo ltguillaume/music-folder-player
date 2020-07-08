@@ -32,6 +32,8 @@ nodupes = false
 ; Don't add already played songs to playlist
 onlinepls = true
 ; Show buttons to load/save playlists online
+share = true
+; Show options to share songs, albums and playlists
 whatsapp = true
 ; Add button to share directly to WhatsApp
 whatsappmsg = 'Have a listen to'
