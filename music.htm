@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html class="splash">
 <head>
-		<meta charset="UTF-8"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link href="music.css" type="text/css" rel="stylesheet"/>
-		<link href="musictheme.css" type="text/css" rel="stylesheet"/>
-		<link href="music.png" type="image/png" rel="shortcut icon">
-		<script src="music.js"></script>
-		<title id="title"></title>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="manifest" href="/music.webmanifest">
+	<link rel="stylesheet" href="music.css" type="text/css">
+	<link rel="stylesheet" href="musictheme.css" type="text/css">
+	<link rel="shortcut icon" href="music.png" type="image/png">
+	<script src="music.js"></script>
+	<title id="title"></title>
+	<style media="(max-width:360px)">*,:before,:after{transition:none!important}html.touch>body{font-size:1em}</style>
 </head>
 <body onload="init()">
 	<span id="splash"></span>
@@ -25,10 +27,11 @@
 				<button id="stop" title="Stop playback (0)" onclick="stop()"></button>
 				<button id="playpause" title="Play or pause (Space)" onclick="playPause()"></button>
 				<button id="previous" title="Play previous ([)" onclick="previous()"></button>
-				<button id="next" title="Play next (])" onclick="nextBtn()"></button>
-				<audio id="audio">HTML5 not supported</audio>
+				<button id="next" title="L: Play next (])&#xA;R: Skip artist"
+					onclick="next()" oncontextmenu="skipArtist(event)"></button>
 			</div>
 		</div>
+		<button id="toast"></button>
 	</div>
 	<div id="options">
 		<button id="enqueue" title="Enqueue songs on click (E)" onclick="toggle(event)"><u>E</u>nqueue</button>
@@ -85,20 +88,23 @@
 			<button id="clear" title="Clear the playlist (C)" onclick="clearPlaylist()"
 				ondragover="allowDrop(event)" ondrop="removeItem(event)"
 				ondragenter="this.className = 'drag drop'" ondragleave="this.className = 'drag'">Clear</button>
-			<div id="playlist" onclick="playItem(event)" oncontextmenu="if (!mode) findItem(event)"
+			<div id="playlist" onclick="playItem(event)" oncontextmenu="if (!mode && document.documentElement.className != 'touch') findItem(event)"
 				ondragstart="prepDrag(event)" ondragover="allowDrop(event)" ondragend="endDrag()" ondrop="dropItem(event)"
 				ondragenter="event.target.className += ' over'" ondragleave="event.target.className = event.target.className.replace(' over', '')"
 				onmouseenter="onplaylist=true" onmouseleave="onplaylist=false"></div>
 		</div>
 	</div>
 	<div id="library">
-		<div id="filterdiv">
-			<input id="filter" title="Filter library (F)" placeholder="Filter..." onchange="filter()" onclick="this.select();setFocus(this)">
-			<button class="filter" title="Apply filter (Enter)" onclick="filter()"></button>
-			<button class="clear" title="Clear filter (Esc)" onclick="clearFilter()"></button>
+		<div>
+			<button id="unfold" title="Show/hide library tree (T)" onclick="toggle(event)"></button>
+			<div id="filterdiv">
+				<input id="filter" title="Filter library (F)" placeholder="Filter..." onchange="filter()" onclick="this.select();setFocus(this)">
+				<button class="filter" title="Apply filter (Enter)" onclick="filter()"></button>
+				<button class="clear" title="Clear filter (Esc)" onclick="clearFilter()"></button>
+			</div>
+			<div id="tree" onclick="libClick(event)" oncontextmenu="libClick(event, true)"
+				title="L: Open folder | Play/Enqueue song (Enter)&#xA;R: Enqueue folder | Play next (Shift-Enter)"></div>
 		</div>
-		<div id="tree" onclick="libClick(event)" oncontextmenu="libClick(event, true)"
-			title="L: Open folder | Play/Enqueue song (Enter)&#xA;R: Enqueue folder | Play next (Shift-Enter)"></div>
 	</div>
 </body>
 </html>

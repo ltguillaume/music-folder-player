@@ -1,0 +1,59 @@
+[server]
+root = library
+; Music folder path, relative to this file
+ext_images = jpg,png
+; Extensions to be considered for images
+ext_songs = aac,fla,flac,m4a,mp3,mp4,ogg,opus,wav
+; Extensions to be considered for images and songs
+maxdepth = 10
+; Maximum recursive folder depth
+notfound = Error! Location not found.
+; Shown when shared URL points to invalid location in the library
+playlistdir = music.pls
+; Folder to save playlists, relative to this file
+
+[client]
+; USE SINGLE QUOTES AROUND STRINGS!
+autoplay = 1
+; Try to start playback on load (0 = off, 1 = for shared links, 2 = also in main library)
+buffersec = .44
+; Start next song (.44)s before ending the current (for near-gapless playback)
+debug = false
+; Show some debug messages in console
+defcover = 'music.png'
+; Default cover image if none found
+deftitle = 'Music'
+; Default page title
+lsid = 'music_folder_player'
+; Local storage ID for this instance
+maxerrors = 5
+; Maximum amount of error before playback stops
+nodupes = false
+; Don't add already played songs to playlist
+onlinepls = true
+; Show buttons to load/save playlists online
+share = true
+; Show options to share songs, albums and playlists
+whatsapp = true
+; Add button to share directly to WhatsApp
+whatsappmsg = 'Have a listen to'
+; Default WhatsApp message
+maxvolume = .9
+; Default volume (.9 might prevent clipping during playback)
+
+errorautoplay    = 'Your browser is blocking autoplay'
+errorfile        = 'File not found'
+playlistdesc     = 'L = Play now\nR = Find in library'
+skipartistdlg    = 'Skip this artist, unless manually added to playlist?'
+addfolderdlg     = 'Add this folder to playlist?'
+whatsappdlg      = 'Your message via WhatApp (the url will be added at the end):'
+restoreposition  = 'Restore the saved playlist position?'
+exportdlg        = 'Save playlist as:'
+saveposition     = 'Store the current playlist position?'
+overwritedlg     = 'Playlist already exists. Overwrite?'
+prevpassdlg      = '[Use previously set password]'
+passdlg          = 'Enter password:'
+wrongpassdlg     = 'Intruder alert!'
+noplaylists      = 'No playlists available'
+errorsave        = 'Error on saving:'
+clearplaylistdlg = 'Clear the playlist?'

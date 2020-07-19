@@ -7,6 +7,7 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 
 ## Overview
 #### Player
+- Rebuilds the tree of a specified folder, showing only files with supported extensions
 - Click on cover image to zoom (300x300px, again for full size)
 - Click on current song or folder name to find it in the library
 #### Playlist
@@ -23,7 +24,6 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 - Load/save online playlists (optional)
 - Import/export playlists from/to a local file
 #### Library
-- Rebuilds the tree of a specified folder, showing only files with supported extensions
 - Sports a library filter to quickly find songs
 - Click a song to play (or enqueue when "Enqueue" mode is enabled)
 - Clicking on a song will always keep the playlist intact
