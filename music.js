@@ -1013,6 +1013,7 @@ function start(a) {
 			else if (autoplay && e.name == 'NotAllowedError')
 				setToast({ 'className': 'error', 'textContent': errorautoplay });
 		});
+	delete cfg.playlist[a.index].playNext;
 	dom.seek.disabled = 0;
 }
 
