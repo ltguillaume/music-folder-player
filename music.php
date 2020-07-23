@@ -1,7 +1,7 @@
 <?php
 	$ini  = parse_ini_file(file_exists('music.ini') ? 'music.ini' : 'music.ini.template', true, INI_SCANNER_RAW);
 	$cfg  = $ini['server'];
-	$ext  = explode(',', $cfg['ext_images'] .','. $cfg['ext_songs']);
+	$ext  = explode(',', $cfg['ext_songs'] .','. $cfg['ext_images']);
 	$img  = explode(',', $cfg['ext_images']);
 
 	header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');

@@ -3,7 +3,7 @@ root = library
 ; Music folder path, relative to this file
 ext_images = jpg,png
 ; Extensions to be considered for images
-ext_songs = aac,fla,flac,m4a,mp3,mp4,ogg,opus,wav,webm
+ext_songs = mp3,flac,ogg,aac,m4a,mp4,opus,wav,webm,fla
 ; Extensions to be considered for images and songs
 maxdepth = 10
 ; Maximum recursive folder depth
