@@ -32,7 +32,7 @@ nodupes = false
 ; Don't add already played songs to playlist
 onlinepls = true
 ; Show buttons to load/save playlists online
-share = true
+sharing = true
 ; Show options to share songs, albums and playlists
 whatsapp = true
 ; Add button to share directly to WhatsApp

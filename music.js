@@ -120,7 +120,7 @@ function prepUI() {
 	}
 	if (url.length > 1) dom.hide(['playlistsdiv', 'save', 'share']);
 	if (!onlinepls) dom.hide(['playlistsdiv', 'save', 'shareplaylist']);
-	if (!share) dom.hide('share');
+	if (!sharing) dom.hide('share');
 	if (whatsapp) dom.options.className = 'whatsapp';
 	if (cfg.after == 'randomfiltered') cfg.after = 'randomlibrary';
 
@@ -574,7 +574,7 @@ function getIndex(li) {
 }
 
 function fillShare(path) {
-	if (!share) return;
+	if (!sharing) return;
 	if (path.endsWith('/')) {
 		dom.folderuri.value = dom.songuri.value = base +'?play='+ esc(root + path);
 	} else {
@@ -1409,7 +1409,7 @@ document.addEventListener('keydown', function(e) {
 			setFocus(dom.options);
 			break;
 		case 83:	// S
-			if (!share) return;
+			if (!sharing) return;
 			if (url.length > 1) return;
 			dom.share.click();
 			setFocus(dom.share);
