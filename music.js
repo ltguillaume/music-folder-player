@@ -840,6 +840,7 @@ function prepPlaylists(action) {
 				break;
 			case 'playlist':
 				loadPlaylist(decodeURIComponent(url[1].substring(3)));
+				if (autoplay && audio[track].paused) playPause();
 		}
 	};
 	xhttp.open('GET', 'music.php?pl=1', true);
