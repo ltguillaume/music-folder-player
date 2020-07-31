@@ -23,7 +23,7 @@
 			<div id="controls">
 				<button id="volume" title="L: Volume (U)&#xA;R: Mute (M)" onclick="toggle(event)" oncontextmenu="mute(event)"></button>
 				<input id="volumeslider" type="range" min="0" step=".05" onchange="setVolume(event)" oninput="setVolume(event)">
-				<button id="stop" title="Stop playback (0)" onclick="stop()"></button>
+				<button id="stop" title="Stop playback (Backspace)" onclick="stop()"></button>
 				<button id="playpause" title="Play or pause (Space)" onclick="playPause()"></button>
 				<button id="previous" title="Play previous ([)" onclick="previous()"></button>
 				<button id="next" title="L: Play next (])&#xA;R: Skip artist"
