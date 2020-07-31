@@ -1347,7 +1347,7 @@ document.addEventListener('keydown', function(e) {
 			e.preventDefault();
 			mute(e);
 			break;
-		case 48:	// 0
+		case 8:	// Backspace
 		case 'MediaStop':
 			stop();
 			break;
