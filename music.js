@@ -1380,6 +1380,7 @@ document.addEventListener('keydown', function(e) {
 			break;
 		case 8:	// Backspace
 		case 'MediaStop':
+			e.preventDefault();
 			stop();
 			break;
 		case 32:	// Space
