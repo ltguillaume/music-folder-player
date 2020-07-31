@@ -831,6 +831,7 @@ function prepPlaylists(action) {
 			case 'load':
 				dom.playlists.innerHTML = playlistElements;
 				dom.playlists.style.display = 'block';
+				setFocus(dom.playlists.firstElementChild);
 				break;
 			case 'save':
 				savePlaylist();
@@ -1077,7 +1078,7 @@ function buildFilteredLibrary() {
 
 function toggleLock() {
 	if (!password()) return;
-	if (!cfg.locked && cls(dom.options, 'playlist'))
+	if (!cfg.locked && cls(dom.options, 'playlistbtn'))
 		dom.playlistbtn.click();
 	cfg.locked ^= true;
 	document.body.className = cfg.locked ? 'locked' : '';
@@ -1117,15 +1118,19 @@ function menu(e) {
 		btn = dom.after;
 	}
 
-	if (el.style.display == 'none' && e.type !== 'mouseleave') {
+	if (el.style.display != 'block' && e.type !== 'mouseleave') {
 		const { bottom, left } = btn.getBoundingClientRect();
 		el.top = bottom;
 		el.left = left;
 		switch (el) {
 			case dom.playlists:
+				if (!cls(dom.options, 'playlistbtn'))
+					dom.playlistbtn.click();
 				prepPlaylists('load');
 				break;
 			case dom.afteroptions:
+				if (!cls(dom.options, 'playlistbtn'))
+					dom.playlistbtn.click();
 				dom.stopplayback.className = cfg.after == 'stopplayback' ? 'on' : '';
 				dom.repeatplaylist.className = cfg.after == 'repeatplaylist' ? 'on' : '';
 				dom.playlibrary.className = cfg.after == 'playlibrary' ? 'on' : '';
@@ -1133,8 +1138,16 @@ function menu(e) {
 				dom.randomlibrary.className = cfg.after == 'randomlibrary' ? 'on' : '';
 				if (dom.filter.value == '') dom.randomfiltered.className += ' dim';
 				el.style.display = 'block';
+				setFocus(dom[cfg.after]);
 		}
-	} else el.style.display = 'none';
+	} else switch (el) {
+			case dom.playlists:
+			case dom.afteroptions:
+				dom.playlistbtn.click();
+				break;
+			default:
+				el.style.display = 'none';
+	}
 }
 
 function clearPlaylist() {
@@ -1272,6 +1285,21 @@ function keyNav(el, direction) {
 				to = el.parentNode.lastElementChild;
 				direction = 'up';
 		}
+	} else if (el && cls(el.parentNode, 'menu')) {
+		switch (direction) {
+			case 'up':
+				if (el.previousElementSibling)
+					return setFocus(el.previousElementSibling);
+			case 'right':
+				return setFocus(el.parentNode.lastElementChild);
+			case 'down':
+				if (el.nextElementSibling)
+					return setFocus(el.nextElementSibling);
+			case 'left':
+				return setFocus(el.parentNode.firstElementChild);
+			default:
+				return;
+		}
 	}
 
 	if (!to || !dom.tree.contains(to)) {
@@ -1314,7 +1342,10 @@ document.addEventListener('keydown', function(e) {
 
 	switch (e.keyCode) {
 		case 27:	// Esc
-			clearFilter();
+			if (el && cls(el.parentNode, 'menu') && cls(dom.options, 'playlistbtn'))
+				dom.playlistbtn.click();
+			else
+				clearFilter();
 			break;
 		case 90:	// Z
 			zoom();
@@ -1383,14 +1414,10 @@ document.addEventListener('keydown', function(e) {
 			break;
 		case 80:	// P
 			dom.playlistbtn.click();
-			setFocus(dom.options);
 			break;
 		case 68:	// D
 			if (cfg.locked || !onlinepls || url.length > 1) return;
-			if (!cls(dom.options, 'playlist'))
-				dom.playlistbtn.click();
 			menu('load');
-			setFocus(dom.options);
 			break;
 		case 86:	// V
 			if (cfg.locked || !onlinepls || url.length > 1) return;
@@ -1404,10 +1431,7 @@ document.addEventListener('keydown', function(e) {
 			break;
 		case 65:	// A
 			if (cfg.locked) return;
-			if (!cls(dom.options, 'playlist'))
-				dom.playlistbtn.click();
 			menu('after');
-			setFocus(dom.options);
 			break;
 		case 83:	// S
 			if (!sharing) return;
@@ -1461,12 +1485,11 @@ document.addEventListener('keydown', function(e) {
 			keyNav(el, 'right');
 			break;
 		case 13:	// Enter
-			if (dom.tree.contains(el)) {
-				if (e.shiftKey)
-					el.dispatchEvent(new CustomEvent('contextmenu'));
-				else
-					el.click();
-			}
+			if (e.shiftKey && dom.tree.contains(el))
+				el.dispatchEvent(new CustomEvent('contextmenu'));
+			else
+				el.click();
+			break;
 			break;
 		default:
 			switch (e.code) {

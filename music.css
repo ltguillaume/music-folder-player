@@ -122,7 +122,7 @@ button {
 	transition: background .1s ease-in;
 }
 	button:before { font-size: 1.05em }
-	button:hover { background: var(--bg-button-hv) }
+	button:hover, .menu > button:focus { background: var(--bg-button-hv) }
 	button::-moz-focus-inner { border: none }
 
 input, select {

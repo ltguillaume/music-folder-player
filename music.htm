@@ -42,7 +42,7 @@
 		<div id="playlistoptions">
 			<div id="playlistsdiv">
 				<button id="load" title="Add songs from online playlist (D)" onclick="menu(event)">Loa<u>d</u></button>
-				<div id="playlists" onmouseleave="menu(event)" onclick="loadPlaylistBtn(event)">
+				<div id="playlists" class="menu" onmouseleave="menu(event)" onclick="loadPlaylistBtn(event)">
 				</div>
 			</div>
 			<button id="save" title="Save playlist online (V)" onclick="prepPlaylists('save')">Sa<u>v</u>e</button>
@@ -50,7 +50,7 @@
 			<button id="export" title="Export current playlist to file (X)" onclick="exportPlaylist()">E<u>x</u>port</button>
 			<div id="afterdiv">
 				<button id="after" title="Define action after last playlist item (A)" onclick="menu(event)"><u>A</u>fter playlist</button>
-				<div id="afteroptions" onmouseleave="menu(event)" onclick="toggle(event)">
+				<div id="afteroptions" class="menu" onmouseleave="menu(event)" onclick="toggle(event)">
 					<button id="stopplayback" title="Stop playing songs after last playlist item">Stop playback</button>
 					<button id="repeatplaylist" title="Restart playback from the top">Repeat playlist</button>
 					<button id="playlibrary" title="Continue from last song's position in library">Continue from library</button>
