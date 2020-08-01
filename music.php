@@ -12,7 +12,7 @@
 	if (isset($_GET['dl']) && !in_array('..', explode('/', $_GET['dl']))) {
 		$dl = urldecode(trim($_GET['dl'], '/'));
 		if (is_dir($dl)) {
-			chdir(urldecode($dl));
+			chdir($dl);
 			$fp = popen('zip -0 -j - *', 'r');	// Or 'zip -0 -r - .' for recursive
 			header('Content-type: application/zip');
 			header('Content-disposition: attachment; filename="'. basename($dl) .'.zip"');
@@ -24,7 +24,7 @@
 			header('Content-Disposition: attachment; filename="'. basename($dl) .'"');
 			readfile($dl);
 			exit;
-		} else die('File not found');
+		} else die('File not found: '. $dl);
 	} elseif (isset($_GET['pl'])) {
 		$playlists = array();
 		if (is_dir($cfg['playlistdir'])) {

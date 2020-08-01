@@ -585,15 +585,15 @@ function fillShare(path) {
 	if (path.endsWith('/')) {
 		dom.folderuri.value = dom.songuri.value = base +'?play='+ esc(root + path);
 	} else {
-		dom.folderuri.value = base +'?play=c:'+ escBase64(btoa(root + path.substring(0, path.lastIndexOf('/'))));
-		dom.songuri.value = base +'?play=c:'+ escBase64(btoa(root + path));
+		dom.folderuri.value = root + path.substring(0, path.lastIndexOf('/'));
+		dom.songuri.value = root + path;
 	}
 }
 
 function fillPlaylistUri() {
 	ffor(document.querySelectorAll('#playlistdata > option'), function(o) {
 		if (o.value.toLowerCase() == dom.playlisturi.value.toLowerCase())
-			dom.playlisturi.value = base +'?play=pl:'+ esc(o.value);
+			dom.playlisturi.value = esc(o.value);
 	});
 }
 
@@ -797,19 +797,25 @@ function setVolume(input) {
 
 function download(type) {
 	var uri = dom[type +'uri'].value;
-	if (uri.indexOf(base) == 0) {
-		dom.a.href = 'music.php?dl='+ uri.substring(uri.indexOf('?play=') + 6);
+	if (uri) {
+		dom.a.href = base +'music.php?dl='+ esc(uri);
 		dom.a.click();
 	}
 }
 
 function share(type) {
 	var share = dom[type +'uri'];
-	if (share.value.indexOf(base) == 0) {
+	if (share.value) {
+		var clearVal = share.value;
+		if (type == 'playlist')
+			share.value = base +'?play=pl:'+ esc(share.value);
+		else
+			share.value = base +'?play=c:'+ escBase64(btoa(share.value));
 		share.select();
 		document.execCommand('copy');
 		share.nextElementSibling.nextElementSibling.className = 'copied';
 		share.blur();
+		share.value = clearVal;
 		setTimeout(function() {
 			share.nextElementSibling.nextElementSibling.className = 'link';
 		}, 1500);
@@ -818,9 +824,10 @@ function share(type) {
 
 function shareWhatsApp(type) {
 	var share = dom[type +'uri'];
-	if (share.value.indexOf(base) == 0) {
+	if (share.value) {
 		var msg = prompt(whatsappdlg, whatsappmsg);
-		if (msg != null) window.open('https://api.whatsapp.com/send?text='+ msg +' '+ encodeURIComponent(share.value));
+		if (msg != null) window.open('https://api.whatsapp.com/send?text='+ msg +' '
+			+ base +'?play=c:'+ escBase64(btoa(share.value)));
 	}
 }
 
