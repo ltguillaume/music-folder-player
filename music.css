@@ -242,14 +242,14 @@ li.over { border-top: 1px dotted var(--focus) }
 	border-radius: 3px;
 	cursor: zoom-in;
 }
-	#player.zoom:not(.fix) > #cover {
+	#player.big:not(.fix) > #cover {
 		min-width: 300px;
 		min-height: 300px;
 		max-width: 300px;
 		max-height: 300px;
 	}
-#player.zoom:not(.fix) #current { width: calc(100% - 300px) }
-#player.fullzoom:not(.fix) #cover, #player.fullzoom:not(.fix) #current, #player.fullzoom:not(.fix) #current > * {
+#player.big:not(.fix) #current { width: calc(100% - 300px) }
+#player.full:not(.fix) #cover, #player.full:not(.fix) #current, #player.full:not(.fix) #current > * {
 	display: block;
 	min-width: 0;
 	min-height: 0;
@@ -258,12 +258,12 @@ li.over { border-top: 1px dotted var(--focus) }
 	margin: 0 auto;
 	text-align: center;
 }
-	#player.fullzoom #cover { cursor: zoom-out }
-	#player.fullzoom:not(.fix) #current {
+	#player.full #cover { cursor: zoom-out }
+	#player.full:not(.fix) #current {
 		width: unset;
 		margin-top: .25em;
 	}
-	#player.fullzoom #seek { margin-bottom: .25em }
+	#player.full #seek { margin-bottom: .25em }
 
 #current {
 	width: calc(100% - 7em);

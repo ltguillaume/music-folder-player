@@ -188,11 +188,11 @@ function touchUI() {
 function fixPlayer() {
 	if (window.pageYOffset > 2 * dom.player.offsetHeight && !cls(dom.player, 'fix') && dom.doc.offsetHeight - dom.player.offsetHeight > window.innerHeight) {
 		playerheight = dom.player.offsetHeight + parseInt(window.getComputedStyle(dom.player).getPropertyValue('margin-top'));
-		dom.player.className += ' fix';
 		dom.doc.style.paddingTop = playerheight +'px';
+		dom.player.className += ' fix';
 	} else if (window.pageYOffset < playerheight) {
-		dom.player.className = dom.player.className.replace(' fix', '');
 		dom.doc.style.paddingTop = '';
+		dom.player.className = dom.player.className.replace(' fix', '');
 	}
 }
 
@@ -626,9 +626,9 @@ function timeTxt(t) {
 
 function zoom() {
 	if (cls(dom.player, 'fix'))
-		return window.scrollTo(0, 0);
-	dom.player.className = dom.player.className == '' ? 'zoom' :
-		(dom.player.className == 'zoom' ? 'fullzoom' : '');
+		return window.scrollTo({ 'top': 0, 'behavior': 'smooth' });
+	dom.player.className = cls(dom.player, 'big') ? 'full' :
+		(cls(dom.player, 'full') ? '' : 'big');
 }
 
 function seek(e) {
@@ -975,13 +975,13 @@ function playNext() {
 	cover = cover ? esc(root + path.substring(0, path.lastIndexOf('/') + 1) + cover) : defcover;
 	if (prevcover.indexOf(cover) == -1) {
 		dom.cover.style.opacity = 0;
-		if (dom.player.className == 'fullzoom') dom.current.style.opacity = 0;
+		if (dom.player.className == 'full') dom.current.style.opacity = 0;
 		setTimeout(function() {
 			dom.folder.textContent = getFolder(path);
 			dom.song.textContent = getSong(path);
 			dom.cover.src = cover;
 			setTimeout(function() {
-				if (dom.player.className == 'fullzoom') dom.current.style.opacity = '';
+				if (dom.player.className == 'full') dom.current.style.opacity = '';
 			}, 150);
 		}, 150);
 	} else {
