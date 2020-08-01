@@ -132,7 +132,10 @@ function prepUI() {
 
 	dom.cover.onload = function() { dom.cover.style.opacity = 1 }
 
-	tv = navigator.userAgent.indexOf('TV') > -1;
+	ffor(['TV', 'Andr0id', ' OMI/', 'Viera'], function(s) {
+		if (navigator.userAgent.indexOf(s) > -1) tv = true;
+	});
+
 	if ('maxTouchPoints' in navigator && navigator.maxTouchPoints > 0) touchUI();
 	else window.addEventListener('touchstart', function() {
 		touchUI();
