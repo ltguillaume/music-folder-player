@@ -22,7 +22,8 @@ var
 	retry,
 	toast,
 	track = 0,
-	tree;
+	tree,
+	tv;
 
 function init() {
 	url = document.URL.split('?play=', 2);
@@ -131,6 +132,7 @@ function prepUI() {
 
 	dom.cover.onload = function() { dom.cover.style.opacity = 1 }
 
+	tv = navigator.userAgent.indexOf('TV') > -1;
 	if ('maxTouchPoints' in navigator && navigator.maxTouchPoints > 0) touchUI();
 	else window.addEventListener('touchstart', function() {
 		touchUI();
@@ -1349,6 +1351,7 @@ document.addEventListener('keydown', function(e) {
 			else
 				clearFilter();
 			break;
+		case tv ? 51 : '':	// 3
 		case 90:	// Z
 			zoom();
 			break;
@@ -1385,6 +1388,7 @@ document.addEventListener('keydown', function(e) {
 			e.preventDefault();
 			stop();
 			break;
+		case tv ? 48 : '':	// 0
 		case 32:	// Space
 		case 179:	// MediaPlayPause
 			e.preventDefault();
@@ -1392,17 +1396,22 @@ document.addEventListener('keydown', function(e) {
 				e.target.blur();
 			playPause();
 			break;
+		case tv ? 34 : '':	// PgDn
 		case 219:	// [
 		case 177:	// MediaTrackPrevious
+			e.preventDefault();	// Necessary?
 			previous();
 			break;
+		case tv ? 33 : '':	// PgUp
 		case 221:	// ]
 		case 176:	// MediaTrackNext
+			e.preventDefault();	// Necessary?
 			next();
 			break;
 		case 75:	// K
 			skipArtist(e);
 			break;
+		case tv ? 49 : '':	// 1
 		case 69:	// E
 			dom.enqueue.click();
 			setToast(dom.enqueue);
@@ -1418,6 +1427,7 @@ document.addEventListener('keydown', function(e) {
 		case 80:	// P
 			dom.playlistbtn.click();
 			break;
+		case tv ? 55 : '':	// 7
 		case 68:	// D
 			if (cfg.locked || !onlinepls || url.length > 1) return;
 			menu('load');
@@ -1465,6 +1475,7 @@ document.addEventListener('keydown', function(e) {
 			e.preventDefault();
 			keyNav(null, 'up');
 			break;
+		case tv ? 50 : '':	// 2
 		case 38:	// ArrowUp
 			e.preventDefault();
 			if (e.shiftKey)
@@ -1472,6 +1483,7 @@ document.addEventListener('keydown', function(e) {
 			else
 				keyNav(el, 'up');
 			break;
+		case tv ? 56 : '':	// 8
 		case 40:	// ArrowDown
 			e.preventDefault();
 			if (e.shiftKey)
@@ -1479,20 +1491,24 @@ document.addEventListener('keydown', function(e) {
 			else
 				keyNav(el, 'down');
 			break;
+		case tv ? 52 : '':	// 4
 		case 37:	// ArrowLeft
 			e.preventDefault();
 			keyNav(el, 'left');
 			break;
+		case tv ? 54 : '':	// 6
 		case 39:	// ArrowRight
 			e.preventDefault();
 			keyNav(el, 'right');
 			break;
+		case tv ? 53 : '':	// 5
 		case 13:	// Enter
 			if (e.shiftKey && dom.tree.contains(el))
 				el.dispatchEvent(new CustomEvent('contextmenu', { bubbles: true }));
 			else
 				el.click();
 			break;
+		case tv ? 57 : '':	// 9
 		case 66:	// B
 			var dim = cls(dom.doc, 'dim') ? '' : ' dim';
 			dom.doc.className = cls(dom.doc, 'touch') ? 'touch' : '' + dim;
