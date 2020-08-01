@@ -1487,7 +1487,7 @@ document.addEventListener('keydown', function(e) {
 			break;
 		case 13:	// Enter
 			if (e.shiftKey && dom.tree.contains(el))
-				el.dispatchEvent(new CustomEvent('contextmenu'));
+				el.dispatchEvent(new CustomEvent('contextmenu', { bubbles: true }));
 			else
 				el.click();
 			break;
