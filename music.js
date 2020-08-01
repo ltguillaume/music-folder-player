@@ -186,7 +186,9 @@ function touchUI() {
 }
 
 function fixPlayer() {
-	if (window.pageYOffset > 2 * dom.player.offsetHeight && !cls(dom.player, 'fix') && dom.doc.offsetHeight - dom.player.offsetHeight > window.innerHeight) {
+	if (!cls(dom.player, 'fix') && !cls(dom.doc, 'dim')
+		&& window.pageYOffset > 2 * dom.player.offsetHeight
+		&& dom.doc.offsetHeight - dom.player.offsetHeight > window.innerHeight) {
 		playerheight = dom.player.offsetHeight + parseInt(window.getComputedStyle(dom.player).getPropertyValue('margin-top'));
 		dom.doc.style.paddingTop = playerheight +'px';
 		dom.player.className += ' fix';
@@ -625,7 +627,7 @@ function timeTxt(t) {
 }
 
 function zoom() {
-	if (cls(dom.player, 'fix'))
+	if (window.pageYOffset > 2 * dom.player.offsetHeight)
 		return window.scrollTo({ 'top': 0, 'behavior': 'smooth' });
 	dom.player.className = cls(dom.player, 'big') ? 'full' :
 		(cls(dom.player, 'full') ? '' : 'big');
@@ -1491,6 +1493,9 @@ document.addEventListener('keydown', function(e) {
 			else
 				el.click();
 			break;
+		case 66:	// B
+			var dim = cls(dom.doc, 'dim') ? '' : ' dim';
+			dom.doc.className = cls(dom.doc, 'touch') ? 'touch' : '' + dim;
 			break;
 		default:
 			switch (e.code) {

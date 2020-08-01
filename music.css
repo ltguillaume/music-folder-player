@@ -72,6 +72,10 @@ html.touch body {
 html.splash > body > div,
 html.splash > body > div:before { opacity: 0 }
 
+html.dim > body { background: black }
+html.dim > body > div,
+html.dim > body > div:before { opacity: .25 }
+
 body, button, input {
 	font-family: Barlow, "Segoe UI", sans-serif;
 	line-height: 1.25em;
@@ -81,7 +85,10 @@ body, button, input {
 	color: var(--text);
 }
 
-body { background: var(--bg-body) }
+body {
+	background: var(--bg-body);
+	transition: background .4s ease-out;
+}
 
 body > div {
 	margin: .5em 2em;
@@ -300,7 +307,7 @@ li.over { border-top: 1px dotted var(--focus) }
 	#toast.error { background: var(--bg-toast-error) !important }
 	#options button:before, #toast:before, li:before { margin-right: .25em }
 
-#player.fix {
+html:not(.dim) #player.fix {
 	position: fixed;
 	top: 0;
 	left: 0;
