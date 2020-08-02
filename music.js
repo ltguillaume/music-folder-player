@@ -595,7 +595,7 @@ function esc(s) {
 }
 
 function escBase64(s) {
-	return s.replace(/[\/+=]/g, function(char) { return escape(char) });
+	return s.replace(/=+$/, '').replace(/[\/+=]/g, function(char) { return escape(char) });
 }
 
 function getFolder(path) {
