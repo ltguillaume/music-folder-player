@@ -590,13 +590,6 @@ function fillShare(path) {
 	}
 }
 
-function fillPlaylistUri() {
-	ffor(document.querySelectorAll('#playlistdata > option'), function(o) {
-		if (o.value.toLowerCase() == dom.playlisturi.value.toLowerCase())
-			dom.playlisturi.value = esc(o.value);
-	});
-}
-
 function esc(s) {
 	return s.replace(/\/+$/, '').replace(/[(\?=&# ]/g, function(char) { return escape(char) });
 }

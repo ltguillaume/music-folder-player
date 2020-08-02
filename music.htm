@@ -73,7 +73,7 @@
 				<button id="songwhatsapp" class="whatsapp hide" title="Share song link via WhatsApp" onclick="shareWhatsApp('song')"></button>
 			</div>
 			<div id="shareplaylist" class="playlist sharediv">
-				<input id="playlisturi" class="uri" placeholder="&#x25BE;" list="playlistdata" onchange="fillPlaylistUri()" onclick="this.select()" onfocus="prepPlaylists('share')">
+				<input id="playlisturi" class="uri" placeholder="&#x25BE;" list="playlistdata" onclick="this.select()" onfocus="prepPlaylists('share')">
 				<button id="clearuri" class="clear" title="Clear playlist field" onclick="dom.playlisturi.value = ''"></button>
 				<button id="playlistshare" class="link" title="Copy playlist link to clipboard" onclick="share('playlist')"></button>
 				<button id="playlistwhatsapp" class="whatsapp hide" title="Share playlist link via WhatsApp" onclick="shareWhatsApp('playlist')"></button>
