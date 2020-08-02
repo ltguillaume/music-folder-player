@@ -389,10 +389,10 @@ function addFolder(e) {
 	e.stopPropagation();
 	var li = e.target;
 	if (confirm(addfolderdlg +'\n'+ li.path.substring(li.path.lastIndexOf('/') + 1))) {
-		li.className += ' dim';
+		if (!cls(li, 'dim')) li.className += ' dim';
 		ffor(li.querySelectorAll('li.song'), function(s) {
 			add(s.id);
-			s.className += ' dim';
+			if (!cls(li, 'dim')) s.className += ' dim';
 		});
 	}
 }
@@ -436,7 +436,7 @@ function addSong(e) {
 		load(li.id, 'next');
 		playNext();
 	}
-	li.className += ' dim';
+	if (!cls(li, 'dim')) li.className += ' dim';
 	if (audio[track].paused) fillShare(li.path);
 }
 
@@ -445,7 +445,7 @@ function addSongNext(e) {
 	e.stopPropagation();
 	var li = e.target;
 	add(li.id, true);
-	li.className += ' dim';
+	if (!cls(li, 'dim')) li.className += ' dim';
 	if (audio[track].paused) fillShare(li.path);
 }
 
