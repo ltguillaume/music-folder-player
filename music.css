@@ -296,13 +296,14 @@ li.over { border-top: 1px dotted var(--focus) }
 
 #toast {
 	display: none;
-	position: absolute;
+	position: fixed;
 	top: 0;
 	right: 0;
 	padding: 1em;
 	background: var(--bg-toast) !important;
 	box-shadow: 0 0 2px 2px var(--bg-toast);
 	cursor: default;
+	z-index: 3;
 }
 	#toast.error { background: var(--bg-toast-error) !important }
 	#options button:before, #toast:before, li:before { margin-right: .25em }

@@ -936,8 +936,7 @@ function add(id, next = false) {
 		if (cfg.index > -1) i++;
 		for (; i < cfg.playlist.length && (next ? cfg.playlist[i].playNext : true); i++) {
 			if (s.path == cfg.playlist[i].path) {
-				dom.tree.className = 'dim';
-				setTimeout(function() { dom.tree.className = '' }, 500);
+				setToast({ 'className': 'error', 'textContent': alreadyadded });
 				return;
 			}
 		}

@@ -41,36 +41,7 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 - Share links directly to WhatsApp (optional)
 
 ## List of hotkeys
-Hotkey | Command
-:---: |---
-Z | Zoom cover image (full size, 300px)
-0 | Stop playback (time to 0:00)
-Space | Play/pause
-\[ | Play previous
-\] | Play next
-\- | Jump back 5s
-\+ | Jump forward 5s
-Shift \- | Volume down
-Shift \+ | Volume up
-U | Show/hide volume
-M | Toggle Mute
-E | Toggle "Enqueue songs on click"
-R | Toggle "Randomize upcoming playlist items"
-O | Toggle "Crossfade between songs"
-P | Show/hide "Playlist options"
-S | Show/hide "Share options"
-L | Toggle "Lock playlist and playback controls"
-D | Load playlist: Add songs from saved playlist
-V | Save playlist: Save playlist online
-I | Import playlist: Add songs from exported playlist
-X | Export current playlist to file
-A | Define action after last playlist item
-C | Clear playlist
-F | Focus library filter
-Esc | Reset library filter
-Arrow keys | Navigate library tree
-Enter | Play/Add to playlist
-Shift-Enter | Play song next/Add folder to playlist
+A list of all the hotkeys can be found in the [Wiki](https://github.com/ltGuillaume/MusicFolderPlayer/wiki/List-of-hotkeys).
 
 ## Installation
 You can have a test setup running within 2 minutes. For all the details, check the [Wiki](https://github.com/ltGuillaume/MusicFolderPlayer/wiki).
