@@ -791,7 +791,7 @@ function setVolume(input) {
 function download(type) {
 	var uri = dom[type +'uri'].value;
 	if (uri) {
-		dom.a.href = base +'music.php?dl='+ esc(uri);
+		dom.a.href = 'music.php?dl='+ esc(uri);
 		dom.a.click();
 	}
 }
