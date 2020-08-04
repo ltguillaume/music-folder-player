@@ -13,8 +13,11 @@
 		$dl = urldecode(trim($_GET['dl'], '/'));
 		if (is_dir($dl)) {
 			if (!chdir($dl)) die('Could not open folder: '. $dl);
-			$fp = popen('zip -0 -r - .', 'r');	// Or 'zip -0 -j - *' for non-recursive
-			if (!$fp) die('Error creating zip: '. $fp);
+			$cmd = substr(php_uname(), 0, 7) == "Windows" ?
+				'7za a -tzip -mx1 -so . 2>&1' :	// -an -bd
+				'zip -0 -r - . 2>&1';	// Or 'zip -0 -j - * 2>&1' for non-recursive
+			$fp = popen($cmd, 'rb');
+			if (!$fp) die('Error creating zip');
 			header('Content-type: application/zip');
 			header('Content-disposition: attachment; filename="'. basename($dl) .'.zip"');
 			fpassthru($fp);
