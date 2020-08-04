@@ -583,7 +583,7 @@ function getIndex(li) {
 function fillShare(path) {
 	if (!sharing) return;
 	if (path.endsWith('/')) {
-		dom.folderuri.value = dom.songuri.value = base +'?play='+ esc(root + path);
+		dom.folderuri.value = dom.songuri.value = root + path;
 	} else {
 		dom.folderuri.value = root + path.substring(0, path.lastIndexOf('/'));
 		dom.songuri.value = root + path;
