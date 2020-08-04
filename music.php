@@ -12,8 +12,9 @@
 	if (isset($_GET['dl']) && !in_array('..', explode('/', $_GET['dl']))) {
 		$dl = urldecode(trim($_GET['dl'], '/'));
 		if (is_dir($dl)) {
-			chdir($dl);
-			$fp = popen('zip -0 -j - *', 'r');	// Or 'zip -0 -r - .' for recursive
+			if (!chdir($dl)) die('Could not open folder: '. $dl);
+			$fp = popen('zip -0 -r - .', 'r');	// Or 'zip -0 -j - *' for non-recursive
+			if (!$fp) die('Error creating zip: '. $fp);
 			header('Content-type: application/zip');
 			header('Content-disposition: attachment; filename="'. basename($dl) .'.zip"');
 			fpassthru($fp);
