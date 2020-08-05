@@ -94,6 +94,7 @@ function init() {
 	var lib = document.createElement('script');
 	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ esc(url[1]) : '');
 	lib.onload = function() {
+		if (!pathexp) alert('Please set the variable "pathexp" in music.ini (see music.ini.template)!');
 		pathexp = pathexp.replace(/[\/^$*+?.()|[\]{}]/g, '\\$&').replace(/dummy/g,'.*')
 			.replace('artist', '(?<artist>.*)')
 			.replace('year','(?<year>\\d+)')
