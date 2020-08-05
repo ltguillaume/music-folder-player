@@ -5,17 +5,18 @@ var
 	dom,
 	library,
 	ls,
-	songs = Array(),
+	pathexp,
+	songs = [],
 	url,
 
 	drag,
 	errorcount = 0,
-	filteredsongs = Array(),
+	filteredsongs = [],
 	mode,
 	onplaylist,
 	onseek,
 	onscrollwait,
-	played = Array(),
+	played = [],
 	playerheight,
 	playlistloaded,
 	playlists,
@@ -36,8 +37,8 @@ function init() {
 		'player': get('player'),
 		'cover': get('cover'),
 		'current': get('current'),
-		'folder': get('folder'),
-		'song': get('song'),
+		'album': get('album'),
+		'title': get('title'),
 		'time': get('time'),
 		'seek': get('seek'),
 		'volume': get('volume'),
@@ -93,6 +94,13 @@ function init() {
 	var lib = document.createElement('script');
 	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ esc(url[1]) : '');
 	lib.onload = function() {
+		pathexp = pathexp.replace(/[\/^$*+?.()|[\]{}]/g, '\\$&').replace(/dummy/g,'.*')
+			.replace('artist', '(?<artist>.*)')
+			.replace('year','(?<year>\\d+)')
+			.replace('album', '(?<album>.*)')
+			.replace('track','(?<track>\\d+)')
+			.replace('title', '(?<title>.*)')
+			.replace('extension', '(?<extension>.*)')
 		prepUI();
 		buildLibrary('', library, dom.tree);
 		buildPlaylist();
@@ -108,7 +116,7 @@ function init() {
 
 function prepUI() {
 	ls = ls();
-	title.textContent = deftitle;
+	pagetitle.textContent = deftitle;
 	dom.volumeslider.max = maxvolume;
 	dom.volumeslider.value = cfg.volume;
 	if (cfg.enqueue) dom.enqueue.className = 'on';
@@ -261,7 +269,7 @@ function prepAudio(a) {
 
 	a.onplay = function() {
 		dom.playpause.className = 'playing';
-		dom.folder.className = dom.song.className = '';
+		dom.album.className = dom.title.className = '';
 		if (cfg.index != -1) {
 			dom.playlist.childNodes[cfg.index].className = 'playing';
 			if (!onplaylist)
@@ -272,7 +280,7 @@ function prepAudio(a) {
 	a.onpause = function(e) {
 		if (a == audio[track]) {
 			dom.playpause.className = '';
-			dom.folder.className = dom.song.className = 'dim';
+			dom.album.className = dom.title.className = 'dim';
 		}
 	};
 
@@ -289,7 +297,7 @@ function prepAudio(a) {
 		if ((a.duration - a.currentTime) < 20) {
 			if (!audio[+!track].prepped) prepNext();
 			if (cfg.crossfade && !a.fade && a.duration - a.currentTime < 10) {
-				log('Fade out: '+ dom.song.textContent);
+				log('Fade out: '+ dom.title.textContent);
 				a.fade = setInterval(function() {
 					if (a.volume > 0.04)
 						a.volume -= 0.04;
@@ -346,7 +354,7 @@ function buildLibrary(root, folder, element) {
 				li.className = 'song';
 				li.path = root + f;
 				if (cover) li.cover = cover;
-				li.textContent = getSong(f);
+				li.textContent = f.substring(f.lastIndexOf('/') + 1, f.lastIndexOf('.'));
 				li.tabIndex = 1;
 				songs.push(li);
 				element.appendChild(li);
@@ -461,8 +469,9 @@ function buildPlaylist() {
 		dom.playlist.appendChild(li);
 		if (i == cfg.index) {
 			var path = cfg.playlist[i].path;
-			dom.folder.textContent = getFolder(path);
-			dom.song.textContent = getSong(path);
+			var nfo = getSongInfo(path);
+			dom.album.innerHTML = getAlbumInfo(nfo);
+			dom.title.innerHTML = nfo.title;
 		}
 	}
 
@@ -481,8 +490,9 @@ function playlistItem(s) {
 	if (s.id == 'last') {
 		li.id = 'last';
 	} else {
-		li.innerHTML = getSong(s.path) +'<span class="artist">'+ getArtist(s.path, true) +'</span>';
-		li.title = getFolder(s.path) + (mode ? '' : '\n\n'+ playlistdesc);
+		var nfo = getSongInfo(s.path);
+		li.innerHTML = nfo.title +' <span class="artist">'+ (nfo.artist ? '('+ nfo.artist +')' : '') +'</span>';
+		li.title = getAlbumInfo(nfo) + (mode ? '' : '\n\n'+ playlistdesc);
 	}
 	return li;
 }
@@ -598,21 +608,22 @@ function escBase64(s) {
 	return s.replace(/=+$/, '').replace(/[\/+=]/g, function(char) { return escape(char) });
 }
 
-function getFolder(path) {
-	if (path.indexOf('/') == -1 && url.length > 1)
-		path = root;
-	return path.substring(path.lastIndexOf('/', path.lastIndexOf('/') - 1) + 1, path.lastIndexOf('/'));
+function getSongInfo(path) {
+	var nfo = path.match(pathexp);
+	if (!nfo) return {
+		'artist': path.substring(path.lastIndexOf('/', path.lastIndexOf('/') - 1) + 1, path.lastIndexOf('/')),
+		'title': path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.'))
+	};
+	log(nfo.groups);
+	return nfo.groups;
 }
 
-function getArtist(path, parenthesize = false) {
-	var artist = getFolder(path);
-	artist = artist.substring(0, artist.indexOf(' -'));
-	if (parenthesize && artist.length > 0) artist = ' ('+ artist + ')';
-	return (artist.length > 0 ? artist : '');
-}
-
-function getSong(path) {
-	return path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.'));
+function getAlbumInfo(nfo) {
+	var album = (nfo.artist ? nfo.artist +' - ' : '')
+		+ (nfo.year ? '('+ nfo.year +') ' : '')
+		+ (nfo.album || '');
+	log('getAlbumInfo(): '+ album);
+	return album;
 }
 
 function timeTxt(t) {
@@ -667,7 +678,7 @@ function previous() {
 function skipArtist(e) {
 	e.preventDefault();
 	if (!cfg.locked) {
-		var artist = dom.folder.textContent;
+		var artist = dom.album.textContent;
 		artist = artist.indexOf(' -') > 0 ? artist.substring(0, artist.indexOf(' -')) : false;
 		if (artist && confirm(artist +'\n'+ skipartistdlg)) {
 			cfg.skip.push(artist);
@@ -738,9 +749,10 @@ function clearPlayed() {
 }
 
 function artistSkipped(path) {
-	if (debug && cfg.skip.indexOf(getArtist(decodeURI(path))) != -1)
-		log('Artist '+ getArtist(decodeURI(path)) +' skipped');
-	return cfg.skip.indexOf(getArtist(decodeURI(path))) != -1;
+	var artist = getSongInfo(path).artist;
+	if (debug && cfg.skip.indexOf() != -1)
+		log('Artist '+ artist +' skipped');
+	return cfg.skip.indexOf(artist) != -1;
 }
 
 function load(id, addtoplaylist = false) {
@@ -976,6 +988,7 @@ function playNext() {
 	start(a);
 
 	var path = cfg.playlist[cfg.index].path,
+		nfo = getSongInfo(path),
 		cover = cfg.playlist[cfg.index].cover,
 		prevcover = dom.cover.src || defcover;
 	cover = cover ? esc(root + path.substring(0, path.lastIndexOf('/') + 1) + cover) : defcover;
@@ -983,23 +996,23 @@ function playNext() {
 		dom.cover.style.opacity = 0;
 		if (dom.player.className == 'full') dom.current.style.opacity = 0;
 		setTimeout(function() {
-			dom.folder.textContent = getFolder(path);
-			dom.song.textContent = getSong(path);
+			dom.album.innerHTML = getAlbumInfo(nfo);
+			dom.title.innerHTML = nfo.title;
 			dom.cover.src = cover;
 			setTimeout(function() {
 				if (dom.player.className == 'full') dom.current.style.opacity = '';
 			}, 150);
 		}, 150);
 	} else {
-		dom.folder.textContent = getFolder(path);
-		dom.song.textContent = getSong(path);
+		dom.album.innerHTML = getAlbumInfo(nfo);
+		dom.title.innerHTML = nfo.title;
 	}
 
-	title.textContent = getSong(path) + getArtist(path, true);
+	pagetitle.textContent = nfo.title + (nfo.artist ? ' - '+ nfo.artist : '');
 	fillShare(path);
 	if ('mediaSession' in navigator) {
-		navigator.mediaSession.metadata.title =  getSong(path);
-		navigator.mediaSession.metadata.artist = getArtist(path);
+		navigator.mediaSession.metadata.title =  nfo.title;
+		navigator.mediaSession.metadata.artist = nfo.artist;
 		navigator.mediaSession.metadata.artwork = [{ src: cover }];
 	}
 }

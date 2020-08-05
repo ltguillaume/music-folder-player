@@ -282,9 +282,12 @@ li.over { border-top: 1px dotted var(--focus) }
 		text-overflow: ellipsis;
 	}
 
-#folder, #song { cursor: alias }
+#album, #title {
+	height: 1.25em;
+	cursor: alias;
+}
 
-#song {
+#title {
 	font-weight: bold;
 	letter-spacing: -.02em;
 }
