@@ -609,19 +609,23 @@ function escBase64(s) {
 }
 
 function getSongInfo(path) {
-	var nfo = path.match(pathexp);
-	if (!nfo) return {
-		'artist': path.substring(path.lastIndexOf('/', path.lastIndexOf('/') - 1) + 1, path.lastIndexOf('/')),
-		'title': path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.'))
-	};
-	log(nfo.groups);
-	return nfo.groups;
+	try {
+		var nfo = path.match(pathexp);
+		log(nfo.groups);
+		return nfo.groups;
+	} catch(e) {
+		log(e);
+		return {
+			'artist': path.substring(path.lastIndexOf('/', path.lastIndexOf('/') - 1) + 1, path.lastIndexOf('/')),
+			'title': path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.'))
+		};
+	}
 }
 
 function getAlbumInfo(nfo) {
-	var album = (nfo.artist ? nfo.artist +' - ' : '')
-		+ (nfo.year ? '('+ nfo.year +') ' : '')
-		+ (nfo.album || '');
+	var artist = nfo.artist ? nfo.artist : '';
+	var album = (nfo.year ? '('+ nfo.year +') ' : '') + (nfo.album || '');
+	album = artist + (album.length > 1 ? ' - '+ album : '');
 	log('getAlbumInfo(): '+ album);
 	return album;
 }
