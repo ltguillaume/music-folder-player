@@ -14,7 +14,7 @@ playlistdir = music.pls
 
 [client]
 ; USE SINGLE QUOTES AROUND STRINGS!
-pathexp = 'dummy/artist - (year) album/track - title.extension'
+pathexp = 'dummy/artist - year album/track title.extension'
 ; Template for your path structure
 autoplay = 1
 ; Try to start playback on load (0 = off, 1 = for shared links, 2 = also in main library)

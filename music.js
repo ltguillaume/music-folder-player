@@ -95,13 +95,15 @@ function init() {
 	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ esc(url[1]) : '');
 	lib.onload = function() {
 		if (!pathexp) alert('Please set the variable "pathexp" in music.ini (see music.ini.template)!');
-		pathexp = pathexp.replace(/[\/^$*+?.()|[\]{}]/g, '\\$&').replace(/dummy/g,'.*')
-			.replace('artist', '(?<artist>.*)')
-			.replace('year','(?<year>\\d+)')
+		pathexp = pathexp.replace(/[\/^$*+?.()|[\]{}]/g, '\\$&')
+			.replace(/ /g,'[\\s\\.\\-()]*')
+			.replace(/dummy/g,'.+')
+			.replace('artist', '(?<artist>.*\\b)')
+			.replace('year','(?<year>\\d*)')
 			.replace('album', '(?<album>.*)')
-			.replace('track','(?<track>[\\d|\\.]+)')
+			.replace('track','(?<track>[\\d\\.]*)')
 			.replace('title', '(?<title>.*)')
-			.replace('extension', '(?<extension>.*)')
+			.replace('extension', '(?<extension>.*\\b)');
 		prepUI();
 		buildLibrary('', library, dom.tree);
 		buildPlaylist();
@@ -612,6 +614,7 @@ function escBase64(s) {
 function getSongInfo(path) {
 	try {
 		var nfo = path.match(pathexp);
+		log(path);
 		log(nfo.groups);
 		return nfo.groups;
 	} catch(e) {
