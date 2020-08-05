@@ -99,7 +99,7 @@ function init() {
 			.replace('artist', '(?<artist>.*)')
 			.replace('year','(?<year>\\d+)')
 			.replace('album', '(?<album>.*)')
-			.replace('track','(?<track>\\d+)')
+			.replace('track','(?<track>[\\d|\\.]+)')
 			.replace('title', '(?<title>.*)')
 			.replace('extension', '(?<extension>.*)')
 		prepUI();
