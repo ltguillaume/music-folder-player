@@ -612,6 +612,8 @@ function escBase64(s) {
 }
 
 function getSongInfo(path) {
+	if (path.indexOf('/') == -1 && url.length > 1)
+		path = root;	// For shared songs/folders
 	try {
 		var nfo = path.match(pathexp);
 		log(path);
@@ -619,10 +621,14 @@ function getSongInfo(path) {
 		return nfo.groups;
 	} catch(e) {
 		log(e);
-		return {
-			'artist': path.substring(path.lastIndexOf('/', path.lastIndexOf('/') - 1) + 1, path.lastIndexOf('/')),
+		var artalb = path.substring(path.lastIndexOf('/', path.lastIndexOf('/') - 1) + 1, path.lastIndexOf('/'));
+		var nfo = {
+			'artist': artalb.substring(0, artalb.indexOf(' -')),
+			'album': artalb.substring(artalb.indexOf('- ') + 2),
 			'title': path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.'))
 		};
+		log(nfo);
+		return nfo;
 	}
 }
 
