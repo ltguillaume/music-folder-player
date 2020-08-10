@@ -953,18 +953,15 @@ function add(id, next = false) {
 		'cover': songs[id].cover
 	};
 
-	var i = nodupes || cfg.index == -1 ? 0 : cfg.index;
+	var i = (nodupes || cfg.index == -1) ? 0 : cfg.index;
 	if (cfg.playlist.length > 0) {
-		if (next && s.path == cfg.playlist[i].path) {	// Currently playing
-			if (cfg.index > -1) cfg.index--;
+		if (next && cfg.index > -1 && s.path == cfg.playlist[i].path) {	// Currently playing
+			cfg.index--;
 			return;
 		}
-		if (cfg.index > -1) i++;
 		for (; i < cfg.playlist.length && (next ? cfg.playlist[i].playNext : true); i++) {
-			if (s.path == cfg.playlist[i].path) {
-				setToast({ 'className': 'error', 'textContent': alreadyadded });
-				return;
-			}
+			if (s.path == cfg.playlist[i].path)
+				return setToast({ 'className': 'error', 'textContent': alreadyadded });
 		}
 	}
 
