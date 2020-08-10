@@ -613,7 +613,7 @@ function escBase64(s) {
 
 function getSongInfo(path) {
 	if (path.indexOf('/') == -1 && url.length > 1)
-		path = root;	// For shared songs/folders
+		path = root +'/'+ path;	// For shared songs/folders
 	try {
 		var nfo = path.match(pathexp);
 		log(path);
