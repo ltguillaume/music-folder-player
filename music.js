@@ -621,12 +621,15 @@ function getSongInfo(path) {
 		return nfo.groups;
 	} catch(e) {
 		log(e);
-		var artalb = path.substring(path.lastIndexOf('/', path.lastIndexOf('/') - 1) + 1, path.lastIndexOf('/'));
-		var nfo = {
-			'artist': artalb.substring(0, artalb.indexOf(' -')),
-			'album': artalb.substring(artalb.indexOf('- ') + 2),
-			'title': path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.'))
-		};
+		var nfo, artalb = path.substring(path.lastIndexOf('/', path.lastIndexOf('/') - 1) + 1, path.lastIndexOf('/'));
+		if (artalb.indexOf(' -') == -1)
+			nfo = { 'artist': artalb }
+		else
+			nfo = {
+				'artist': artalb.substring(0, artalb.indexOf(' -')),
+				'album': artalb.substring(artalb.indexOf('- ') + 2)
+			}
+		nfo.title = path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.'));
 		log(nfo);
 		return nfo;
 	}
