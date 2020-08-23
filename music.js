@@ -205,10 +205,10 @@ function fixPlayer() {
 
 function ls() {
 	var def = {
-		'crossfade': false,
-		'enqueue': false,
-		'random': false,
-		'after': (url.length == 1 ? 'randomlibrary' : 'playlibrary'),
+		'crossfade': default_crossfade,
+		'enqueue': default_enqueue,
+		'random': default_random,
+		'after': (url.length == 1 ? default_action_after_library : default_action_after_playlist),
 		'locked': false,
 		'password': false,
 		'playlist': [],

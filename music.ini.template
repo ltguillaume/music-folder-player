@@ -40,6 +40,23 @@ whatsappmsg = 'Have a listen to'
 ; Default WhatsApp message
 maxvolume = .9
 ; Default volume (.9 might prevent clipping during playback)
+default_crossfade = false
+; whether the 'crossfade' ui option should be on by default
+default_random = false
+; whether the 'random' ui option should be on by default
+default_enqueue = false
+; whether the 'enqueue' ui option should be on by default
+default_action_after_playlist = 'playlibrary'
+; default value for the 'after playlist' ui option when triggered from a playlist/folder url
+; valid values are:
+;   - 'stopplayback': just stop playing
+;   - 'repeatplaylist': restart the playlist from the beginning
+;   - 'playlibrary': play the song that follows the last played one in the library
+;   - 'randomlibrary': play any random song from the library
+;   - 'randomfiltered': play any random song matching the current library filter
+default_action_after_library = 'randomlibrary'
+; default value for the 'after playlist' ui option when triggered from the main library url
+; see default_action_after_playlist for the valid values
 
 errorautoplay    = 'Your browser is blocking autoplay'
 errorfile        = 'File not found'
