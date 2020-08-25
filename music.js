@@ -955,6 +955,7 @@ function add(id, next = false) {
 			cfg.index--;
 			return;
 		}
+		i++;
 		for (; i < cfg.playlist.length && (next ? cfg.playlist[i].playNext : true); i++) {
 			if (s.path == cfg.playlist[i].path)
 				return setToast({ 'className': 'error', 'textContent': alreadyadded });
