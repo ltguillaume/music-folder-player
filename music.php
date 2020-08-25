@@ -49,7 +49,7 @@
 	}
 
 	foreach($ini['client'] as $key => $value)
-		echo 'var '. $key .'='. $value .';'. PHP_EOL;
+		echo (stristr($key, '.') ? '' : 'var ') . $key .'='. $value .';'. PHP_EOL;
 	
 	$dir = $cfg['root'];
 	if (isset($_GET['play']) && !in_array('..', explode('/', $_GET['play']))) {

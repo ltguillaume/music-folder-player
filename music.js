@@ -2,6 +2,7 @@ var
 	audio,
 	base,
 	cfg,
+	def = { 'playlist': [], 'skip': [], 'index': -1 },
 	dom,
 	library,
 	ls,
@@ -119,8 +120,8 @@ function init() {
 
 function prepUI() {
 	ls = ls();
-	pagetitle.textContent = deftitle;
-	dom.volumeslider.max = maxvolume;
+	pagetitle.textContent = def.title;
+	dom.volumeslider.max = def.volume;
 	dom.volumeslider.value = cfg.volume;
 	if (cfg.enqueue) dom.enqueue.className = 'on';
 	if (cfg.random) dom.random.className = 'on';
@@ -215,20 +216,8 @@ function fixPlayer() {
 }
 
 function ls() {
-	var def = {
-		'crossfade': false,
-		'enqueue': false,
-		'random': false,
-		'after': (url.length == 1 ? 'randomlibrary' : 'playlibrary'),
-		'locked': false,
-		'password': false,
-		'playlist': [],
-		'skip': [],
-		'index': -1,
-		'volume': maxvolume
-	};
-
 	if (url.length > 1) {	// Don't use saved options & playlist when not in main library
+		def.after = 'playlibrary';
 		cfg = def;
 		return false;
 	}
@@ -1004,8 +993,8 @@ function playNext() {
 	var path = cfg.playlist[cfg.index].path,
 		nfo = getSongInfo(path),
 		cover = cfg.playlist[cfg.index].cover,
-		prevcover = dom.cover.src || defcover;
-	cover = cover ? esc(root + path.substring(0, path.lastIndexOf('/') + 1) + cover) : defcover;
+		prevcover = dom.cover.src || def.cover;
+	cover = cover ? esc(root + path.substring(0, path.lastIndexOf('/') + 1) + cover) : def.cover;
 	if (prevcover.indexOf(cover) == -1) {
 		dom.cover.style.opacity = 0;
 		if (dom.player.className == 'full') dom.current.style.opacity = 0;
@@ -1388,7 +1377,7 @@ document.addEventListener('keydown', function(e) {
 		case 187:	// =
 			e.preventDefault();
 			if (e.shiftKey)
-				setVolume(Math.min(cfg.volume + .05, maxvolume));
+				setVolume(Math.min(cfg.volume + .05, def.volume));
 			else
 				audio[track].currentTime += 5;
 			break;
