@@ -15,34 +15,48 @@ playlistdir = music.pls
 [client]
 ; USE SINGLE QUOTES AROUND STRINGS!
 ; Template for your path structure
-pathexp = 'dummy/artist - year album/track title.extension'
-; Try to start playback on load (0 = off, 1 = for shared links, 2 = also in main library)
 autoplay = 1
 ; Start next song (.44)s before ending the current (for near-gapless playback)
 buffersec = .44
 ; Show some debug messages in console
 debug = false
+
+; Default for continued playback after finishing the playlist
+; Values: 'stopplayback', 'repeatplaylist', 'playlibrary', 'randomlibrary', 'randomfiltered'
+def.after = 'randomlibrary'
 ; Default cover image if none found
-defcover = 'music.png'
+def.cover = 'music.png'
+; Default state for Crossfade
+def.crossfade = false
+; Default state for Enqueue
+def.enqueue = false
+; Default state for Lock
+def.lock = false
+; Default password for locked state
+def.pass = false
+; Default state for Random
+def.random = false
 ; Default page title
-deftitle = 'Music'
+def.title = 'Music'
+; Default (maximum) volume (.9 might prevent clipping during playback)
+def.volume = .9
+
 ; Local storage ID for this instance
 lsid = 'music_folder_player'
 ; Maximum amount of error before playback stops
 maxerrors = 5
-; Default volume (.9 might prevent clipping during playback)
-maxvolume = .9
-; Don't add already played songs to playlist
+; Don't allow adding previously played songs (i.e. songs above the playback cursor)
 nodupes = false
 ; Show buttons to load/save playlists online
 onlinepls = true
 ; Show options to share songs, albums and playlists
+pathexp = 'dummy/artist - year album/track title.extension'
+; Try to start playback on load (0 = off, 1 = for shared links, 2 = also in main library)
 sharing = true
 ; Add button to share directly to WhatsApp
 whatsapp = true
-; Default WhatsApp message
-whatsappmsg = 'Have a listen to'
 
+; Strings
 errorautoplay    = 'Your browser is blocking autoplay'
 errorfile        = 'File not found'
 playlistdesc     = 'L = Play now\nR = Find in library'
@@ -60,3 +74,4 @@ wrongpassdlg     = 'Intruder alert!'
 noplaylists      = 'No playlists available'
 errorsave        = 'Error on saving:'
 clearplaylistdlg = 'Clear the playlist?'
+whatsappmsg      = 'Have a listen to'
