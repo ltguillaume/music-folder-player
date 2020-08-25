@@ -497,7 +497,7 @@ function playItem(e) {
 function findItem(e) {
 	e.preventDefault();
 	var s = e.target.tagName.toLowerCase() == 'li' ? e.target : (e.target.parentNode.tagName.toLowerCase() == 'li' ? e.target.parentNode : null);
-	if (s) setFilter(s.firstChild.textContent);
+	if (s) setFilter(s.firstChild.textContent.trim());
 }
 
 function prepDrag(e) {
