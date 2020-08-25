@@ -419,7 +419,6 @@ html:not(.dim) #player.fix {
 }
 #playlist li:before { margin-left: -1.25em }
 #playlist li[error="1"] { color: red }
-#playlist li * { pointer-events: none }
 
 #filterdiv {
 	margin-right: 2em;

@@ -495,9 +495,13 @@ function playItem(e) {
 }
 
 function findItem(e) {
+	if (mode || cls(dom.doc, 'touch')) return;
 	e.preventDefault();
-	var s = e.target.tagName.toLowerCase() == 'li' ? e.target : (e.target.parentNode.tagName.toLowerCase() == 'li' ? e.target.parentNode : null);
-	if (s) setFilter(s.firstChild.textContent.trim());
+	var tag = e.target.tagName.toLowerCase();
+	if (tag == 'li')
+		setFilter(e.target.firstChild.textContent.trim());
+	else if (tag == 'span')
+		setFilter(e.target.textContent.replace(/^\(|\)$/g, ''));
 }
 
 function prepDrag(e) {
