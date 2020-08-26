@@ -356,9 +356,9 @@ html:not(.dim) #player.fix {
 		transition: max-height .2s ease-in;
 	}
 
-#playlistsdiv, #afterdiv { display: inline-block }
+#playlistsdiv, #deleteplaylistsdiv, #afterdiv { display: inline-block }
 
-#playlists, #afteroptions {
+#playlists, #deleteplaylistsmenu, #afteroptions {
 	display: none;
 	position: absolute;
 	background: var(--bg);
@@ -367,7 +367,7 @@ html:not(.dim) #player.fix {
 	box-shadow: 0 1px 2px 2px var(--box-shadow);
 	z-index: 2;
 }
-	#playlists button, #afteroptions button {
+	#playlists button, #deleteplaylistsmenu button, #afteroptions button {
 		display: block;
 		width: 100%;
 		text-align: left;
@@ -505,6 +505,7 @@ html:not(.dim) #player.fix {
 #export:before { content: "\f188" }
 #import:before { content: "\f17f" }
 #load:before { content: "\f180" }
+#deleteplaylist:before { content: "\f204" }
 #splash:before { content: "\f1ed" }
 #library:before { content: "\f17b" }
 #lock:before { content: "\f16a" !important }

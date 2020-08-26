@@ -54,6 +54,9 @@ function init() {
 		'random': get('random'),
 		'playlistbtn': get('playlistbtn'),
 		'playlistsdiv': get('playlistsdiv'),
+		'deleteplaylistsdiv': get('deleteplaylistsdiv'),
+		'deleteplaylistsmenu': get('deleteplaylistsmenu'),
+		'deleteplaylist': get('deleteplaylist'),
 		'load': get('load'),
 		'save': get('save'),
 		'playlists': get('playlists'),
@@ -131,8 +134,8 @@ function prepUI() {
 		dom.lock.className = 'on';
 		dom.lock.textContent = 'Unlock';
 	}
-	if (url.length > 1) dom.hide(['playlistsdiv', 'save', 'share']);
-	if (!onlinepls) dom.hide(['playlistsdiv', 'save', 'shareplaylist']);
+	if (url.length > 1) dom.hide(['playlistsdiv', 'deleteplaylistsdiv', 'save', 'share']);
+	if (!onlinepls) dom.hide(['playlistsdiv', 'deleteplaylistsdiv', 'save', 'shareplaylist']);
 	if (!sharing) dom.hide('share');
 	if (whatsapp) dom.options.className = 'whatsapp';
 	if (cfg.after == 'randomfiltered') cfg.after = 'randomlibrary';
@@ -862,6 +865,11 @@ function prepPlaylists(action) {
 				dom.playlists.style.display = 'block';
 				setFocus(dom.playlists.firstElementChild);
 				break;
+			case 'delete':
+				dom.deleteplaylistsmenu.innerHTML = playlistElements;
+				dom.deleteplaylistsmenu.style.display = 'block';
+				setFocus(dom.deleteplaylistsmenu.firstElementChild);
+				break;
 			case 'save':
 				savePlaylist();
 				break;
@@ -894,6 +902,11 @@ function loadPlaylistBtn(e) {
 	if (e.target.className == 'on') return;
 	e.target.className = 'on';
 	loadPlaylist(e.target.textContent);
+}
+function deletePlaylistBtn(e){
+	if (e.target.className == 'on') return;
+	e.target.className = 'on';
+	deletePlaylist(e.target.textContent);
 }
 
 function savePlaylist() {
@@ -941,6 +954,18 @@ function exportPlaylist() {
 		dom.a.download = filename +'.mfp.json';
 		dom.a.click();
 	}
+}
+function deletePlaylist(name) {
+	if (!confirm(deleteplaylistdlg)) return;
+	
+	var xhttp = new XMLHttpRequest();
+	xhttp.onload = function() {
+		if (this.responseText != '')
+			alert(errorsave +'\n\n'+ this.responseText);
+	}
+	xhttp.open('DELETE', 'music.php', true);
+	xhttp.setRequestHeader('Content-type', 'application/json');
+	xhttp.send(JSON.stringify({ 'name': name }));
 }
 
 function add(id, next = false) {
@@ -1140,6 +1165,10 @@ function menu(e) {
 	if (e == 'load' || dom.playlistsdiv.contains(e.target)) {
 		el = dom.playlists;
 		btn = dom.load;
+	} else if (dom.deleteplaylistsdiv.contains(e.target)) { 
+		// currently no hotkey -> no menu('delete')
+		el = dom.deleteplaylistsmenu;
+		btn = dom.deleteplaylist;
 	} else if (e == 'after' || dom.afterdiv.contains(e.target)) {
 		el = dom.afteroptions;
 		btn = dom.after;
@@ -1154,6 +1183,11 @@ function menu(e) {
 				if (!cls(dom.options, 'playlistbtn'))
 					dom.playlistbtn.click();
 				prepPlaylists('load');
+				break;
+			case dom.deleteplaylistsmenu:
+				if (!cls(dom.options, 'playlistbtn'))
+					dom.playlistbtn.click();
+				prepPlaylists('delete');
 				break;
 			case dom.afteroptions:
 				if (!cls(dom.options, 'playlistbtn'))

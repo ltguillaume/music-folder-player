@@ -48,6 +48,11 @@
 			<button id="save" title="Save playlist online (V)" onclick="prepPlaylists('save')">Sa<u>v</u>e</button>
 			<button id="import" title="Add songs from exported playlist (I)" onclick="importPlaylist()"><u>I</u>mport</button>
 			<button id="export" title="Export current playlist to file (X)" onclick="exportPlaylist()">E<u>x</u>port</button>
+			<div id="deleteplaylistsdiv">
+				<button id="deleteplaylist" title="Delete an online playlist" onclick="menu(event)">Delete</button>
+				<div id="deleteplaylistsmenu" class="menu" onmouseleave="menu(event)" onclick="deletePlaylistBtn(event)">
+				</div>
+			</div>
 			<div id="afterdiv">
 				<button id="after" title="Define action after last playlist item (A)" onclick="menu(event)"><u>A</u>fter playlist</button>
 				<div id="afteroptions" class="menu" onmouseleave="menu(event)" onclick="toggle(event)">

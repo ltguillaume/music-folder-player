@@ -38,6 +38,23 @@
 					$playlists[substr($f, 0, -9)] = json_decode(file_get_contents($cfg['playlistdir'] .'/'. $f));
 		}
 		die(json_encode($playlists));
+	} elseif ($_SERVER['REQUEST_METHOD'] == 'DELETE'){
+		$pl = json_decode(file_get_contents('php://input'), true);
+		if (isset($pl['name']) && is_dir($cfg['playlistdir'])){
+			$name = $pl['name']. '.mfp.json';
+			$name_len = strlen($name);
+			$scan = scandir($cfg['playlistdir']);
+			foreach ($scan as $f) {
+				//this way we catch old 'timestamped' versions of the playlist aswell
+				if (substr($f, 0, $name_len) == $name) 
+					// we can safely ignore errors here since it would just mean
+					// somebody deleted the playlist before us -> we achieved our goal anyways
+					unlink($cfg['playlistdir'] .'/'. $f);
+			}
+			exit;
+		} else {
+			die("Malformed Request");
+		}
 	}
 
 	$pl = json_decode(file_get_contents('php://input'), true);
