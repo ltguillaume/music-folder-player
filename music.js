@@ -855,7 +855,7 @@ function prepPlaylists(action) {
 		if (playlists.length != []) {
 			for (var p in playlists)
 				playlistElements += action == 'share' ? '<option value="'+ p +'">' : '<button class="add">'+ p +'</button>';
-		} else playlistElements = '&nbsp;'+ noplaylists +'&nbsp;';
+		} else playlistElements = '<p tabindex="1">'+ noplaylists +'</p>';
 		switch (action) {
 			case 'load':
 				dom.playlists.innerHTML = playlistElements;
@@ -891,9 +891,31 @@ function loadPlaylist(name) {
 }
 
 function loadPlaylistBtn(e) {
-	if (e.target.className == 'on') return;
+	if (e.target.className == 'on' || e.target.textContent == noplaylists) return;
 	e.target.className = 'on';
 	loadPlaylist(e.target.textContent);
+}
+
+function removePlaylist(e) {
+	e.preventDefault();
+	var name = e.target.textContent;
+	if (e.target.tagName.toLowerCase() != 'button' || !confirm(removeplaylist +' '+ name +'?')) return true;
+	var xhttp = new XMLHttpRequest();
+	xhttp.onload = function() {
+		if (this.responseText != '')
+			alert(error +'\n\n'+ this.responseText);
+		else if (dom.playlists.style.display != 'block')
+			menu('load');
+		else {
+			dom.playlists.removeChild(e.target);
+			if (!dom.playlists.hasChildNodes())
+				dom.playlists.innerHTML = '<p tabindex="1">'+ noplaylists +'</p>';
+			setFocus(dom.playlists.firstElementChild);
+		}
+	}
+	xhttp.open('DELETE', 'music.php', true);
+	xhttp.setRequestHeader('Content-type', 'application/json');
+	xhttp.send(JSON.stringify({ 'name': name }));
 }
 
 function savePlaylist() {
@@ -908,7 +930,7 @@ function savePlaylist() {
 		var xhttp = new XMLHttpRequest();
 		xhttp.onload = function() {
 			if (this.responseText != '')
-				alert(errorsave +'\n\n'+ this.responseText);
+				alert(error +'\n\n'+ this.responseText);
 		}
 		xhttp.open('POST', 'music.php', true);
 		xhttp.setRequestHeader('Content-type', 'application/json');
@@ -1528,10 +1550,10 @@ document.addEventListener('keydown', function(e) {
 			break;
 		case tv ? 53 : '':	// 5
 		case 13:	// Enter
-			if (e.shiftKey && dom.tree.contains(el))
+			if (e.shiftKey) {
+				e.preventDefault();
 				el.dispatchEvent(new CustomEvent('contextmenu', { bubbles: true }));
-			else
-				el.click();
+			} else el.click();
 			break;
 		case tv ? 57 : '':	// 9
 		case 66:	// B

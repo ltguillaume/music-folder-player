@@ -42,6 +42,12 @@
 
 	$pl = json_decode(file_get_contents('php://input'), true);
 	if (isset($pl['name'])) {
+		if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+			if (chdir($cfg['playlistdir']))
+				foreach (glob($pl['name'] .'.mfp.*') as $f)
+					unlink($f);
+			exit;
+		}
 		$name = $cfg['playlistdir'] .'/'. $pl['name'] .'.mfp.json';
 		if (!is_dir($cfg['playlistdir'])) mkdir($cfg['playlistdir']);
 		if (file_exists($name)) rename($name, $name .'.'. time());

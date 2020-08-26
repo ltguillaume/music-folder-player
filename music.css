@@ -18,6 +18,7 @@
 	--bg-body: #fefeff;
 	--bg-button-hv: #ebf2f7;
 	--bg-clear: rgba(254, 254, 255, .8);
+	--bg-menu: #fcfcfd;
 	--bg-player-fix: #fcfcfd;
 	--bg-splash: #eee;
 	--bg-thumb: #eee;
@@ -358,22 +359,6 @@ html:not(.dim) #player.fix {
 
 #playlistsdiv, #afterdiv { display: inline-block }
 
-#playlists, #afteroptions {
-	display: none;
-	position: absolute;
-	background: var(--bg);
-	border: 1px solid var(--border);
-	border-radius: 3px;
-	box-shadow: 0 1px 2px 2px var(--box-shadow);
-	z-index: 2;
-}
-	#playlists button, #afteroptions button {
-		display: block;
-		width: 100%;
-		text-align: left;
-		border-radius: 0;
-	}
-
 #shares button:before { margin-right: 0 }
 #shares input { direction: rtl }
 #shares > .sharediv {
@@ -460,6 +445,24 @@ html:not(.dim) #player.fix {
 .artist, .dim { color: var(--text-dim) }
 
 .hide { display: none }
+
+.menu {
+	display: none;
+	position: absolute;
+	background: var(--bg-menu);
+	border: 1px solid var(--border);
+	border-radius: 3px;
+	box-shadow: 0 1px 2px 2px var(--box-shadow);
+	z-index: 2;
+}
+	.menu button {
+		display: block;
+		width: 100%;
+		background: var(--bg-menu);
+		text-align: left;
+		border-radius: 0;
+	}
+	.menu p { padding: .5em }
 
 @media (max-width: 480px) {
 	body > div { margin: 2px }

@@ -57,6 +57,7 @@ sharing = true
 whatsapp = true
 
 ; Strings
+error            = 'Error:'
 errorautoplay    = 'Your browser is blocking autoplay'
 errorfile        = 'File not found'
 playlistdesc     = 'L = Play now\nR = Find in library'
@@ -72,6 +73,6 @@ prevpassdlg      = '[Use previously set password]'
 passdlg          = 'Enter password:'
 wrongpassdlg     = 'Intruder alert!'
 noplaylists      = 'No playlists available'
-errorsave        = 'Error on saving:'
+removeplaylist   = 'Remove playlist'
 clearplaylistdlg = 'Clear the playlist?'
 whatsappmsg      = 'Have a listen to'

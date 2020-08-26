@@ -42,7 +42,8 @@
 		<div id="playlistoptions">
 			<div id="playlistsdiv">
 				<button id="load" title="Add songs from online playlist (D)" onclick="menu(event)">Loa<u>d</u></button>
-				<div id="playlists" class="menu" onmouseleave="menu(event)" onclick="loadPlaylistBtn(event)">
+				<div id="playlists" title="L: Add songs (Enter)&#xA;R: Remove playlist" class="menu" onmouseleave="menu(event)"
+					onclick="loadPlaylistBtn(event)" oncontextmenu="removePlaylist(event)">
 				</div>
 			</div>
 			<button id="save" title="Save playlist online (V)" onclick="prepPlaylists('save')">Sa<u>v</u>e</button>
