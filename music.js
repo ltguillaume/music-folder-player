@@ -418,8 +418,8 @@ function setFocus (el) {
 }
 
 function setToast(el) {
-	if (toast) clearTimeout(toast);
 	if (cls(el, 'error') || cls(dom.player, 'fix')) {
+		if (toast) clearTimeout(toast);
 		dom.toast.className = el.className;
 		dom.toast.textContent = el.textContent;
 		dom.show('toast');
@@ -951,11 +951,10 @@ function add(id, next = false) {
 
 	var i = (nodupes || cfg.index == -1) ? 0 : cfg.index;
 	if (cfg.playlist.length > 0) {
-		if (next && cfg.index > -1 && s.path == cfg.playlist[i].path) {	// Currently playing
-			cfg.index--;
-			return;
+		if (next && cfg.index > -1) {
+			if (s.path == cfg.playlist[i].path) return cfg.index--;	// Currently playing
+			if (cfg.playlist.length > cfg.index + 1 && s.path == cfg.playlist[i+1].path) return;	// Next up
 		}
-		i++;
 		for (; i < cfg.playlist.length && (next ? cfg.playlist[i].playNext : true); i++) {
 			if (s.path == cfg.playlist[i].path)
 				return setToast({ 'className': 'error', 'textContent': alreadyadded });
@@ -981,7 +980,11 @@ function add(id, next = false) {
 }
 
 function playNext() {
-	if (cfg.index != -1) dom.playlist.childNodes[cfg.index].className = 'song';
+	if (cfg.index != -1) {
+		var li = dom.playlist.childNodes[cfg.index];
+		li.className = 'song';
+		delete li.playNext;
+	}
 	if (cfg.index + 1 == cfg.playlist.length && !audio[+!track].prepped && cfg.after == 'stopplayback') return;
 	if (!audio[+!track].prepped) {
 		log('PlayNext: not prepped');
@@ -1042,7 +1045,6 @@ function start(a) {
 			else if (autoplay && e.name == 'NotAllowedError')
 				setToast({ 'className': 'error', 'textContent': errorautoplay });
 		});
-	delete cfg.playlist[a.index].playNext;
 	dom.seek.disabled = 0;
 }
 
