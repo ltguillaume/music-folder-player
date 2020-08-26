@@ -502,6 +502,7 @@ html:not(.dim) #player.fix {
 #clear:before { content: "\f204" }
 #crossfade:before { content: "\f1b2" }
 #enqueue:before, .add:before { content: "\f199" }
+#delete:before, .add:before { content: "\f204" }
 #export:before { content: "\f188" }
 #import:before { content: "\f17f" }
 #load:before { content: "\f180" }

@@ -36,6 +36,7 @@
 		<button id="enqueue" title="Enqueue songs on click (E)" onclick="toggle(event)"><u>E</u>nqueue</button>
 		<button id="random" title="Randomize upcoming playlist songs (R)" onclick="toggle(event)"><u>R</u>andom</button>
 		<button id="crossfade" title="Crossfade between songs (O)" onclick="toggle(event)">Cr<u>o</u>ssfade</button>
+		<button id="delete" title="Delete playlist entries" onclick="toggle(event)">Delete</button>
 		<button id="playlistbtn" title="Playlist options (P)" onclick="toggle(event)"><u>P</u>laylist</button>
 		<button id="share" title="Share options (S)" onclick="toggle(event)"><u>S</u>hare</button>
 		<button id="lock" title="Lock playlist and playback controls (L)" onclick="toggleLock()"><u>L</u>ock</button>
@@ -85,9 +86,9 @@
 	<div id="playlistdiv">
 		<div>
 			<button id="clear" title="Clear the playlist (C)" onclick="clearPlaylist()"
-				ondragover="allowDrop(event)" ondrop="removeItem(event)"
+				ondragover="allowDrop(event)" ondrop="plalistItemDraggedToTrash(event)"
 				ondragenter="this.className = 'drag drop'" ondragleave="this.className = 'drag'">Clear</button>
-			<div id="playlist" onclick="playItem(event)" oncontextmenu="findItem(event)"
+			<div id="playlist" onclick="playlistClick(event)" oncontextmenu="findItem(event)"
 				ondragstart="prepDrag(event)" ondragover="allowDrop(event)" ondragend="endDrag()" ondrop="dropItem(event)"
 				ondragenter="event.target.className += ' over'" ondragleave="event.target.className = event.target.className.replace(' over', '')"
 				onmouseenter="onplaylist=true" onmouseleave="onplaylist=false"></div>

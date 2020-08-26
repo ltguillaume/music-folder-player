@@ -30,6 +30,8 @@ def.cover = 'music.png'
 def.crossfade = false
 ; Default state for Enqueue
 def.enqueue = false
+; Default state for Delete
+def.delete = false
 ; Default state for Lock
 def.lock = false
 ; Default password for locked state

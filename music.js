@@ -51,6 +51,7 @@ function init() {
 		'options': get('options'),
 		'crossfade': get('crossfade'),
 		'enqueue': get('enqueue'),
+		'delete': get('delete'),
 		'random': get('random'),
 		'playlistbtn': get('playlistbtn'),
 		'playlistsdiv': get('playlistsdiv'),
@@ -126,6 +127,7 @@ function prepUI() {
 	if (cfg.enqueue) dom.enqueue.className = 'on';
 	if (cfg.random) dom.random.className = 'on';
 	if (cfg.crossfade) dom.crossfade.className = 'on';
+	if (cfg.delete) dom.delete.className = 'on';
 	if (cfg.locked) {
 		document.body.className = 'locked';
 		dom.lock.className = 'on';
@@ -488,10 +490,17 @@ function playlistItem(s) {
 	}
 	return li;
 }
-
-function playItem(e) {
-	if (!cfg.locked && e.target.tagName.toLowerCase() == 'li')
-		play(getIndex(e.target));
+function playlistClick(e) {
+	if (!cfg.locked && e.target.tagName.toLowerCase() == 'li'){
+		const index = getIndex(e.target); 
+		if(cfg.delete){
+			removePlaylistItem(index);
+		}
+		else{
+			play(index);
+		}
+	}
+		
 }
 
 function findItem(e) {
@@ -561,11 +570,7 @@ function moveItem(drag, to, indexfrom, indexto) {
 			cfg.index++;
 	}
 }
-
-function removeItem(e) {
-	e.preventDefault();
-	e.stopPropagation();
-	var index = getIndex(drag);
+function removePlaylistItem(index){
 	var playing = index == cfg.index;
 	cfg.playlist.splice(index, 1);
 	dom.playlist.removeChild(dom.playlist.childNodes[index]);
@@ -574,6 +579,12 @@ function removeItem(e) {
 		cfg.index--;
 	if (cfg.index != -1 && !playing)
 		dom.playlist.childNodes[cfg.index].className = 'playing';
+}
+
+function plalistItemDraggedToTrash(e) {
+	e.preventDefault();
+	e.stopPropagation();
+	removePlaylistItem(getIndex(drag));
 	endDrag();
 }
 
