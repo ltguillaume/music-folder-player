@@ -24,12 +24,13 @@
 	elseif (isset($_GET['dlpl'])) {
 		$plname = urldecode($_GET['dlpl']);
 		$plfile = $cfg['playlistdir']. '/'. $plname. '.mfp.json';
-		if (!file_exists($plfile)) die('Playlist not found: '. $plfile);
-		$pl = (array) json_decode(stripcslashes(trim(file_get_contents($plfile), '"')));
+		if (!file_exists($plfile)) die('Playlist not found: '. $plfile. PHP_EOL);
+		$pl = (array)json_decode(json_decode(file_get_contents($plfile)));
 		$files = array();
 		foreach($pl['playlist'] as $song) { 
-			$path = $cfg['root']. '/'. ((array)$song)['path'];
-			if (!file_exists($path)) die('Playlist file not found: '. $path);
+			$raw_path = ((array)$song)['path'];
+			$path = $cfg['root']. '/'. $raw_path;
+			if (!file_exists($path)) die('Playlist file not found: '. $path. PHP_EOL);
 			array_push($files,  $path);
 		}
 		return_zip($plname, $files, true);
@@ -118,33 +119,35 @@
 			return false;
 	}
 
-	function return_zip($name, $pathes, $flat){
-		foreach($pathes as &$path)
-			$path = escapeshellarg($path);
-		$pathes = implode(" ", $pathes);
-		$windows = substr(php_uname(), 0, 7) == "Windows";
-		if ($windows){
-			$cmd = "7za a -tzip -mx1 -so";
-		} else {
-			$cmd = 'zip -0 '. ($flat ? '-j' : '-r'). ' -';
+	function return_zip($name, $paths, $flat){
+		$windows = substr(php_uname(), 0, 7) == 'Windows';
+		$temp_path = tempnam(sys_get_temp_dir(), "mfp_");
+		$temp_file = fopen($temp_path, "w");
+		if ($windows) {
+			foreach($paths as $path) fwrite($temp_file, ($flat ? './' : ''). $path. "\r\n");
+			$cmd = '7z a -tzip -mx1 -so -i@'. escapeshellarg($temp_path). basename($name);
+		} else { 
+			foreach($paths as $path) fwrite($temp_file, $path. "\n");
+			$stdin = array('file', $temp_path, 'r');
+			$cmd = 'zip - -0 '. ($flat ? '-j' : '-r'). ' -@ <'. escapeshellarg($temp_path);
 		}
-		$cmd = $cmd. ' '. $pathes;
-
-		$descriptorspec = array(array("pipe", "r"), array("pipe", "w"), array("pipe", "w"));
+		fclose($temp_file);
+		$descriptorspec = array(array('pipe', 'r'), array('pipe', 'w'), array('pipe', 'w'));
 		$zip_proc = proc_open($cmd, $descriptorspec, $pipes);
 		if (!$zip_proc) die('Error creating zip');
-		fclose($pipes[0]);
 		header('Content-type: application/zip');
 		header('Content-disposition: attachment; filename="'. basename($name) .'.zip"');
+		$err = fread($pipes[2], 8192);
 		fpassthru($pipes[1]);
-		$errs = fgets($pipes[2]);
-		fclose($pipes[1]);
 		fclose($pipes[2]);
+		fclose($pipes[1]);
+		fclose($pipes[0]);
 		$res = proc_close($zip_proc);
-		if($res != 0){
-			error_log("zip error: ". $errs);
+		if ($res != 0) {
+			error_log('zip error (' . $res . '): '. $err. PHP_EOL);
 			http_response_code(500);
 		}
+		unlink($temp_path);
 		exit;
 	}
 ?>
