@@ -1215,6 +1215,7 @@ function clearPlaylist() {
 		dom.playlist.innerHTML = '';
 		resizePlaylist();
 	}
+	cfg.remove = false;
 }
 
 function resizePlaylist() {
