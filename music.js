@@ -74,7 +74,8 @@ function init() {
 		'playlisturi': get('playlisturi'),
 		'playlistdata': get('playlistdata'),
 		'a': get('a'),
-		'clear': get('clear'),
+		'trash': get('trash'),
+		'remove': get('remove'),
 		'playlist': get('playlist'),
 		'library': get('library'),
 		'filter': get('filter'),
@@ -136,6 +137,7 @@ function prepUI() {
 	if (!sharing) dom.hide('share');
 	if (whatsapp) dom.options.className = 'whatsapp';
 	if (cfg.after == 'randomfiltered') cfg.after = 'randomlibrary';
+	cfg.remove = false;
 
 	if (url.length > 1 && url[1].startsWith('pl:')) {
 		prepPlaylistMode();
@@ -199,7 +201,7 @@ function prepUI() {
 function touchUI() {
 	dom.doc.className += ' touch';
 	if (mode) resizePlaylist();
-	else dom.show('clear');
+	else dom.show('trash');
 }
 
 function fixPlayer() {
@@ -249,7 +251,7 @@ function log(s) {
 
 function prepPlaylistMode() {
 	cfg.after = 'stopplayback';
-	dom.hide(['enqueue', 'save', 'share', 'playlibrary', 'randomlibrary', 'randomfiltered', 'clear', 'library']);
+	dom.hide(['enqueue', 'save', 'share', 'playlibrary', 'randomlibrary', 'randomfiltered', 'trash', 'library']);
 	dom.playlist.style.minHeight = dom.playlist.style.maxHeight = 'unset';
 	mode = 'playlist';
 }
@@ -489,9 +491,12 @@ function playlistItem(s) {
 	return li;
 }
 
-function playItem(e) {
-	if (!cfg.locked && e.target.tagName.toLowerCase() == 'li')
-		play(getIndex(e.target));
+function clickItem(e) {
+	if (cfg.locked || e.target.tagName.toLowerCase() == 'div') return;
+	if (cfg.remove) {
+		drag = cls(e.target, 'artist') ? e.target.parentNode : e.target;
+		removeItem(e);
+	} else play(getIndex(e.target));
 }
 
 function findItem(e) {
@@ -507,8 +512,7 @@ function findItem(e) {
 function prepDrag(e) {
 	if (cfg.locked) return e.preventDefault();
 	e.stopPropagation();
-	dom.clear.className = 'drag';
-	dom.clear.textContent = '';
+	dom.trash.className = 'drag';
 	dom.playlist.appendChild(playlistItem({ 'id': 'last' }));
 	if (cfg.index != -1)
 		dom.playlist.childNodes[cfg.index].className = 'song';
@@ -524,13 +528,11 @@ function allowDrop(e) {
 }
 
 function endDrag() {
-	if (dom.clear.className != '') {
-		dom.clear.className = '';
-		dom.clear.textContent = 'Clear';
-	}
+	dom.trash.className = cls(dom.trash, 'on') ? 'on' : '';
 	if (dom.playlist.hasChildNodes() && dom.playlist.lastChild.id == 'last') {
 		dom.playlist.removeChild(dom.playlist.lastChild);
 	}
+	drag = null;
 }
 
 function dropItem(e) {
@@ -1108,6 +1110,10 @@ function toggle(e) {
 			return;
 		case 'lock':
 			return toggleLock();
+		case 'trash':
+			return button.className = 'over';
+		case 'clear':
+			return clearPlaylist();
 		case 'unfold':
 			return dom.library.className = cls(dom.library, 'unfold') ? '' : 'unfold';
 		case 'crossfade':
@@ -1117,6 +1123,7 @@ function toggle(e) {
 			cfg[button.id] ^= true;
 			button.className = cfg[button.id] ? 'on' : '';
 		}
+		if (button.id == 'remove') dom.trash.className = cfg.remove ? 'on' : '';
 }
 
 function buildFilteredLibrary() {
@@ -1202,7 +1209,7 @@ function menu(e) {
 }
 
 function clearPlaylist() {
-	if (cfg.playlist.length > 0 && confirm(clearplaylistdlg)) {
+	if (cfg.playlist.length > 0) {
 		cfg.playlist = [];
 		cfg.index = -1;
 		dom.playlist.innerHTML = '';
@@ -1219,7 +1226,7 @@ function resizePlaylist() {
 	} else dom.playlist.className = dom.playlist.style.height = '';
 
 	var scrollBars = dom.playlist.offsetWidth - dom.playlist.clientWidth;
-	dom.clear.style.right = scrollBars == 0 ? '' : scrollBars + 2 +'px';
+	dom.trash.style.right = scrollBars == 0 ? '' : scrollBars + 4 +'px';
 }
 
 function filter() {

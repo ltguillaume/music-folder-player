@@ -2,7 +2,6 @@
 	--bg: #10100f;
 	--bg-body: #1a1a1a;
 	--bg-button-hv: #1c1c1c;
-	--bg-clear: rgba(16, 16, 15, .8);
 	--bg-menu: #121211;
 	--bg-player-fix: #121211;
 	--bg-splash: #212121;
@@ -10,6 +9,7 @@
 	--bg-thumb-hv: #313131;
 	--bg-toast: #121211;
 	--bg-toast-error: #911d1d;
+	--bg-trash: rgba(16, 16, 15, .8);
 	--border: #1e1e1e;
 	--border-cover: #696969;
 	--box-shadow: #10100f;

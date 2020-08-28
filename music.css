@@ -17,7 +17,6 @@
 	--bg: #fefeff;
 	--bg-body: #fefeff;
 	--bg-button-hv: #ebf2f7;
-	--bg-clear: rgba(254, 254, 255, .8);
 	--bg-menu: #fcfcfd;
 	--bg-player-fix: #fcfcfd;
 	--bg-splash: #eee;
@@ -25,6 +24,7 @@
 	--bg-thumb-hv: #ddd;
 	--bg-toast: #fcfcfd;
 	--bg-toast-error: #911d1d;
+	--bg-trash: rgba(254, 254, 255, .8);
 	--border: #eee;
 	--border-cover: #fafafa;
 	--box-shadow: #fefeff;
@@ -114,8 +114,8 @@ body.locked #enqueue, body.locked #random, body.locked #crossfade, body.locked #
 }
 	body.locked #seek { pointer-events: none }
 	body.locked #enqueue:before { content: "\f126" }
-	body.locked #playlistdiv #clear { display: none !important }
-body:not(.locked) #playlistdiv:hover #clear,
+	body.locked #playlistdiv #trash { display: none !important }
+body:not(.locked) #playlistdiv:hover #trash,
 body:not(.locked) #library:hover #unfold { display: block }
 
 button {
@@ -310,7 +310,6 @@ li.over { border-top: 1px dotted var(--focus) }
 	z-index: 3;
 }
 	#toast.error { background: var(--bg-toast-error) !important }
-	#options button:before, #toast:before, li:before { margin-right: .25em }
 
 html:not(.dim) #player.fix {
 	position: fixed;
@@ -369,22 +368,28 @@ html:not(.dim) #player.fix {
 #playlistdiv > div,
 #library > div { position: relative }
 
-#clear {
+#trash {
 	display: none;
 	position: absolute;
 	top: 0;
 	right: 0;
-	box-shadow: 0 0 2px 2px var(--bg-clear);
+	background: var(--bg-trash);
+	box-shadow: -1px 1px 2px 1px var(--bg-trash);
 	z-index: 1;
 }
-	#clear:not(:hover) { background: var(--bg-clear) }
-	#clear.drag {
-		display: block;
+	#trash:before {
+		padding: .4em;
+		font-size: 1.1em;
+	}
+		#trash.over:before, #trash:hover:before { display: none }
+	#trash:not(:hover) button { display: none }
+	#trash.drag {
 		height: 100%;
-		padding: .5em 1em;
+		padding: .5em;
 		border-left: 1px solid var(--border);
 	}
-	#clear.drop { color: var(--focus) }
+	#trash.drop, #trash.on, #trash.over { display: block}
+	#trash.drop, #trash.on { color: var(--focus) }
 
 #playlist {
 	min-height: 2.25em;
@@ -500,9 +505,10 @@ html:not(.dim) #player.fix {
 	font-family: Foundation;
 	text-align: center;
 }
+	#options button:before, #trash button:before, #toast:before, li:before { margin-right: .25em }
 
 #after:before { content: "\f182" }
-#clear:before { content: "\f204" }
+#trash:before { content: "\f204" }
 #crossfade:before { content: "\f1b2" }
 #enqueue:before, .add:before { content: "\f199" }
 #export:before { content: "\f188" }
@@ -522,6 +528,7 @@ html:not(.dim) #player.fix {
 #previous:before { content: "\f19c" }
 #random:before, #randomlibrary:before { content: "\f13a" }
 #randomfiltered:before { content: "\f14b" }
+#remove:before { content: "\f204" }
 #repeatplaylist:not(.on):before { content: "\f1a5"; margin-left: 1px; margin-right: calc(.25em - 1px); transform: scale(-1, 1) }
 #save:before { content: "\f184" }
 #share:before { content: "\f1ad" }
