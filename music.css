@@ -539,6 +539,7 @@ html:not(.dim) #player.fix {
 #volume:before { content: "\f211" }
 #volume.muted:before { content: "\f210" }
 
+.clear:before { content: "\f217" }
 .copied:before { content: "\f129" }
 .download:before { content: "\f143" }
 .filter:before { content: "\f14b" }
