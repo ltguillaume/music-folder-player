@@ -534,8 +534,8 @@ html:not(.dim) #player.fix {
 #share:before { content: "\f1ad" }
 #stop:before, #stopplayback:before { content: "\f1ef" }
 #toast:before { content: "\f217" }
-#unfold:before { content: "\25c1" }
-	#library.unfold #unfold:before { content: '\25bd' }
+#unfold:before { content: "\f10e" }
+	#library.unfold #unfold:before { content: '\f10d' }
 #volume:before { content: "\f211" }
 #volume.muted:before { content: "\f210" }
 
