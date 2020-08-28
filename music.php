@@ -30,7 +30,7 @@
 		foreach($pl['playlist'] as $song) { 
 			$raw_path = ((array)$song)['path'];
 			$path = $cfg['root']. '/'. $raw_path;
-			if (!file_exists($path)) die('Playlist file not found: '. $path. PHP_EOL);
+			if (!file_exists($path)) die('Song not found: '. $path. PHP_EOL);
 			array_push($files,  $path);
 		}
 		return_zip($plname, $files, true);
@@ -119,7 +119,7 @@
 			return false;
 	}
 
-	function return_zip($name, $paths, $flat){
+	function return_zip ($name, $paths, $flat) {
 		$windows = substr(php_uname(), 0, 7) == 'Windows';
 		$temp_path = tempnam(sys_get_temp_dir(), "mfp_");
 		$temp_file = fopen($temp_path, "w");
