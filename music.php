@@ -123,7 +123,7 @@
 		if (substr(php_uname(), 0, 7) == 'Windows') {
 			foreach($paths as $path) fwrite($temp_file, ($flat ? './' : ''). $path ."\r\n");
 			$cmd = '7z a -tzip -mx1 -so -i@'. escapeshellarg($temp_path) .' '. basename($name);
-		} else { 
+		} else {
 			foreach($paths as $path) fwrite($temp_file, $path ."\n");
 			$stdin = array('file', $temp_path, 'r');
 			$cmd = 'zip - -0 '. ($flat ? '-j' : '-r') .' -@ <'. escapeshellarg($temp_path);
