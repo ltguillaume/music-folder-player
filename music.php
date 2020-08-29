@@ -24,11 +24,11 @@
 		$plname = urldecode($_GET['dlpl']);
 		$plfile = $cfg['playlistdir'] .'/'. $plname .'.mfp.json';
 		if (!file_exists($plfile)) die('Playlist not found: '. $plfile . PHP_EOL);
-		$pl = (array) json_decode(json_decode(file_get_contents($plfile)));
+		$pl = json_decode(json_decode(file_get_contents($plfile)));
+		if (is_object($pl)) $pl = $pl->playlist;
 		$files = array();
-		foreach($pl['playlist'] as $song) {
-			$raw_path = ((array) $song)['path'];
-			$path = $cfg['root'] .'/'. $raw_path;
+		foreach($pl as $song) {
+			$path = $cfg['root'] .'/'. $song->path;
 			if (!file_exists($path)) die('Song not found: '. $path . PHP_EOL);
 			array_push($files,  $path);
 		}
@@ -60,7 +60,7 @@
 
 	foreach($ini['client'] as $key => $value)
 		echo (stristr($key, '.') ? '' : 'var ') . $key .'='. $value .';'. PHP_EOL;
-	
+
 	$dir = $cfg['root'];
 	if (isset($_GET['play']) && !in_array('..', explode('/', $_GET['play']))) {
 		$dir = trim($_GET['play'], '/');

@@ -476,7 +476,7 @@ html:not(.dim) #player.fix {
 
 @media (max-width: 670px) {
 	body { font-family: BarlowSC, "Segoe UI", sans-serif }
-	
+
 	#player:not(.fix) #cover, #player:not(.fix) #current, #player:not(.fix) #current > *:not(#seek) {
 		display: block;
 		min-width: 0;

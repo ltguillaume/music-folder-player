@@ -193,7 +193,7 @@ function prepUI() {
 		navigator.mediaSession.setActionHandler('nexttrack', next);
 		navigator.mediaSession.metadata = new MediaMetadata();
 	}
-	
+
 	if (window.innerWidth > 360)
 		dom.library.className = 'unfold';
 }
@@ -815,7 +815,7 @@ function setVolume(input) {
 function download(type) {
 	var uri = dom[type +'uri'].value;
 	if (uri) {
-		dom.a.href = 'music.php?dl' + (type == 'playlist' ? 'pl' : '') +'='+ esc(uri);
+		dom.a.href = 'music.php?dl'+ (type == 'playlist' ? 'pl' : '') +'='+ esc(uri);
 		dom.a.click();
 	}
 }
