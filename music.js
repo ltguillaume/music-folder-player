@@ -96,7 +96,7 @@ function init() {
 	var lib = document.createElement('script');
 	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ esc(url[1]) : '');
 	lib.onload = function() {
-		if (!pathexp) alert('Please set the variable "pathexp" in music.ini (see music.ini.template)!');
+		if (!pathexp) alert(s_nopathexp);
 		pathexp = pathexp.replace(/[\/^$*+?.()|[\]{}]/g, '\\$&')
 			.replace(/ /g,'[\\s\\.\\-()]*')
 			.replace(/dummy/g,'.+')
@@ -390,7 +390,7 @@ function addFolder(e) {
 	e.preventDefault();
 	e.stopPropagation();
 	var li = e.target;
-	if (confirm(addfolderdlg +'\n'+ li.path.substring(li.path.lastIndexOf('/') + 1))) {
+	if (confirm(s_addfolder +'\n'+ li.path.substring(li.path.lastIndexOf('/') + 1))) {
 		if (!cls(li, 'dim')) li.className += ' dim';
 		ffor(li.querySelectorAll('li.song'), function(s) {
 			add(s.id);
@@ -486,7 +486,7 @@ function playlistItem(s) {
 	} else {
 		var nfo = getSongInfo(s.path);
 		li.innerHTML = nfo.title +' <span class="artist">'+ (nfo.artist ? '('+ nfo.artist +')' : '') +'</span>';
-		li.title = getAlbumInfo(nfo) + (mode ? '' : '\n\n'+ playlistdesc);
+		li.title = getAlbumInfo(nfo) + (mode ? '' : '\n\n'+ s_playlistdesc);
 	}
 	return li;
 }
@@ -692,7 +692,7 @@ function skipArtist(e) {
 	if (!cfg.locked) {
 		var artist = dom.album.textContent;
 		artist = artist.indexOf(' -') > 0 ? artist.substring(0, artist.indexOf(' -')) : false;
-		if (artist && confirm(artist +'\n'+ skipartistdlg)) {
+		if (artist && confirm(artist +'\n'+ s_skipartist)) {
 			cfg.skip.push(artist);
 			next();
 		}
@@ -842,7 +842,7 @@ function share(type) {
 function shareWhatsApp(type) {
 	var share = dom[type +'uri'];
 	if (share.value) {
-		var msg = prompt(whatsappdlg, whatsappmsg);
+		var msg = prompt(s_whatsapp, s_whatsappmsg);
 		if (msg != null) window.open('https://api.whatsapp.com/send?text='+ msg +' '
 			+ base +'?play=c:'+ escBase64(btoa(share.value)));
 	}
@@ -857,7 +857,7 @@ function prepPlaylists(action) {
 		if (playlists.length != []) {
 			for (var p in playlists)
 				playlistElements += action == 'share' ? '<option value="'+ p +'">' : '<button class="add">'+ p +'</button>';
-		} else playlistElements = '<p tabindex="1">'+ noplaylists +'</p>';
+		} else playlistElements = '<p tabindex="1">'+ s_noplaylists +'</p>';
 		switch (action) {
 			case 'load':
 				dom.playlists.innerHTML = playlistElements;
@@ -882,7 +882,7 @@ function prepPlaylists(action) {
 function loadPlaylist(name) {
 	var items = JSON.parse(playlists[name]);
 	if (items.constructor !== Array) {
-		if (confirm(restoreposition))
+		if (confirm(s_restoreposition))
 			cfg.index = items.index + cfg.playlist.length;
 		items = items.playlist;
 	}
@@ -893,7 +893,7 @@ function loadPlaylist(name) {
 }
 
 function loadPlaylistBtn(e) {
-	if (e.target.className == 'on' || e.target.textContent == noplaylists) return;
+	if (e.target.className == 'on' || e.target.textContent == s_noplaylists) return;
 	e.target.className = 'on';
 	loadPlaylist(e.target.textContent);
 }
@@ -901,17 +901,17 @@ function loadPlaylistBtn(e) {
 function removePlaylist(e) {
 	e.preventDefault();
 	var name = e.target.textContent;
-	if (e.target.tagName.toLowerCase() != 'button' || !confirm(removeplaylist +' '+ name +'?')) return true;
+	if (e.target.tagName.toLowerCase() != 'button' || !confirm(s_removeplaylist +' '+ name +'?')) return true;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onload = function() {
 		if (this.responseText != '')
-			alert(error +'\n\n'+ this.responseText);
+			alert(s_error +'\n\n'+ this.responseText);
 		else if (dom.playlists.style.display != 'block')
 			menu('load');
 		else {
 			dom.playlists.removeChild(e.target);
 			if (!dom.playlists.hasChildNodes())
-				dom.playlists.innerHTML = '<p tabindex="1">'+ noplaylists +'</p>';
+				dom.playlists.innerHTML = '<p tabindex="1">'+ s_noplaylists +'</p>';
 			setFocus(dom.playlists.firstElementChild);
 		}
 	}
@@ -922,17 +922,17 @@ function removePlaylist(e) {
 
 function savePlaylist() {
 	if (!cfg.playlist.length) return;
-	var name = prompt(exportdlg, playlistloaded);
+	var name = prompt(s_export, playlistloaded);
 	if (name) {
-		var position = cfg.index && confirm(saveposition) ? cfg.index : 0;
+		var position = cfg.index && confirm(s_saveposition) ? cfg.index : 0;
 		var playlist = position ? { playlist: cfg.playlist, index: position } : cfg.playlist;
 		name = name.replace(/[\\\/:*?"<>|]/g, ' ');
 		for (var pl in playlists)
-			if (pl == name && !confirm(overwritedlg)) return;
+			if (pl == name && !confirm(s_overwrite)) return;
 		var xhttp = new XMLHttpRequest();
 		xhttp.onload = function() {
 			if (this.responseText != '')
-				alert(error +'\n\n'+ this.responseText);
+				alert(s_error +'\n\n'+ this.responseText);
 		}
 		xhttp.open('POST', 'music.php', true);
 		xhttp.setRequestHeader('Content-type', 'application/json');
@@ -959,7 +959,7 @@ function importPlaylist() {
 
 function exportPlaylist() {
 	if (!cfg.playlist.length) return;
-	var filename = prompt(exportdlg);
+	var filename = prompt(s_export);
 	if (filename) {
 		dom.a.href = 'data:text/json;charset=utf-8,'+ esc(JSON.stringify(cfg.playlist));
 		dom.a.download = filename +'.mfp.json';
@@ -981,7 +981,7 @@ function add(id, next = false) {
 		}
 		for (; i < cfg.playlist.length && (next ? cfg.playlist[i].playNext : true); i++) {
 			if (s.path == cfg.playlist[i].path)
-				return setToast({ 'className': 'error', 'textContent': alreadyadded });
+				return setToast({ 'className': 'error', 'textContent': s_alreadyadded });
 		}
 	}
 
@@ -1065,9 +1065,9 @@ function start(a) {
 			error = e;
 			console.log(e);
 			if (e.code == 9)
-				setToast({ 'className': 'error', 'textContent': errorfile });
+				setToast({ 'className': 'error', 'textContent': s_errorfile });
 			else if (autoplay && e.name == 'NotAllowedError')
-				setToast({ 'className': 'error', 'textContent': errorautoplay });
+				setToast({ 'className': 'error', 'textContent': s_errorautoplay });
 		});
 	dom.seek.disabled = 0;
 }
@@ -1147,8 +1147,8 @@ function toggleLock() {
 function password() {
 	if (cfg.locked && !cfg.password) return true;
 
-	var prev = prevpassdlg;
-	var p = prompt(passdlg, (!cfg.locked && cfg.password ? prev : ''));
+	var prev = s_prevpass;
+	var p = prompt(s_pass, (!cfg.locked && cfg.password ? prev : ''));
 	if (p == null) return false;
 	if (p == prev) return true;
 
@@ -1157,7 +1157,7 @@ function password() {
 		pass = pass * 7 + p.charCodeAt(i);
 
 	if (cfg.locked && cfg.password != pass) {
-		alert(wrongpassdlg);
+		alert(s_wrongpass);
 		return false;
 	}
 	if (!cfg.locked) cfg.password = pass;
@@ -1511,7 +1511,7 @@ document.addEventListener('keydown', function(e) {
 			dom.lock.click();
 			break;
 		case 67:	// C
-			if (!cfg.locked && !mode && confirm(clearplaylistdlg)) clearPlaylist();
+			if (!cfg.locked && !mode && confirm(s_clearplaylist)) clearPlaylist();
 			break;
 		case 70:	// F
 			e.preventDefault();
