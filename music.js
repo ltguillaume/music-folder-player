@@ -1511,7 +1511,7 @@ document.addEventListener('keydown', function(e) {
 			dom.lock.click();
 			break;
 		case 67:	// C
-			if (!cfg.locked && !mode) clearPlaylist();
+			if (!cfg.locked && !mode && confirm(clearplaylistdlg)) clearPlaylist();
 			break;
 		case 70:	// F
 			e.preventDefault();
