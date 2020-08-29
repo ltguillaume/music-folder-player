@@ -815,7 +815,7 @@ function setVolume(input) {
 function download(type) {
 	var uri = dom[type +'uri'].value;
 	if (uri) {
-		dom.a.href = 'music.php?dl='+ esc(uri);
+		dom.a.href = 'music.php?dl' + (type == 'playlist' ? 'pl' : '') +'='+ esc(uri);
 		dom.a.click();
 	}
 }
