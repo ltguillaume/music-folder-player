@@ -880,15 +880,8 @@ function prepPlaylists(action) {
 }
 
 function loadPlaylist(name) {
-	var items = JSON.parse(playlists[name]);
-	if (items.constructor !== Array) {
-		if (confirm(s_restoreposition))
-			cfg.index = items.index + cfg.playlist.length;
-		items = items.playlist;
-	}
-	for (var i in items)
-		cfg.playlist.push(items[i]);
-	buildPlaylist();
+	var pl = JSON.parse(playlists[name]);
+	fillPlaylist(pl);
 	playlistloaded = name;
 }
 
@@ -924,8 +917,6 @@ function savePlaylist() {
 	if (!cfg.playlist.length) return;
 	var name = prompt(s_export, playlistloaded);
 	if (name) {
-		var position = cfg.index && confirm(s_saveposition) ? cfg.index : 0;
-		var playlist = position ? { playlist: cfg.playlist, index: position } : cfg.playlist;
 		name = name.replace(/[\\\/:*?"<>|]/g, ' ');
 		for (var pl in playlists)
 			if (pl == name && !confirm(s_overwrite)) return;
@@ -936,7 +927,7 @@ function savePlaylist() {
 		}
 		xhttp.open('POST', 'music.php', true);
 		xhttp.setRequestHeader('Content-type', 'application/json');
-		xhttp.send(JSON.stringify({ 'name': name, 'songs': JSON.stringify(playlist) }));
+		xhttp.send(JSON.stringify({ 'name': name, 'songs': getPlaylistCopy() }));
 	}
 }
 
@@ -947,10 +938,8 @@ function importPlaylist() {
 	input.onchange = function(e) {
 		var reader = new FileReader();
 		reader.onload = function(e) {
-			var items = JSON.parse(e.target.result);
-			for (var i in items)
-				cfg.playlist.push(items[i]);
-			buildPlaylist();
+			var pl = JSON.parse(e.target.result);
+			fillPlaylist(pl);
 		};
 		reader.readAsText(input.files[0], 'UTF-8');
 	}
@@ -961,10 +950,28 @@ function exportPlaylist() {
 	if (!cfg.playlist.length) return;
 	var filename = prompt(s_export);
 	if (filename) {
-		dom.a.href = 'data:text/json;charset=utf-8,'+ esc(JSON.stringify(cfg.playlist));
+		dom.a.href = 'data:text/json;charset=utf-8,'+ esc(getPlaylistCopy());
 		dom.a.download = filename +'.mfp.json';
 		dom.a.click();
 	}
+}
+
+function fillPlaylist(pl) {
+	if (pl.constructor !== Array) {
+		if (confirm(s_restoreposition))
+			cfg.index = pl.index + cfg.playlist.length;
+		pl = pl.playlist;
+	}
+	for (var i in pl) cfg.playlist.push(pl[i]);
+	buildPlaylist();
+}
+
+function getPlaylistCopy() {
+	var position = cfg.index > 0 && confirm(s_saveposition) ? cfg.index : 0;
+	var copy = JSON.parse(JSON.stringify(cfg.playlist));
+	ffor(copy, function(s) { delete s.playNext });
+	var pl = position ? { playlist: copy, index: position } : copy;
+	return JSON.stringify(pl);
 }
 
 function add(id, next = false) {
