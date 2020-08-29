@@ -27,12 +27,16 @@
 		$pl = json_decode(json_decode(file_get_contents($plfile)));
 		if (is_object($pl)) $pl = $pl->playlist;
 		$files = array();
+		$filenames = '';
 		foreach($pl as $song) {
 			$path = $cfg['root'] .'/'. $song->path;
 			if (!file_exists($path)) die('Song not found: '. $path . PHP_EOL);
-			array_push($files,  $path);
+			array_push($files, $path);
+			$filenames .= basename($song->path) ."\r\n";
 		}
-		return_zip($plname, $files, true);
+		$m3u = sys_get_temp_dir() .'/'. $plname .'.m3u';
+		if (!file_put_contents($m3u, $filenames)) $m3u = false;
+		return_zip($plname, $files, $m3u);
 	} elseif (isset($_GET['pl'])) {
 		$playlists = array();
 		if (is_dir($cfg['playlistdir'])) {
@@ -117,19 +121,20 @@
 			return false;
 	}
 
-	function return_zip($name, $paths, $flat) {
-		$temp_path = tempnam(sys_get_temp_dir(), 'mfp_');
-		$temp_file = fopen($temp_path, 'w');
+	function return_zip($name, $paths, $pl) {
+		$list_path = tempnam(sys_get_temp_dir(), 'mfp_');
+		$list = fopen($list_path, 'w');
 		if (substr(php_uname(), 0, 7) == 'Windows') {
-			foreach($paths as $path) fwrite($temp_file, ($flat ? './' : ''). $path ."\r\n");
-			$cmd = '7z a -tzip -mx1 -so -i@'. escapeshellarg($temp_path) .' '. basename($name);
+			foreach($paths as $path) fwrite($list, ($pl ? './' : '') . $path ."\r\n");
+			$cmd = '7z a dummy -tzip -mx1 -so -i@'. escapeshellarg($list_path);
 		} else {
-			foreach($paths as $path) fwrite($temp_file, $path ."\n");
-			$stdin = array('file', $temp_path, 'r');
-			$cmd = 'zip - -0 '. ($flat ? '-j' : '-r') .' -@ <'. escapeshellarg($temp_path);
+			foreach($paths as $path) fwrite($list, $path ."\n");
+			$stdin = array('file', $list_path, 'r');
+			$cmd = 'zip - -0 '. ($pl ? '-j' : '-r') .' -@ <'. escapeshellarg($list_path);
 		}
-		fclose($temp_file);
-		$descriptorspec = array(array('pipe', 'r'), array('pipe', 'w'), array('pipe', 'w'));
+		if ($pl) fwrite($list, $pl);
+		fclose($list);
+		$descriptorspec = array(array('pipe', 'r'), array('pipe', 'w'), array('pipe', 'a'));
 		$zip_proc = proc_open($cmd, $descriptorspec, $pipes);
 		if (!$zip_proc) die('Error creating zip');
 		header('Content-type: application/zip');
@@ -144,7 +149,8 @@
 			error_log('zip error ('. $res .'): '. $err . PHP_EOL);
 			http_response_code(500);
 		}
-		unlink($temp_path);
+		if ($pl) unlink($pl);
+		unlink($list_path);
 		exit;
 	}
 ?>
