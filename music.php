@@ -119,13 +119,13 @@
 			return false;
 	}
 
-	function return_zip ($name, $paths, $flat) {
+	function return_zip($name, $paths, $flat) {
 		$windows = substr(php_uname(), 0, 7) == 'Windows';
 		$temp_path = tempnam(sys_get_temp_dir(), "mfp_");
 		$temp_file = fopen($temp_path, "w");
 		if ($windows) {
 			foreach($paths as $path) fwrite($temp_file, ($flat ? './' : ''). $path. "\r\n");
-			$cmd = '7z a -tzip -mx1 -so -i@'. escapeshellarg($temp_path). basename($name);
+			$cmd = '7z a -tzip -mx1 -so -i@'. escapeshellarg($temp_path). ' ' . basename($name);
 		} else { 
 			foreach($paths as $path) fwrite($temp_file, $path. "\n");
 			$stdin = array('file', $temp_path, 'r');
