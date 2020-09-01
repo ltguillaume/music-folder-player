@@ -136,8 +136,8 @@ button {
 input, select {
 	width: 29.5em;
 	max-width: calc(100% - 7.5em);
-	background: var(--bg);
 	padding: .1em;
+	background: var(--bg);
 	font-size: .8em;
 	border: none;
 	border-bottom: 1px solid var(--text);
@@ -339,9 +339,8 @@ html:not(.dim) #player.fix {
 	#player.fix:before, #player.fix #time, #player.fix #seek { display: none }
 	#player.fix, #player.fix button:not(:hover) { background: var(--bg-player-fix) }
 
-#options { z-index: 1 }
-	#options.whatsapp button.whatsapp { display: inline-block }
-	#options.whatsapp input.uri { max-width: calc(100% - 10em) }
+#options.whatsapp button.whatsapp { display: inline-block }
+#options.whatsapp input.uri { max-width: calc(100% - 10em) }
 
 #playlistoptions, #shares {
 		max-height: 0;
