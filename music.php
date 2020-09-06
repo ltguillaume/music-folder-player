@@ -1,8 +1,11 @@
 <?php
-	$ini  = parse_ini_file(file_exists('music.ini') ? 'music.ini' : 'music.ini.template', true, INI_SCANNER_RAW);
-	$cfg  = $ini['server'];
-	$ext  = explode(',', $cfg['ext_songs'] .','. $cfg['ext_images']);
-	$img  = explode(',', $cfg['ext_images']);
+	$ini = parse_ini_file('music.ini.template', true, INI_SCANNER_RAW);
+	if (file_exists('music.ini'))
+		$ini = ini_merge($ini, parse_ini_file('music.ini', true, INI_SCANNER_RAW));
+
+	$cfg = $ini['server'];
+	$ext = explode(',', $cfg['ext_songs'] .','. $cfg['ext_images']);
+	$img = explode(',', $cfg['ext_images']);
 
 	header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 	header('Cache-Control: post-check=0, pre-check=0', false);
@@ -87,6 +90,15 @@
 	}
 
 	echo 'var root="'. $dir .'/";'. PHP_EOL .'var library='. json_encode(tree($dir, 0));
+
+	function ini_merge($ini, $usr) {
+		foreach ($usr as $k => $v)
+			if (is_array($v))
+				$ini[$k] = ini_merge($ini[$k], $usr[$k]);
+			else
+				$ini[$k] = $v;
+		return $ini;
+	}
 
 	function tree($dir, $depth) {
 		$scan = scandir($dir);
