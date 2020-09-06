@@ -68,6 +68,7 @@ s_nopathexp       = 'Please set the variable "pathexp" in music.ini (see music.i
 s_noplaylists     = 'No playlists available'
 s_overwrite       = 'Playlist already exists. Overwrite?'
 s_pass            = 'Enter password:'
+s_othersongsnext  = 'Other songs are set to be played first'
 s_playlistdesc    = 'L = Play now\nR = Find in library'
 s_prevpass        = '[Use previously set password]'
 s_removeplaylist  = 'Remove playlist'

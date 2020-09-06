@@ -436,7 +436,10 @@ function addSong(e) {
 		add(li.id);
 	else {
 		load(li.id, 'next');
-		playNext();
+		if (cfg.playlist[cfg.index + 1].path != li.path)	// Other songs are set to be played first
+			return setToast({ 'className': 'error', 'textContent': s_othersongsnext });
+		else
+			playNext();
 	}
 	if (!cls(li, 'dim')) li.className += ' dim';
 	if (audio[track].paused) fillShare(li.path);
