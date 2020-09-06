@@ -994,6 +994,7 @@ function add(id, next = false) {
 
 	var li = playlistItem(s);
 	if (next) {
+		if (i == cfg.index) i++;
 		s.playNext = 1;
 		cfg.playlist.splice(i, 0, s);
 		playlist.insertBefore(li, dom.playlist.childNodes[i]);
