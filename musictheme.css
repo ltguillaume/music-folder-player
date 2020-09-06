@@ -25,8 +25,8 @@
 /* Dark theme */
 *, *:before { text-shadow: none !important }
 
-#cover { opacity: .6 }
-	#cover:hover, #cover.nofade { opacity: 1 }
+#cover { opacity: .6 !important }
+	#cover:hover, #cover.nofade { opacity: 1 !important }
 
 @media (min-width: 541px) {
 	body { background-image: url("musictheme.svg") }
