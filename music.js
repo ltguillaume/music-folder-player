@@ -1222,7 +1222,7 @@ function clearPlaylist() {
 		dom.playlist.innerHTML = '';
 		resizePlaylist();
 	}
-	cfg.remove = false;
+	if (cfg.remove) dom.remove.click();
 }
 
 function resizePlaylist() {
