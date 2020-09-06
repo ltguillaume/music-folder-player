@@ -989,6 +989,7 @@ function add(id, next = false) {
 			if (s.path == cfg.playlist[i].path) return cfg.index--;	// Currently playing
 			if (cfg.playlist.length > cfg.index + 1 && s.path == cfg.playlist[i+1].path) return;	// Next up
 		}
+		i++;
 		for (; i < cfg.playlist.length && (next ? cfg.playlist[i].playNext : true); i++) {
 			if (s.path == cfg.playlist[i].path)
 				return setToast({ 'className': 'error', 'textContent': s_alreadyadded });
@@ -997,7 +998,6 @@ function add(id, next = false) {
 
 	var li = playlistItem(s);
 	if (next) {
-		if (i == cfg.index) i++;
 		s.playNext = 1;
 		cfg.playlist.splice(i, 0, s);
 		playlist.insertBefore(li, dom.playlist.childNodes[i]);
