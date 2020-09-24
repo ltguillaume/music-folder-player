@@ -13,7 +13,9 @@
 <body onload="init()">
 	<span id="splash"></span>
 	<div id="player">
-		<img id="cover" src="music.png" title="L: Zoom to 300px, full size (Z)&#xA;R: Toggle dimming" onclick="zoom()" oncontextmenu="toggle(event)"/>
+		<img id="cover" src="music.png" title="L: Zoom to 300px, full size (Z)&#xA;R: Toggle dimming"
+			onclick="zoom()" oncontextmenu="toggle(event)"
+			onload="this.style.opacity = ''" />
 		<div id="current">
 			<div id="album" class="dim" onclick="setFilter(event)">Album Title</div>
 			<div id="title" class="dim" onclick="setFilter(event)">Track Title</div>

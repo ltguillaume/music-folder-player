@@ -144,8 +144,6 @@ function prepUI() {
 		prepPlaylists(mode);
 	}
 
-	dom.cover.onload = function() { dom.cover.style.opacity = 1 }
-
 	ffor(['TV', 'Andr0id', ' OMI/', 'Viera'], function(s) {
 		if (navigator.userAgent.indexOf(s) > -1) tv = true;
 	});
