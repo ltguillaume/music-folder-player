@@ -231,9 +231,9 @@ function ls() {
 			return true;
 		}
 		cfg = def;
-		def = JSON.stringify(def);
-		localStorage.setItem(lsid, def);
-		if (localStorage.getItem(lsid) == def) return true;
+		var ls = JSON.stringify(cfg);
+		localStorage.setItem(lsid, ls);
+		if (localStorage.getItem(lsid) == ls) return true;
 		log('LocalStorage WTF');
 		return false;
 	} catch(e) {
