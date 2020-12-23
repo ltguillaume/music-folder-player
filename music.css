@@ -414,9 +414,10 @@ html:not(.dim) #player.fix {
 	white-space: nowrap;
 }
 
-#filterdiv input {
+#filter {
 	width: 21.5em;
-	max-width: calc(100% - 5.5em)
+	max-width: calc(100% - 5.5em);
+	padding-top: .75em;
 }
 
 #tree {

@@ -1524,7 +1524,7 @@ document.addEventListener('keydown', function(e) {
 			break;
 		case 70:	// F
 			e.preventDefault();
-			dom.filter.focus();
+			setFocus(dom.filter);
 			if (dom.filter.value != '') dom.filter.select();
 			break;
 		case 84:	// T
