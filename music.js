@@ -110,7 +110,7 @@ function init() {
 		buildLibrary('', library, dom.tree);
 		buildPlaylist();
 		get('splash').className = '';
-		dom.doc.className = cls(dom.doc, 'touch') ? 'touch' : '';
+		dom.doc.className = dom.doc.className.replace('splash', '');
 		console.log('https://github.com/ltGuillaume/MusicFolderPlayer'+ (mode ? '' : '\nSong count: '+ songs.length));
 		log('PHP request = '+ lib.src);
 		if (songs.length == 1) prepSongMode();
@@ -515,7 +515,7 @@ function findItem(e) {
 function prepDrag(e) {
 	if (cfg.locked) return e.preventDefault();
 	e.stopPropagation();
-	dom.trash.className = 'drag';
+	dom.trash.className += ' drag';
 	dom.playlist.appendChild(playlistItem({ 'id': 'last' }));
 	if (cfg.index != -1)
 		dom.playlist.childNodes[cfg.index].className = 'song';
@@ -531,7 +531,7 @@ function allowDrop(e) {
 }
 
 function endDrag() {
-	dom.trash.className = cls(dom.trash, 'on') ? 'on' : '';
+	dom.trash.className = dom.trash.className.replace(' drag', '');
 	if (dom.playlist.hasChildNodes() && dom.playlist.lastChild.id == 'last') {
 		dom.playlist.removeChild(dom.playlist.lastChild);
 	}
@@ -1122,7 +1122,7 @@ function toggle(e) {
 		case 'lock':
 			return toggleLock();
 		case 'trash':
-			return button.className = 'over';
+			return button.className += ' over';
 		case 'clear':
 			return clearPlaylist();
 		case 'unfold':

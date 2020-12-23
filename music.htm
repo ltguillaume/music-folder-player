@@ -88,8 +88,8 @@
 	<div id="playlistdiv">
 		<div>
 			<div id="trash" onclick="toggle(event)"
-					ondragover="allowDrop(event)" ondrop="removeItem(event)"
-					ondragenter="this.className = 'drag drop'" ondragleave="this.className = 'drag'">
+					ondragover="allowDrop(event)" ondrop="removeItem(event); this.className = this.className.replace(' drop', '')"
+					ondragenter="this.className += ' drop'" ondragleave="this.className = this.className.replace(' drop', '')">
 				<button id="clear" class="clear" title="Clear the playlist (C)">Clear</button>
 				<button id="remove" title="Remove playlist items">Remove</button>
 			</div>
