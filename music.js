@@ -1331,7 +1331,7 @@ function keyNav(el, direction) {
 					to = el.nextElementSibling;
 				} else {
 					var parent = el.parentNode.parentNode;
-					while (parent.nextElementSibling == null)
+					while (parent.nextElementSibling == null && parent.parentNode)
 						parent = parent.parentNode.parentNode;
 					to = parent.nextElementSibling;
 				}
