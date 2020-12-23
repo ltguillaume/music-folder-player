@@ -192,6 +192,8 @@ function prepUI() {
 		navigator.mediaSession.metadata = new MediaMetadata();
 	}
 
+	if (instantfilter) dom.filter.oninput = filter;
+
 	if (window.innerWidth > 360)
 		dom.library.className = 'unfold';
 }
@@ -1239,7 +1241,8 @@ function resizePlaylist() {
 	dom.trash.style.right = scrollBars == 0 ? '' : scrollBars + 4 +'px';
 }
 
-function filter() {
+function filter(instant = false) {
+	if (instant && dom.filter.value.length < instantfilter) return;
 	var clear = dom.filter.value == '' ? '' : 'none';
 	if (!tree) tree = dom.tree.querySelectorAll('li');
 	ffor(tree, function(f) {
@@ -1279,7 +1282,7 @@ function filter() {
 	}
 
 	dom.library.className = 'unfold';
-	keyNav(null, 'down');
+	if (!instant) keyNav(null, 'down');
 }
 
 function cls(el, name) {
@@ -1391,21 +1394,22 @@ document.addEventListener('keydown', function(e) {
 	var el = document.activeElement;
 
 	if (el.tagName.toLowerCase() == 'input') {
-		if (el == dom.volumeslider) {
-			if (e.keyCode > 36 && e.keyCode < 41) return;	// Arrow keys
-		} else {
-			if (e.keyCode == 27) {	// Esc
-				if (el == dom.filter)
-					clearFilter();
-				else {
-					e.preventDefault();
-					el.value = '';
-					el.blur();
-					el.focus();
-				}
-			}
+		if (el == dom.volumeslider && e.keyCode > 36 && e.keyCode < 41)	// Arrow keys
 			return;
+		if (el == dom.filter)
+			switch(e.keyCode) {
+				case 38: return keyNav(null, "up");	// ArrowUp
+				case 40: return keyNav(null, "down");	// ArrowDown
+			}
+
+		if (e.keyCode == 27) {	// Esc
+			e.preventDefault();
+			el.value = '';
+			el.blur();
+			if (el = dom.filter) filter();
+			el.focus();
 		}
+		return;
 	}
 
 	switch (e.keyCode) {

@@ -41,6 +41,8 @@ def.title = 'Music'
 ; Default (maximum) volume (.9 might prevent clipping during playback)
 def.volume = .9
 
+; Filter the library instantly (input minimum of x characters, 0 = disabled)
+instantfilter = 0
 ; Local storage ID for this instance
 lsid = 'music_folder_player'
 ; Maximum amount of error before playback stops
