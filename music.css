@@ -293,7 +293,10 @@ li.over { border-top: 1px dotted var(--focus) }
 	letter-spacing: -.02em;
 }
 
-#time { display: inline-block }
+#time {
+	display: inline-block;
+	color: var(--text-dim);
+}
 
 #controls { margin-bottom: 1px }
 	#controls > button:before { margin: .25em }
