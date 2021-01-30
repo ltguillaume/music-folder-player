@@ -1,11 +1,11 @@
 @font-face {
 	font-family: Barlow;
-	src: url("musictxt.woff") format("woff");
+	src: url("music.txt.woff") format("woff");
 }
 
 @font-face {
 	font-family: BarlowSC;
-	src: url("musictxtsc.woff") format("woff");
+	src: url("music.txtsc.woff") format("woff");
 }
 
 @font-face {

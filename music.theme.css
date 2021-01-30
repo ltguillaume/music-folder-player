@@ -29,7 +29,7 @@
 	#cover:hover, #cover.nofade { opacity: 1 }
 
 @media (min-width: 541px) {
-	body { background-image: url("musictheme.svg") }
+	body { background-image: url("music.theme.svg") }
 	body > div { box-shadow: 0 0 3px #242424 }
 }
 
