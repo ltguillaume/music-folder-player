@@ -432,6 +432,15 @@ html:not(.dim) #player.fix {
 	padding-top: .75em;
 }
 
+#unfold {
+	display: none;
+	position: absolute;
+	top: 0;
+	right: 0;
+	background: none;
+	z-index: 1;
+}
+
 #tree {
 	display: none;
 	margin-left: 1.25em;
@@ -448,15 +457,6 @@ html:not(.dim) #player.fix {
 #tree li.parent { color: var(--text-li-parent) }
 #tree li.parent .song, #tree li.filtered,
 #tree li:hover > ul, #tree li:focus > ul { color: var(--text) }
-
-#unfold {
-	display: none;
-	position: absolute;
-	top: 0;
-	right: 0;
-	background: none;
-	z-index: 1;
-}
 
 .artist, .dim { color: var(--text-dim) }
 
