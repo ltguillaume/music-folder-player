@@ -70,8 +70,8 @@ html.touch body {
 	}
 	html.touch #unfold { display: block }
 
-html.splash > body > div,
-html.splash > body > div:before { opacity: 0 }
+html:not(.show) > body > div,
+html:not(.show) > body > div:before { opacity: 0 }
 
 html.dim > body { background: black }
 html.dim > body > div,

@@ -110,7 +110,7 @@ function init() {
 		buildLibrary('', library, dom.tree);
 		buildPlaylist();
 		get('splash').className = '';
-		dom.doc.className = dom.doc.className.replace('splash', '');
+		dom.doc.className += ' show';
 		console.log('https://github.com/ltGuillaume/MusicFolderPlayer'+ (mode ? '' : '\nSong count: '+ songs.length));
 		log('PHP request = '+ lib.src);
 		if (songs.length == 1) prepSongMode();
