@@ -85,7 +85,7 @@
 			<a id="a" class="hide" target="_blank" download></a>
 		</div>
 	</div>
-	<div id="playlistdiv">
+	<div id="playlistdiv" onmouseup="resizePlaylist()">
 		<div>
 			<div id="trash" onclick="toggle(event)"
 					ondragover="allowDrop(event)" ondrop="removeItem(event); this.className = this.className.replace(' drop', '')"
