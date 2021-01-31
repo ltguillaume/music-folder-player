@@ -192,7 +192,7 @@ function prepUI() {
 		navigator.mediaSession.metadata = new MediaMetadata();
 	}
 
-	if (instantfilter) dom.filter.oninput = filter;
+	if (instantfilter) dom.filter.oninput = filter;	// Gives event as parameter
 
 	if (window.innerWidth > 360)
 		dom.library.className = 'unfold';
@@ -1241,7 +1241,7 @@ function resizePlaylist() {
 	dom.trash.style.right = scrollBars == 0 ? '' : scrollBars + 4 +'px';
 }
 
-function filter(instant = false) {
+function filter(instant = false) {	// Gets event from oninput
 	if (instant && dom.filter.value.length < instantfilter) return;
 	var clear = dom.filter.value == '' ? '' : 'none';
 	if (!tree) tree = dom.tree.querySelectorAll('li');
