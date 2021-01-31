@@ -207,10 +207,19 @@ ul {
 	list-style: none;
 }
 
-li:hover, li:focus, li:hover:before, li:focus:before {
-	color: var(--focus) !important;
-	transition: color .05s ease-in;
-}
+li.dim:hover, li.dim:hover:before,
+li.dim:focus, li.dim:focus:before,
+li.parent:hover, li.parent:hover:before,
+li.parent:focus, li.parent:focus:before,
+li:hover .artist, li:focus .artist { color: var(--focus-dim) !important }
+
+li:hover, li:hover:before,
+li:focus, li:focus:before,
+li.filtered:hover, li.filtered:hover:before,
+li.filtered:focus, li.filtered:focus:before { color: var(--focus) !important }
+
+li:hover, li:hover:before,
+li.parent:hover, li.parent:hover:before { transition: color .05s ease-in }
 
 li#last:before { visibility: hidden }
 
@@ -435,7 +444,6 @@ html:not(.dim) #player.fix {
 #tree li:focus { text-decoration: underline solid var(--focus) }
 #tree li:focus * { text-decoration: underline solid var(--bg) }
 #tree li.dim:focus { text-decoration: underline solid var(--focus-dim) }
-#tree li.dim:focus, li.dim:focus:before { color: var(--focus-dim) !important }
 #tree li.open > ul { display: block }
 #tree li.parent { color: var(--text-li-parent) }
 #tree li.parent .song, #tree li.filtered,
