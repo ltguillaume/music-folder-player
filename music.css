@@ -292,11 +292,6 @@ li.over { border-top: 1px dotted var(--focus) }
 		text-overflow: ellipsis;
 	}
 
-#album, #title {
-	height: 1.25em;
-	cursor: alias;
-}
-
 #title {
 	font-weight: bold;
 	letter-spacing: -.02em;
@@ -458,6 +453,11 @@ html:not(.dim) #player.fix {
 #tree li.parent .song, #tree li.filtered,
 #tree li:hover > ul, #tree li:focus > ul { color: var(--text) }
 
+.title {
+	height: 1.25em;
+	cursor: alias;
+}
+
 .artist, .dim { color: var(--text-dim) }
 
 .hide { display: none }
@@ -551,7 +551,6 @@ html:not(.dim) #player.fix {
 #volume.muted:before { content: "\f210" }
 
 .clear:before { content: "\f217" }
-.copied:before { content: "\f129" }
 .download:before { content: "\f143" }
 .filter:before { content: "\f14b" }
 .folder:before { content: "\f150" }
@@ -559,6 +558,7 @@ html:not(.dim) #player.fix {
 .playing:before { content: "\f198" }
 .playlist:before { content: "\f18e" }
 .link:before { content: "\f165" }
+.link.copied:before { content: "\f129" }
 .song:before { content: "\f17b"; color: var(--text-dim) }
 button.on:before { content: "\f126" !important }
 button.whatsapp:before { content: "\f1a6" }
