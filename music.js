@@ -1057,7 +1057,7 @@ function playNext() {
 	pagetitle.textContent = nfo.title + (nfo.artist ? ' - '+ nfo.artist : '');
 	fillShare(path);
 	if ('mediaSession' in navigator) {
-		navigator.mediaSession.metadata.title =  nfo.title;
+		navigator.mediaSession.metadata.title = nfo.title;
 		navigator.mediaSession.metadata.artist = nfo.artist;
 		navigator.mediaSession.metadata.artwork = [{ src: cover }];
 	}
@@ -1207,7 +1207,7 @@ function menu(e) {
 				dom.randomlibrary.className = cfg.after == 'randomlibrary' ? 'on' : '';
 				if (dom.filter.value == '') dom.randomfiltered.className += ' dim';
 				el.style.display = 'block';
-				setFocus(dom[cfg.after]);
+				setFocus(dom.afteroptions.firstElementChild);
 		}
 	} else switch (el) {
 			case dom.playlists:
