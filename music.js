@@ -27,6 +27,11 @@ var
 	tree,
 	tv;
 
+const
+	ADD =  1,
+	TOG = .1,
+	REM = -1;
+
 function init() {
 	url = document.URL.split('?play=', 2);
 	if (url[1] && url[1].startsWith('c:')) url[1] = atob(decodeURIComponent(url[1].substring(2)));
@@ -91,7 +96,7 @@ function init() {
 		}
 	};
 
-	get('splash').className = 'show';
+	cls(get('splash'), 'show', ADD);
 
 	var lib = document.createElement('script');
 	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ esc(url[1]) : '');
@@ -109,8 +114,8 @@ function init() {
 		prepUI();
 		buildLibrary('', library, dom.tree);
 		buildPlaylist();
-		get('splash').className = '';
-		dom.doc.className += ' show';
+		cls(get('splash'), 'show', REM);
+		cls(dom.doc, 'show', ADD);
 		console.log('https://github.com/ltGuillaume/MusicFolderPlayer'+ (mode ? '' : '\nSong count: '+ songs.length));
 		log('PHP request = '+ lib.src);
 		if (songs.length == 1) prepSongMode();
@@ -124,18 +129,18 @@ function prepUI() {
 	pagetitle.textContent = def.title;
 	dom.volumeslider.max = def.volume;
 	dom.volumeslider.value = cfg.volume;
-	if (cfg.enqueue) dom.enqueue.className = 'on';
-	if (cfg.random) dom.random.className = 'on';
-	if (cfg.crossfade) dom.crossfade.className = 'on';
+	if (cfg.enqueue) cls(dom.enqueue, 'on', ADD);
+	if (cfg.random) cls(dom.random, 'on', ADD);
+	if (cfg.crossfade) cls(dom.crossfade, 'on', ADD);
 	if (cfg.locked) {
-		document.body.className = 'locked';
-		dom.lock.className = 'on';
+		cls(document.body, 'locked', ADD);
+		cls(dom.lock, 'on', ADD);
 		dom.lock.textContent = 'Unlock';
 	}
 	if (url.length > 1) dom.hide(['playlistsdiv', 'save', 'share']);
 	if (!onlinepls) dom.hide(['playlistsdiv', 'save', 'shareplaylist']);
 	if (!sharing) dom.hide('share');
-	if (whatsapp) dom.options.className = 'whatsapp';
+	if (whatsapp) cls(dom.options, 'whatsapp', ADD);
 	if (cfg.after == 'randomfiltered') cfg.after = 'randomlibrary';
 	cfg.remove = false;
 
@@ -195,11 +200,11 @@ function prepUI() {
 	if (instantfilter) dom.filter.oninput = filter;	// Gives event as parameter
 
 	if (window.innerWidth > 360)
-		dom.library.className = 'unfold';
+		cls(dom.library, 'unfold', ADD);
 }
 
 function touchUI() {
-	dom.doc.className += ' touch';
+	cls(dom.doc, 'touch', ADD);
 	if (mode) resizePlaylist();
 	else dom.show('trash');
 }
@@ -210,10 +215,10 @@ function fixPlayer() {
 		&& dom.doc.offsetHeight - dom.player.offsetHeight > window.innerHeight) {
 		playerheight = dom.player.offsetHeight + parseInt(window.getComputedStyle(dom.player).getPropertyValue('margin-top'));
 		dom.doc.style.paddingTop = playerheight +'px';
-		dom.player.className += ' fix';
+		cls(dom.player, 'fix', ADD);
 	} else if (window.pageYOffset < playerheight) {
 		dom.doc.style.paddingTop = '';
-		dom.player.className = dom.player.className.replace(' fix', '');
+		cls(dom.player, 'fix', REM);
 	}
 }
 
@@ -262,10 +267,11 @@ function prepAudio(a) {
 	};
 
 	a.onplay = function() {
-		dom.playpause.className = 'playing';
-		dom.album.className = dom.title.className = '';
+		cls(dom.playpause, 'playing', ADD);
+		cls(dom.album, 'dim', REM);
+		cls(dom.title, 'dim', REM);
 		if (cfg.index != -1) {
-			dom.playlist.childNodes[cfg.index].className = 'playing';
+			cls(dom.playlist.childNodes[cfg.index], 'playing', ADD);
 			if (!onplaylist)
 				dom.playlist.scrollTop = dom.playlist.childNodes[cfg.index > 0 ? cfg.index - 1 : cfg.index].offsetTop - dom.playlist.offsetTop;
 		}
@@ -273,8 +279,9 @@ function prepAudio(a) {
 
 	a.onpause = function(e) {
 		if (a == audio[track]) {
-			dom.playpause.className = '';
-			dom.album.className = dom.title.className = 'dim';
+			cls(dom.playpause, 'playing', REM);
+			cls(dom.album, 'dim', ADD);
+			cls(dom.title, 'dim', ADD);
 		}
 	};
 
@@ -327,7 +334,7 @@ function buildLibrary(root, folder, element) {
 	for (i in folder) {
 		if (i != '/') {	// Subfolder
 			li = document.createElement('li');
-			li.className = 'folder';
+			cls(li, 'folder', ADD);
 			li.path = root + i;
 			li.textContent = i;
 			li.tabIndex = 1;
@@ -345,7 +352,7 @@ function buildLibrary(root, folder, element) {
 			for (f in folder[i]) {
 				li = document.createElement('li');
 				li.id = songs.length;
-				li.className = 'song';
+				cls(li, 'song', ADD);
 				li.path = root + f;
 				if (cover) li.cover = cover;
 				li.textContent = f.substring(f.lastIndexOf('/') + 1, f.lastIndexOf('.'));
@@ -380,7 +387,7 @@ function openFolder(e) {
 		});
 		li.className = 'folder open'+ dim;
 	} else {
-		li.className = (cls(li, 'open') ? 'folder' : 'folder open') + dim;
+		li.className = (cls(li, 'open') ? ' folder' : ' folder open') + dim;
 	}
 	setFocus(li);
 	if (audio[track].paused) fillShare(li.path +'/');
@@ -391,10 +398,10 @@ function addFolder(e) {
 	e.stopPropagation();
 	var li = e.target;
 	if (confirm(s_addfolder +'\n'+ li.path.substring(li.path.lastIndexOf('/') + 1))) {
-		if (!cls(li, 'dim')) li.className += ' dim';
+		cls(li, 'dim', ADD);
 		ffor(li.querySelectorAll('li.song'), function(s) {
 			add(s.id);
-			if (!cls(li, 'dim')) s.className += ' dim';
+			cls(li, 'dim', ADD);
 		});
 	}
 }
@@ -441,7 +448,7 @@ function addSong(e) {
 		else
 			playNext();
 	}
-	if (!cls(li, 'dim')) li.className += ' dim';
+	cls(li, 'dim', ADD);
 	if (audio[track].paused) fillShare(li.path);
 }
 
@@ -450,7 +457,7 @@ function addSongNext(e) {
 	e.stopPropagation();
 	var li = e.target;
 	add(li.id, true);
-	if (!cls(li, 'dim')) li.className += ' dim';
+	cls(li, 'dim', ADD);
 	if (audio[track].paused) fillShare(li.path);
 }
 
@@ -462,9 +469,10 @@ function buildPlaylist() {
 	var i, li;
 	for (i in cfg.playlist) {
 		li = playlistItem(cfg.playlist[i]);
-		li.className = i == cfg.index ? 'playing' : 'song';
+		cls(li, 'song', ADD);
 		dom.playlist.appendChild(li);
 		if (i == cfg.index) {
+			cls(li, 'playing', ADD);
 			var path = cfg.playlist[i].path;
 			var nfo = getSongInfo(path);
 			dom.album.innerHTML = getAlbumInfo(nfo);
@@ -482,7 +490,7 @@ function buildPlaylist() {
 
 function playlistItem(s) {
 	var li = document.createElement('li');
-	li.className = 'song';
+	cls(li, 'song', ADD);
 	li.draggable = 'true';
 	if (s.id == 'last') {
 		li.id = 'last';
@@ -515,10 +523,10 @@ function findItem(e) {
 function prepDrag(e) {
 	if (cfg.locked) return e.preventDefault();
 	e.stopPropagation();
-	dom.trash.className += ' drag';
+	cls(dom.trash, 'drag', ADD);
 	dom.playlist.appendChild(playlistItem({ 'id': 'last' }));
 	if (cfg.index != -1)
-		dom.playlist.childNodes[cfg.index].className = 'song';
+		cls(dom.playlist.childNodes[cfg.index], 'playing', REM);
 
 	drag = e.target;
 	e.dataTransfer.effectAllowed = 'move';
@@ -531,7 +539,7 @@ function allowDrop(e) {
 }
 
 function endDrag() {
-	dom.trash.className = dom.trash.className.replace(' drag', '');
+	cls(dom.trash, 'drag', REM);
 	if (dom.playlist.hasChildNodes() && dom.playlist.lastChild.id == 'last') {
 		dom.playlist.removeChild(dom.playlist.lastChild);
 	}
@@ -544,11 +552,11 @@ function dropItem(e) {
 	var to = e.target;
 	if (to.tagName.toLowerCase() != 'li') to = to.parentNode;
 	log('Drag ['+ drag.textContent +'] to place of ['+ to.textContent +']');
-	to.className = to.className.replace(' over', '');
+	cls(to, 'over', REM);
 	var indexfrom = e.dataTransfer.getData('text');
 	var indexto = getIndex(to);
 	if (indexto != indexfrom) moveItem(drag, to, indexfrom, indexto);
-	if (cfg.index != -1) dom.playlist.childNodes[cfg.index].className = 'playing';
+	if (cfg.index != -1) cls(dom.playlist.childNodes[cfg.index], 'playing', ADD);
 	log('Drag from '+ indexfrom +' to '+ indexto);
 	log('Playback index to '+ cfg.index);
 }
@@ -578,7 +586,7 @@ function removeItem(e) {
 	if (cfg.index != -1 && index <= cfg.index)
 		cfg.index--;
 	if (cfg.index != -1 && !playing)
-		dom.playlist.childNodes[cfg.index].className = 'playing';
+		cls(dom.playlist.childNodes[cfg.index], 'playing', ADD);
 	endDrag();
 }
 
@@ -805,7 +813,7 @@ function play(id) {
 function mute(e = null) {
 	if (e) e.preventDefault();
 	audio[+!track].muted = audio[track].muted ^= true;
-	dom.volume.className = audio[track].muted ? 'muted' : '';
+	cls(dom.volume, 'muted', audio[track].muted ? ADD : REM);
 }
 
 function setVolume(input) {
@@ -833,11 +841,11 @@ function share(type) {
 			share.value = base +'?play=c:'+ escBase64(btoa(share.value));
 		share.select();
 		document.execCommand('copy');
-		share.nextElementSibling.nextElementSibling.className = 'copied';
+		cls(share.nextElementSibling.nextElementSibling, 'copied', ADD);
 		share.blur();
 		share.value = clearVal;
 		setTimeout(function() {
-			share.nextElementSibling.nextElementSibling.className = 'link';
+			cls(share.nextElementSibling.nextElementSibling, 'copied', REM);
 		}, 1500);
 	}
 }
@@ -889,8 +897,8 @@ function loadPlaylist(name) {
 }
 
 function loadPlaylistBtn(e) {
-	if (e.target.className == 'on' || e.target.textContent == s_noplaylists) return;
-	e.target.className = 'on';
+	if (cls(e.target, 'on') || e.target.textContent == s_noplaylists) return;
+	cls(e.target, 'on', ADD);
 	loadPlaylist(e.target.textContent);
 }
 
@@ -1017,7 +1025,7 @@ function add(id, next = false) {
 function playNext() {
 	if (cfg.index != -1) {
 		var li = dom.playlist.childNodes[cfg.index];
-		li.className = 'song';
+		cls(li, 'playing', REM);
 		delete li.playNext;
 	}
 	if (cfg.index + 1 == cfg.playlist.length && !audio[+!track].prepped && cfg.after == 'stopplayback') return;
@@ -1040,13 +1048,13 @@ function playNext() {
 	cover = cover ? esc(root + path.substring(0, path.lastIndexOf('/') + 1) + cover) : def.cover;
 	if (prevcover.indexOf(cover) == -1) {
 		dom.cover.style.opacity = 0;
-		if (dom.player.className == 'full') dom.current.style.opacity = 0;
+		if (cls(dom.player, 'full')) dom.current.style.opacity = 0;
 		setTimeout(function() {
 			dom.album.innerHTML = getAlbumInfo(nfo);
 			dom.title.innerHTML = nfo.title;
 			dom.cover.src = cover;
 			setTimeout(function() {
-				if (dom.player.className == 'full') dom.current.style.opacity = '';
+				if (cls(dom.player, 'full')) dom.current.style.opacity = '';
 			}, 150);
 		}, 150);
 	} else {
@@ -1088,7 +1096,7 @@ function toggle(e) {
 	switch (button.id) {
 		case 'cover':
 			e.preventDefault();
-			dom.cover.className = dom.cover.className == '' ? 'nofade' : '';
+			cls(dom.cover, 'nofade', TOG);
 			return;
 		case 'volume':
 			dom.volumeslider.style.display = dom.volumeslider.style.display == 'unset' ? '' : 'unset';
@@ -1097,13 +1105,8 @@ function toggle(e) {
 			if (cfg.locked) return;
 			dom.hide(['playlists', 'afteroptions']);	// Continue
 		case 'share':
-			if (button.className == 'on') {
-				dom.options.className = dom.options.className.replace(' '+ button.id, '');
-				button.className = '';
-			} else {
-				dom.options.className += ' '+ button.id;
-				button.className = 'on';
-			}
+			cls(dom.options, button.id, TOG);
+			cls(button, 'on', TOG);
 			return;
 		case 'randomfiltered':
 			if (dom.filter.value == '') return;
@@ -1122,19 +1125,19 @@ function toggle(e) {
 		case 'lock':
 			return toggleLock();
 		case 'trash':
-			return button.className += ' over';
+			return cls(button, 'over', ADD);
 		case 'clear':
 			return clearPlaylist();
 		case 'unfold':
-			return dom.library.className = cls(dom.library, 'unfold') ? '' : 'unfold';
+			return cls(dom.library, 'unfold', TOG);
 		case 'crossfade':
 			fade = null;	// Continue
 		default:
 			if (cfg.locked) return;
 			cfg[button.id] ^= true;
-			button.className = cfg[button.id] ? 'on' : '';
+			cls(button, 'on', cfg[button.id] ? ADD : REM);
 		}
-		if (button.id == 'remove') dom.trash.className = cfg.remove ? 'on' : '';
+		if (button.id == 'remove') cls(dom.trash, 'on', cfg.remove ? ADD : REM);
 }
 
 function buildFilteredLibrary() {
@@ -1150,8 +1153,9 @@ function toggleLock() {
 	if (!cfg.locked && cls(dom.options, 'playlistbtn'))
 		dom.playlistbtn.click();
 	cfg.locked ^= true;
-	document.body.className = cfg.locked ? 'locked' : '';
-	dom.lock.className = cfg.locked ? 'on' : '';
+	var act = cfg.locked ? ADD : REM;
+	cls(document.body, 'locked', act);
+	cls(dom.lock, 'on', act);
 	dom.lock.textContent = cfg.locked ? 'Unlock' : 'Lock';
 }
 
@@ -1200,12 +1204,12 @@ function menu(e) {
 			case dom.afteroptions:
 				if (!cls(dom.options, 'playlistbtn'))
 					dom.playlistbtn.click();
-				dom.stopplayback.className = cfg.after == 'stopplayback' ? 'on' : '';
-				dom.repeatplaylist.className = cfg.after == 'repeatplaylist' ? 'on' : '';
-				dom.playlibrary.className = cfg.after == 'playlibrary' ? 'on' : '';
-				dom.randomfiltered.className = cfg.after == 'randomfiltered' ? 'on' : '';
-				dom.randomlibrary.className = cfg.after == 'randomlibrary' ? 'on' : '';
-				if (dom.filter.value == '') dom.randomfiltered.className += ' dim';
+				cls(dom.stopplayback, 'on', cfg.after == 'stopplayback' ? ADD : REM);
+				cls(repeatplaylist, 'on', cfg.after == 'repeatplaylist' ? ADD : REM);
+				cls(dom.playlibrary, 'on', cfg.after == 'playlibrary' ? ADD : REM);
+				cls(dom.randomfiltered, 'on', cfg.after == 'randomfiltered' ? ADD : REM);
+				cls(dom.randomlibrary, 'on', cfg.after == 'randomlibrary' ? ADD : REM);
+				cls(dom.randomfiltered, 'dim', dom.filter.value == '' ? ADD : REM);
 				el.style.display = 'block';
 				setFocus(dom.afteroptions.firstElementChild);
 		}
@@ -1231,11 +1235,14 @@ function clearPlaylist() {
 
 function resizePlaylist() {
 	if (!mode && cfg.playlist.length > 7) {
-		if (dom.playlist.className != 'resize') {
+		if (!cls(dom.playlist, 'resize')) {
 			dom.playlist.style.height = dom.playlist.offsetHeight +'px';
-			dom.playlist.className = 'resize';
+			cls(dom.playlist, 'resize', ADD);
 		}
-	} else dom.playlist.className = dom.playlist.style.height = '';
+	} else {
+		dom.playlist.style.height = '';
+		cls(dom.playlist, 'resize', REM);
+	}
 
 	var scrollBars = dom.playlist.offsetWidth - dom.playlist.clientWidth;
 	dom.trash.style.right = scrollBars == 0 ? '' : scrollBars + 4 +'px';
@@ -1281,12 +1288,19 @@ function filter(instant = false) {	// Gets event from oninput
 		});
 	}
 
-	dom.library.className = 'unfold';
+	cls(dom.library, 'unfold', ADD);
 	if (!instant) keyNav(null, 'down');
 }
 
-function cls(el, name) {
-	return el.className.indexOf(name) != -1;
+function cls(el, name, act = false) {
+	var found = el.className.indexOf(name) == 0 || el.className.indexOf(' '+ name) >= 0;
+	if (!act) return found;
+	if (found && act <= TOG)
+		el.className = el.className.replace((found > 0 ? ' ' : '') + name, '');
+	else if (!found && act >= TOG)
+		el.className += ' '+ name;
+	else return found;	// NoOp
+	return !found;
 }
 
 function ffor(items, callback, scope) {
@@ -1578,8 +1592,7 @@ document.addEventListener('keydown', function(e) {
 			break;
 		case tv ? 57 : '':	// 9
 		case 66:	// B
-			var dim = cls(dom.doc, 'dim') ? '' : ' dim';
-			dom.doc.className = cls(dom.doc, 'touch') ? 'touch' : '' + dim;
+			cls(dom.doc, 'dim', TOG);
 			break;
 		default:
 			switch (e.code) {

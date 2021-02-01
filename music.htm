@@ -88,14 +88,14 @@
 	<div id="playlistdiv" onmouseup="resizePlaylist()">
 		<div>
 			<div id="trash" onclick="toggle(event)"
-					ondragover="allowDrop(event)" ondrop="removeItem(event); this.className = this.className.replace(' drop', '')"
-					ondragenter="this.className += ' drop'" ondragleave="this.className = this.className.replace(' drop', '')">
+					ondragover="allowDrop(event)" ondrop="removeItem(event); cls(this, 'drop', REM)"
+					ondragenter="cls(this, 'drop', ADD)" ondragleave="cls(this 'drop', REM)">
 				<button id="clear" class="clear" title="Clear the playlist (C)">Clear</button>
 				<button id="remove" title="Remove playlist items">Remove</button>
 			</div>
 			<div id="playlist" onclick="clickItem(event)" oncontextmenu="findItem(event)"
 				ondragstart="prepDrag(event)" ondragover="allowDrop(event)" ondragend="endDrag()" ondrop="dropItem(event)"
-				ondragenter="event.target.className += ' over'" ondragleave="event.target.className = event.target.className.replace(' over', '')"
+				ondragenter="cls(event.target', 'over', ADD)" ondragleave="cls(event.target, 'over', REM)"
 				onmouseenter="onplaylist=true" onmouseleave="onplaylist=false"></div>
 		</div>
 	</div>
