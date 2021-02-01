@@ -31,7 +31,8 @@
 	#cover:hover, #cover.nofade { opacity: 1 }
 
 @media (min-width: 541px) {
-	body { background-image: url("music.theme.svg") }
+	body, #player.fix, #player.fix button:hover { background-image: url("music.theme.svg") } 
+	#player.fix button:not(:hover) { background: none }
 	body > div { box-shadow: 0 0 3px #242424 }
 }
 
