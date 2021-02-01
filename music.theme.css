@@ -13,7 +13,7 @@
 	--bg-toast-error: #911d1d;
 	--bg-trash: ##10100faa;
 	--border: #1e1e1e;
-	--border-cover: #696969;
+	--border-cover: #3c3c3c;
 	--box-shadow: #10100f;
 	--focus: #1d91f0;
 	--focus-dim: #1a6eac;
@@ -48,12 +48,57 @@ html, #playlist {
   scrollbar-width: thin;
 }
 
+/* Based on mov.im, orange focus */
+html.blue {
+	--bg: #10151a;
+	--bg-button-hv: #192028;
+	--bg-body: #141a21;
+	--bg-menu: #141a21;
+	--bg-player-fix: #141a21;
+	--bg-resizer: #141a21;
+	--bg-toast: #141a21;
+	--bg-trash: #10151aaa;
+	--bg-scrollbar-track: #181e27;
+	--bg-scrollbar-thumb-hv: #5a6367;
+	--bg-scrollbar-thumb: #30353c;
+	--bg-splash: #30353c;
+	--border: #171f26;
+	--border-cover: #212b36;
+	--focus: #eb6600;
+	--focus-dim: #b35000;
+}
+
+/* Blue + hue rotation -60, orange focus */
+html.green {
+	--bg: #101a15;
+	--bg-button-hv: #1a2922;
+	--bg-body: #14211b;
+	--bg-menu: #14211b;
+	--bg-player-fix: #14211b;
+	--bg-resizer: #14211b;
+	--bg-toast: #14211b;
+	--bg-trash: #101a15aa;
+	--bg-scrollbar-track: #182620;
+	--bg-scrollbar-thumb-hv: #59665d;
+	--bg-scrollbar-thumb: #313d38;
+	--bg-splash: #313d38;
+	--border: #17261e;
+	--border-cover: #21362b;
+	--focus: #ef6c00;
+	--focus-dim: #b35000;
+}
+
+/* Green focus */
+html.focusgreen {
+	--focus: #00bd35;
+	--focus-dim: #00800f;
+}
+
 /* Display songs in tree horizontally 
 #tree li.song {
 	display: inline-block;
 	margin-right: 2.5em;
-}
-*/
+}*/
 
 /* Set a fixed height for the playlist
 #playlist { height: 7.75em !important }*/
