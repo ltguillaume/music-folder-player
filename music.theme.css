@@ -4,12 +4,14 @@
 	--bg-button-hv: #1c1c1c;
 	--bg-menu: #121211;
 	--bg-player-fix: #121211;
+	--bg-resizer: #171717;
+	--bg-scrollbar-thumb: #212121;
+	--bg-scrollbar-thumb-hv: #313131;
+	--bg-scrollbar-track: #141414;
 	--bg-splash: #212121;
-	--bg-thumb: #212121;
-	--bg-thumb-hv: #313131;
 	--bg-toast: #121211;
 	--bg-toast-error: #911d1d;
-	--bg-trash: rgba(16, 16, 15, .8);
+	--bg-trash: ##10100faa;
 	--border: #1e1e1e;
 	--border-cover: #696969;
 	--box-shadow: #10100f;
@@ -35,10 +37,10 @@
 
 /* Dark scrollbars */
 ::-webkit-scrollbar { width: 12px }
-::-webkit-scrollbar-track { background: #141414; border-radius: 2px }
-::-webkit-scrollbar-thumb { background: var(--bg-thumb); border-radius: 2px }
-::-webkit-scrollbar-thumb:hover { background: var(--bg-thumb-hv) }
-::-webkit-resizer { background: #171717 }
+::-webkit-scrollbar-track { background: var(--bg-scrollbar-track); border-radius: 2px }
+::-webkit-scrollbar-thumb { background: var(--bg-scrollbar-thumb); border-radius: 2px }
+::-webkit-scrollbar-thumb:hover { background: var(--bg-scrollbar-thumb-hv) }
+::-webkit-resizer { background: var(--bg-resizer) }
 
 html, #playlist {
 	scrollbar-color: #212121 #171717;
