@@ -561,6 +561,6 @@ html:not(.dim) #player.fix {
 .playlist:before { content: "\f18e" }
 .link:before { content: "\f165" }
 .link.copied:before { content: "\f129" }
-.song:before { content: "\f17b"; color: var(--text-dim) }
+.song:not(.playing):before { content: "\f17b"; color: var(--text-dim) }
 button.on:before { content: "\f126" !important }
 button.whatsapp:before { content: "\f1a6" }
