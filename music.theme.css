@@ -19,7 +19,7 @@
 	--focus-dim: #1a6eac;
 	--text: #b4b4b4;
 	--text-dim: #696969;
-	--text-li-parent: #3c3c3c;
+	--text-li-parent: #4c4c4c;
 	--text-locked: #5a5a5a;
 /*	--text-shadow* not used */
 }
@@ -44,7 +44,7 @@
 ::-webkit-resizer { background: var(--bg-resizer) }
 
 html, #playlist {
-	scrollbar-color: #212121 #171717;
+	scrollbar-color: var(bg-scrollbar-thumb) var(--bg-scrollbar-track);
   scrollbar-width: thin;
 }
 

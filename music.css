@@ -207,6 +207,8 @@ ul {
 	list-style: none;
 }
 
+li.dim { color: var(--text-dim) !important }
+
 li.dim:hover, li.dim:hover:before,
 li.dim:focus, li.dim:focus:before,
 li.parent:hover, li.parent:hover:before,
@@ -447,7 +449,7 @@ html:not(.dim) #player.fix {
 #tree li:before { margin-left: -1.25em }
 #tree li:focus { text-decoration: underline solid var(--focus) }
 #tree li:focus * { text-decoration: underline solid var(--bg) }
-#tree li.dim:focus { text-decoration: underline solid var(--focus-dim) }
+#tree li.dim:focus, #tree li.parent:focus { text-decoration: underline solid var(--focus-dim) !important }
 #tree li.open > ul { display: block }
 #tree li.parent { color: var(--text-li-parent) }
 #tree li.parent .song, #tree li.filtered,

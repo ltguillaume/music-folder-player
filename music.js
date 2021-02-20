@@ -1,7 +1,7 @@
 var
 	audio,
 	base,
-	cfg,
+	cfg = {},
 	def = { 'playlist': [], 'skip': [], 'index': -1 },
 	dom,
 	library,
