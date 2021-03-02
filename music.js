@@ -171,14 +171,14 @@ function prepUI() {
 		}, { passive: true });
 	}, { once: true, passive: true });
 
-	window.onscroll = function() {
+	window.addEventListener('scroll', function() {
 		if (onscrollwait) return;
 		onscrollwait = true;
 		setTimeout(function() {
 			fixPlayer();
 			onscrollwait = false;
 		}, 400);
-	}
+	}, { passive: true });
 
 	window.onunload = function() {
 		if (ls) {
