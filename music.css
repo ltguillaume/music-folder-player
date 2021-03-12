@@ -24,7 +24,7 @@
 	--bg-thumb-hv: #ddd;
 	--bg-toast: #fcfcfd;
 	--bg-toast-error: #911d1d;
-	--bg-trash: rgba(254, 254, 255, .8);
+	--bg-trash: #fefeffaa;
 	--border: #eee;
 	--border-cover: #fafafa;
 	--box-shadow: #fefeff;
@@ -123,7 +123,7 @@ button {
 	padding: .5em;
 	font-size: .95em;
 	text-shadow: .5px .5px var(--text-shadow-button);
-	background: var(--bg);
+	background: none;
 	border: none;
 	border-radius: 3px;
 	cursor: pointer;
@@ -391,6 +391,7 @@ html:not(.dim) #player.fix {
 	}
 		#trash.over:before, #trash:hover:before { display: none }
 	#trash:not(:hover) button { display: none }
+	#trash:hover { background: var(--bg) }
 	#trash.drag {
 		height: 100%;
 		padding: .5em;
