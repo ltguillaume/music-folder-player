@@ -68,7 +68,7 @@ html.touch body {
 		overflow-x: auto;
 		white-space: nowrap;
 	}
-	html.touch #unfold { display: block }
+	html.touch #reload, html.touch #unfold { display: block }
 
 html:not(.show) > body > div,
 html:not(.show) > body > div:before { opacity: 0 }
@@ -115,7 +115,7 @@ body.locked #enqueue, body.locked #random, body.locked #crossfade, body.locked #
 	body.locked #seek { pointer-events: none }
 	body.locked #enqueue:before { content: "\f126" }
 	body.locked #playlistdiv #trash { display: none !important }
-body:not(.locked) #playlistdiv:hover #trash,
+body:not(.locked) #playlistdiv:hover #trash, #library:hover #reload,
 body:not(.locked) #library:hover #unfold { display: block }
 
 button {
@@ -426,18 +426,18 @@ html:not(.dim) #player.fix {
 
 #filter {
 	width: 21.5em;
-	max-width: calc(100% - 5.5em);
+	max-width: calc(100% - 8em);
 	padding-top: .75em;
 }
 
-#unfold {
+#reload, #unfold {
 	display: none;
 	position: absolute;
 	top: 0;
-	right: 0;
-	background: none;
+	right: 2em;
 	z-index: 1;
 }
+	#unfold { right: 0 }
 
 #tree {
 	display: none;
@@ -542,6 +542,7 @@ html:not(.dim) #player.fix {
 #previous:before { content: "\f19c" }
 #random:before, #randomlibrary:before { content: "\f13a" }
 #randomfiltered:before { content: "\f14b" }
+#reload:before { content: "\f1a5" }
 #remove:before { content: "\f204" }
 #repeatplaylist:not(.on):before { content: "\f1a5"; margin-left: 1px; margin-right: calc(.25em - 1px); transform: scale(-1, 1) }
 #save:before { content: "\f184" }

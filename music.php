@@ -89,7 +89,14 @@
 		}
 	}
 
-	echo 'var root="'. $dir .'/";'. PHP_EOL .'var library='. json_encode(tree($dir, 0));
+	$lib_path = $cfg['playlistdir'] .'/library.json';
+	if (!$cfg['cache'] || isset($_GET['play']) || isset($_GET['reload']) || !file_exists($lib_path)) {
+		$lib = json_encode(tree($dir, 0));
+		if (!isset($_GET['play']))
+			file_put_contents($lib_path, $lib);
+	} else $lib = file_get_contents($lib_path);
+
+	echo 'var root="'. $dir .'/";'. PHP_EOL .'var library='. $lib;
 
 	function ini_merge($ini, $usr) {
 		foreach ($usr as $k => $v)

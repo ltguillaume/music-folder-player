@@ -366,6 +366,16 @@ function buildLibrary(root, folder, element) {
 	}
 }
 
+function reloadLibrary() {
+	dom.tree.innerHTML = '';
+	var lib = document.createElement('script');
+	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ esc(url[1]) : '') +'&reload=1';
+	lib.onload = function() {
+		buildLibrary('', library, dom.tree);
+	}
+	document.body.appendChild(lib);
+}
+
 function prepSongMode() {
 	prepPlaylistMode();
 	add(0);
@@ -1429,6 +1439,10 @@ document.addEventListener('keydown', function(e) {
 	}
 
 	switch (e.keyCode) {
+		case 116:	// F5
+			e.preventDefault();
+			reloadLibrary();
+			break;
 		case 27:	// Esc
 			if (el && cls(el.parentNode, 'menu') && cls(dom.options, 'playlistbtn'))
 				dom.playlistbtn.click();
