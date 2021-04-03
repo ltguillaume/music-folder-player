@@ -101,7 +101,10 @@
 	</div>
 	<div id="library">
 		<div>
-			<button id="unfold" title="Show/hide library tree (T)" onclick="toggle(event)"></button>
+			<div class="hoverdiv">
+				<button id="reload" title="Reload library (F5)" onclick="reloadLibrary()"></button>
+				<button id="unfold" title="Show/hide library tree (T)" onclick="toggle(event)"></button>
+			</div>
 			<div id="filterdiv">
 				<input id="filter" title="Filter library (F)" placeholder="Filter..." onchange="filter()" onclick="this.select();setFocus(this)">
 				<button class="filter" title="Apply filter (Enter)" onclick="filter()"></button>
