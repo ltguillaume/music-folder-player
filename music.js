@@ -369,7 +369,7 @@ function buildLibrary(root, folder, element) {
 function reloadLibrary() {
 	dom.tree.innerHTML = '';
 	var lib = document.createElement('script');
-	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ esc(url[1]) : '') + (url.length > 1 ? '&' : '?') +'reload=1';
+	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ esc(url[1]) +'&' : '?') +'reload=1';
 	lib.onload = function() {
 		buildLibrary('', library, dom.tree);
 	}
