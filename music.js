@@ -1440,6 +1440,7 @@ document.addEventListener('keydown', function(e) {
 
 	switch (e.keyCode) {
 		case 116:	// F5
+			if (cfg.locked) return;
 			e.preventDefault();
 			reloadLibrary();
 			break;
@@ -1535,18 +1536,19 @@ document.addEventListener('keydown', function(e) {
 			prepPlaylists('save');
 			break;
 		case 73:	// I
-			if (!cfg.locked && mode != 'song') importPlaylist();
+			if (cfg.locked || mode == 'song') return;
+			importPlaylist();
 			break;
 		case 88:	// X
-			if (!cfg.locked && mode != 'song') exportPlaylist();
+			if (cfg.locked || mode == 'song') return;
+			exportPlaylist();
 			break;
 		case 65:	// A
 			if (cfg.locked) return;
 			menu('after');
 			break;
 		case 83:	// S
-			if (!sharing) return;
-			if (url.length > 1) return;
+			if (!sharing || url.length > 1) return;
 			dom.share.click();
 			setFocus(dom.share);
 			break;
@@ -1566,8 +1568,7 @@ document.addEventListener('keydown', function(e) {
 					cls(dom.doc, 'dim', REM);
 					log('Theme: '+ cfg.theme);
 				}, 400);
-			} else
-				if (!cfg.locked && !mode && confirm(s_clearplaylist)) clearPlaylist();
+			} else if (!cfg.locked && !mode && confirm(s_clearplaylist)) clearPlaylist();
 			break;
 		case 70:	// F
 			e.preventDefault();
@@ -1575,8 +1576,9 @@ document.addEventListener('keydown', function(e) {
 			if (dom.filter.value != '') dom.filter.select();
 			break;
 		case 84:	// T
+			if (cfg.locked || mode) return;
 			e.preventDefault();
-			if (!cfg.locked && !mode) dom.unfold.click();
+			dom.unfold.click();
 			break;
 		case 36:	// Home
 			e.preventDefault();
