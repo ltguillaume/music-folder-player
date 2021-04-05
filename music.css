@@ -229,9 +229,14 @@ li.over { border-top: 1px dotted var(--focus) }
 
 #splash {
 	position: absolute;
-	top: calc(50vh - .75em);
-	left: calc(50% - .5em);
-	font-size: 7.25em;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	width: 150px;
+	height: 150px;
+	margin: auto;
+	font-size: 150px;
 	color: var(--bg-splash);
 	opacity: 0;
 	border: none;
