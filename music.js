@@ -372,6 +372,7 @@ function reloadLibrary() {
 	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ esc(url[1]) +'&' : '?') +'reload=1';
 	lib.onload = function() {
 		buildLibrary('', library, dom.tree);
+		clearPlayed();
 	}
 	document.body.appendChild(lib);
 }
@@ -779,7 +780,7 @@ function prepNext() {
 }
 
 function clearPlayed() {
-	log('All songs have been played. Clearing played.');
+	console.log('User reloaded library or all songs have been played. Clearing played array.');
 	played.length = 0;
 }
 
