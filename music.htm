@@ -106,7 +106,7 @@
 				<button id="unfold" title="Show/hide library tree (T)" onclick="toggle(event)"></button>
 			</div>
 			<div id="filterdiv">
-				<input id="filter" title="Filter library (F)" placeholder="Filter..." onchange="filter()" onclick="this.select();setFocus(this)">
+				<input id="filter" title="Filter library (F)" placeholder="Filter..." onchange="filter()" onfocus="this.select()" onclick="setFocus(this)">
 				<button class="filter" title="Apply filter (Enter)" onclick="filter()"></button>
 				<button class="clear" title="Clear filter (Esc)" onclick="clearFilter()"></button>
 			</div>
