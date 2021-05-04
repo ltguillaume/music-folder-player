@@ -9,7 +9,7 @@
 	--bg-scrollbar-thumb-hv: #313131;
 	--bg-scrollbar-track: #141414;
 	--bg-splash: #212121;
-	--bg-toast: #121211;
+	--bg-toast: var(--bg);
 	--bg-toast-error: #911d1d;
 	--bg-trash: #10100faa;
 	--border: #1e1e1e;
@@ -31,7 +31,7 @@
 	#cover:hover, #cover.nofade { opacity: 1 }
 
 @media (min-width: 541px) {
-	body, #player.fix, #player.fix button:hover { background-image: url("music.theme.svg") } 
+	body, #player.fix, #player.fix button:hover { background-image: url("music.theme.svg") }
 	#player.fix button:not(:hover) { background: none }
 	body > div { box-shadow: 0 0 3px #242424 }
 }
@@ -56,7 +56,7 @@ html.blue {
 	--bg-menu: #141a21;
 	--bg-player-fix: #141a21;
 	--bg-resizer: #141a21;
-	--bg-toast: #141a21;
+	--bg-toast: var(--bg);
 	--bg-trash: #10151aaa;
 	--bg-scrollbar-track: #181e27;
 	--bg-scrollbar-thumb-hv: #5a6367;
@@ -76,7 +76,7 @@ html.green {
 	--bg-menu: #14211b;
 	--bg-player-fix: #14211b;
 	--bg-resizer: #14211b;
-	--bg-toast: #14211b;
+	--bg-toast: var(--bg);
 	--bg-trash: #101a15aa;
 	--bg-scrollbar-track: #182620;
 	--bg-scrollbar-thumb-hv: #59665d;
