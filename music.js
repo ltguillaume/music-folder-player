@@ -302,10 +302,8 @@ function prepAudio(a) {
 			if (cfg.crossfade && !a.fade && a.duration - a.currentTime < 10) {
 				log('Fade out: '+ dom.title.textContent);
 				a.fade = setInterval(function() {
-					if (a.volume > 0.04)
-						a.volume -= 0.04;
-					else if (a.volume > 0)
-						a.volume = 0;
+					a.volume -= a.volume > 0.04 ? 0.04 : a.volume;
+					if (a.volume == 0) clearInterval(a.fade);
 				}, 200);
 				playNext();
 			}
