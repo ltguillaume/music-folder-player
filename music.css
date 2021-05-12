@@ -353,6 +353,7 @@ html:not(.dim) #player.fix {
 	#player.fix:before, #player.fix #time, #player.fix #seek { display: none }
 	#player.fix, #player.fix button:not(:hover) { background: var(--bg-player-fix) }
 
+#options button:before, #trash button:before, #toast:before, li:before { margin-right: .25em }
 #options.whatsapp button.whatsapp { display: inline-block }
 #options.whatsapp input.uri { max-width: calc(100% - 10em) }
 
@@ -523,7 +524,6 @@ html:not(.dim) #player.fix {
 	font-family: Foundation;
 	text-align: center;
 }
-	#options button:before, #trash button:before, #toast:before, li:before { margin-right: .25em }
 
 #after:before { content: "\f182" }
 #trash:before { content: "\f204" }
