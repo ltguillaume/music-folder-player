@@ -439,6 +439,7 @@ function setFocus (el) {
 
 function setToast(el) {
 	if (cls(el, 'error') || cls(dom.player, 'fix')) {
+		if (cls(el, 'error')) console.log(s_error +' '+ el.textContent);
 		if (toast) clearTimeout(toast);
 		dom.toast.className = el.className;
 		dom.toast.textContent = el.textContent;
