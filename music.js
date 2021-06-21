@@ -1326,7 +1326,11 @@ function setFilter(f) {
 	if (mode) return;
 	if (f.constructor === String)
 		dom.filter.value = f;
-	else
+	else if (f.target && f.target.id == 'album') {
+		var f = cfg.playlist[cfg.index].path.split('/');
+		if (f.length < 2) return;
+		dom.filter.value = f[f.length - 2];
+	} else
 		dom.filter.value = f.target.textContent;
 	filter();
 	setFocus(dom.library);
