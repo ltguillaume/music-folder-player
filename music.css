@@ -202,10 +202,13 @@ input[type=range] {
 		input#volumeslider::-webkit-slider-runnable-track { margin-top: 0px }
 
 ul {
-	display: none;
-	margin-left: 1.25em;
+	margin-left: 0;
 	list-style: none;
 }
+	#tree ul {
+		display: none;
+		margin-left: 1.25em;
+	}
 
 li.dim { color: var(--text-dim) !important }
 

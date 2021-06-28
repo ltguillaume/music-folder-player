@@ -180,7 +180,7 @@ function prepUI() {
 		}, 400);
 	}, { passive: true });
 
-	window.onunload = function() {
+	window.onpagehide = function() {
 		if (ls) {
 			localStorage.setItem(lsid, JSON.stringify(cfg));
 			log('Session saved');
@@ -515,7 +515,7 @@ function playlistItem(s) {
 }
 
 function clickItem(e) {
-	if (cfg.locked || e.target.tagName.toLowerCase() == 'div') return;
+	if (cfg.locked || e.target.id == 'playlist') return;
 	if (cfg.remove) {
 		drag = cls(e.target, 'artist') ? e.target.parentNode : e.target;
 		removeItem(e);
