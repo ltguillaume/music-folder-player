@@ -1,0 +1,8 @@
+{$ADDRESS}:{$PORT}
+root * /app/srv
+header Cache-Control no-cache
+header /library/* Cache-Control max-age=1209600
+file_server {
+	hide music.ini
+}
+php_fastcgi unix//var/run/php-fpm.sock

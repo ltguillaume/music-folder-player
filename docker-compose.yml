@@ -1,0 +1,19 @@
+services:
+  mfp:
+    environment:
+      - ADDRESS=
+      - PORT=
+    volumes:
+      - source: /YOUR/MUSIC/FOLDER
+        target: /app/srv/library
+        type: bind
+        read_only: true
+      - mfp:/app/cfg
+    build:
+      context: https://github.com/ltGuillaume/MusicFolderPlayer.git#docker
+    container_name: mfp
+    image: mfp
+    network_mode: bridge
+    restart: unless-stopped
+volumes:
+  mfp:
