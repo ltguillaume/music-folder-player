@@ -622,7 +622,7 @@ function fillShare(path) {
 }
 
 function esc(s) {
-	return s.replace(/\/+$/, '').replace(/[(\?=&# ]/g, function(char) { return escape(char) });
+	return s.replace(/\/+$/, '').replace(/[(\?=&#% ]/g, function(char) { return escape(char) });
 }
 
 function escBase64(s) {
