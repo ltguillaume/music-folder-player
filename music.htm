@@ -40,7 +40,7 @@
 		<button id="crossfade" title="Crossfade between songs (O)" onclick="toggle(event)">Cr<u>o</u>ssfade</button>
 		<button id="playlistbtn" title="Playlist options (P)" onclick="toggle(event)"><u>P</u>laylist</button>
 		<button id="share" title="Share options (S)" onclick="toggle(event)"><u>S</u>hare</button>
-		<button id="lock" title="Lock playlist and playback controls (L)" onclick="toggleLock()"><u>L</u>ock</button>
+		<button id="lock" title="Lock playlist and playback controls (L)" onclick="toggle(event)"><u>L</u>ock</button>
 		<div id="playlistoptions">
 			<div id="playlistsdiv">
 				<button id="load" title="Add songs from online playlist (D)" onclick="menu(event)">Loa<u>d</u></button>
@@ -82,7 +82,7 @@
 				<button id="playlistwhatsapp" class="whatsapp hide" title="Share playlist link via WhatsApp" onclick="shareWhatsApp('playlist')"></button>
 				<datalist id="playlistdata"></datalist>
 			</div>
-			<a id="a" class="hide" target="_blank" download></a>
+			<a id="a" class="hide" src="#" target="_blank" download></a>
 		</div>
 	</div>
 	<div id="playlistdiv" onmouseup="resizePlaylist()">
