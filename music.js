@@ -1306,13 +1306,14 @@ function filter(instant = false) {	// Gets event from oninput
 }
 
 function cls(el, name, act = false) {
-	var found = el.className.indexOf(name) == 0 || el.className.indexOf(' '+ name) >= 0;
+	var found = el.classList.contains(name);
 	if (!act) return found;
-	if (found && act <= TOG)
-		el.className = el.className.replace((found > 0 ? ' ' : '') + name, '');
-	else if (!found && act >= TOG)
-		el.className += ' '+ name;
-	else return found;	// NoOp
+	if (!found && act >= TOG)
+		el.classList.add(name);
+	else if (found && act <= TOG)
+		el.classList.remove(name);
+	else
+		return found;	// NoOp
 	return !found;
 }
 
