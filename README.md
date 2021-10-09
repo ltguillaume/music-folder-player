@@ -36,7 +36,7 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 - Prevents adding a song if it's already queued up
 - Do not add previously played songs to playlist (optional)
 #### Sharing
-- Download a song or zipped folder (only tested on a Linux server)
+- Download a song or zipped folder
 - Share a song, folder or playlist link (library features/options will be hidden)
 - Share links directly to WhatsApp (optional)
 

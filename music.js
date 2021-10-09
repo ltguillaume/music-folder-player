@@ -367,9 +367,10 @@ function buildLibrary(root, folder, element) {
 function reloadLibrary() {
 	dom.tree.innerHTML = '';
 	var lib = document.createElement('script');
-	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ esc(url[1]) +'&' : '?') +'reload=1';
+	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ esc(url[1]) +'&' : '?') +'reload';
 	lib.onload = function() {
 		buildLibrary('', library, dom.tree);
+		tree = dom.tree.querySelectorAll('li');
 		clearPlayed();
 	}
 	document.body.appendChild(lib);
