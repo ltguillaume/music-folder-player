@@ -143,8 +143,7 @@ function prepUI() {
 		cls(dom.lock, 'on', ADD);
 		dom.lock.textContent = 'Unlock';
 	}
-	if (url.length > 1) dom.hide(['playlistsdiv', 'save', 'share']);
-	if (!onlinepls) dom.hide(['playlistsdiv', 'save', 'shareplaylist']);
+	if (url.length > 1 || !onlinepls) dom.hide(['playlistsdiv', 'save', 'shareplaylist']);
 	if (!sharing) dom.hide('share');
 	if (whatsapp) cls(dom.options, 'whatsapp', ADD);
 	if (cfg.after == 'randomfiltered') cfg.after = 'randomlibrary';
@@ -262,7 +261,7 @@ function log(s) {
 
 function prepPlaylistMode() {
 	cfg.after = 'stopplayback';
-	dom.hide(['enqueue', 'save', 'share', 'playlibrary', 'randomlibrary', 'randomfiltered', 'trash', 'library']);
+	dom.hide(['enqueue', 'save', 'playlibrary', 'randomlibrary', 'randomfiltered', 'trash', 'library']);
 	dom.playlist.style.minHeight = dom.playlist.style.maxHeight = 'unset';
 	mode = 'playlist';
 }
