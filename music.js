@@ -1430,6 +1430,20 @@ function keyNav(el, direction) {
 	setFocus(to);
 }
 
+function changeTheme() {
+	if (!themes.length) return;
+	var prev = cfg.theme;
+	if (cfg.theme == themes[0])
+		themes.push(themes.shift());
+	cfg.theme = themes[0];
+	cls(dom.doc, 'dim', ADD);
+	setTimeout(function() {
+		dom.doc.className = dom.doc.className.replace(prev, cfg.theme);
+		cls(dom.doc, 'dim', REM);
+		log('Theme: '+ cfg.theme);
+	}, 400);
+}
+
 document.addEventListener('keydown', function(e) {
 	if (e.altKey || e.ctrlKey) return;
 	var el = document.activeElement;
@@ -1571,19 +1585,7 @@ document.addEventListener('keydown', function(e) {
 			dom.lock.click();
 			break;
 		case 67:	// C
-			if (e.shiftKey) {
-				if (!themes.length) return;
-				var prev = cfg.theme;
-				if (cfg.theme == themes[0])
-					themes.push(themes.shift());
-				cfg.theme = themes[0];
-				cls(dom.doc, 'dim', ADD);
-				setTimeout(function() {
-					dom.doc.className = dom.doc.className.replace(prev, cfg.theme);
-					cls(dom.doc, 'dim', REM);
-					log('Theme: '+ cfg.theme);
-				}, 400);
-			} else if (!cfg.locked && !mode && confirm(s_clearplaylist)) clearPlaylist();
+			if (!cfg.locked && !mode && confirm(s_clearplaylist)) clearPlaylist();
 			break;
 		case 70:	// F
 			e.preventDefault();
@@ -1591,6 +1593,7 @@ document.addEventListener('keydown', function(e) {
 			if (dom.filter.value != '') dom.filter.select();
 			break;
 		case 84:	// T
+			if (e.shiftKey) changeTheme();
 			if (cfg.locked || mode) return;
 			e.preventDefault();
 			dom.unfold.click();
