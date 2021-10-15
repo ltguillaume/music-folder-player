@@ -366,6 +366,7 @@ function buildLibrary(root, folder, element) {
 			}
 		}
 	}
+	library = null;
 }
 
 function reloadLibrary() {
