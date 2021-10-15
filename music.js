@@ -103,15 +103,18 @@ function init() {
 	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ esc(url[1]) : '');
 	lib.onload = function() {
 		if (!pathexp) alert(s_nopathexp);
-		pathexp = pathexp.replace(/[\/^$*+?.()|[\]{}]/g, '\\$&')
-			.replace(/ /g,'[\\s\\.\\-()]*')
-			.replace(/dummy/g,'.+')
-			.replace('artist', '(?<artist>.*\\b)')
-			.replace('year','(?<year>\\d*)')
-			.replace('album', '(?<album>.*)')
-			.replace('track','(?<track>[\\d\\.]*)')
-			.replace('title', '(?<title>.*)')
-			.replace('extension', '(?<extension>.*\\b)');
+		if (pathexp.constructor !== Array) pathexp = [pathexp];
+		for(var i = 0; i < pathexp.length; i++) {
+			pathexp[i] = pathexp[i].replace(/[\/^$*+?.()|[\]{}]/g, '\\$&')
+				.replace(/ /g,'[\\s\\.\\-()]*')
+				.replace(/dummy/g,'.+')
+				.replace('artist', '(?<artist>.*\\b)')
+				.replace('year','(?<year>\\d*)')
+				.replace('album', '(?<album>.*)')
+				.replace('track','(?<track>[\\d\\.]*)')
+				.replace('title', '(?<title>.*)')
+				.replace('extension', '(?<extension>.*\\b)');
+		}
 		prepUI();
 		buildLibrary('', library, dom.tree);
 		buildPlaylist();
@@ -633,24 +636,29 @@ function escBase64(s) {
 function getSongInfo(path) {
 	if (path.indexOf('/') == -1 && url.length > 1)
 		path = root + path;	// For shared songs/folders
-	try {
-		var nfo = path.match(pathexp);
-		log(path);
-		log(nfo.groups);
-		return nfo.groups;
-	} catch(e) {
-		log(e);
-		var nfo, artalb = path.substring(path.lastIndexOf('/', path.lastIndexOf('/') - 1) + 1, path.lastIndexOf('/'));
-		if (artalb.indexOf(' -') == -1)
-			nfo = { 'artist': artalb }
-		else
-			nfo = {
-				'artist': artalb.substring(0, artalb.indexOf(' -')),
-				'album': artalb.substring(artalb.indexOf('- ') + 2)
+
+	for(var i = pathexp.length - 1; i > -1; i--) {
+		try {
+			var nfo = path.match(pathexp[i]);
+			log(path);
+			log(nfo.groups);
+			return nfo.groups;
+		} catch(e) {
+			log(e);
+			if (i < 1) {
+				var nfo, artalb = path.substring(path.lastIndexOf('/', path.lastIndexOf('/') - 1) + 1, path.lastIndexOf('/'));
+				if (artalb.indexOf(' -') == -1)
+					nfo = { 'artist': artalb }
+				else
+					nfo = {
+						'artist': artalb.substring(0, artalb.indexOf(' -')),
+						'album': artalb.substring(artalb.indexOf('- ') + 2)
+					}
+				nfo.title = path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.'));
+				log(nfo);
+				return nfo;
 			}
-		nfo.title = path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.'));
-		log(nfo);
-		return nfo;
+		}
 	}
 }
 
@@ -854,11 +862,11 @@ function share(type) {
 			share.value = base +'?play=c:'+ escBase64(btoa(share.value));
 		share.select();
 		document.execCommand('copy');
-		cls(share.nextElementSibling.nextElementSibling, 'copied', ADD);
+		cls(share.nextElementSibling.nextElementSibling, 'copy', ADD);
 		share.blur();
 		share.value = clearVal;
 		setTimeout(function() {
-			cls(share.nextElementSibling.nextElementSibling, 'copied', REM);
+			cls(share.nextElementSibling.nextElementSibling, 'copy', REM);
 		}, 1500);
 	}
 }

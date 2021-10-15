@@ -561,6 +561,7 @@ html:not(.dim) #player.fix {
 #volume.muted:before { content: "\f210" }
 
 .clear:before { content: "\f217" }
+.copy:before { content: "\f129" !important }
 .download:before { content: "\f143" }
 .filter:before { content: "\f14b" }
 .folder:before { content: "\f150" }
@@ -568,7 +569,6 @@ html:not(.dim) #player.fix {
 .playing:before { content: "\f198" }
 .playlist:before { content: "\f18e" }
 .link:before { content: "\f165" }
-.link.copied:before { content: "\f129" }
 .song:not(.playing):before { content: "\f17b"; color: var(--text-dim) }
 button.on:before { content: "\f126" !important }
 button.whatsapp:before { content: "\f1a6" }
