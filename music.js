@@ -443,8 +443,8 @@ function setFocus (el) {
 }
 
 function setToast(el) {
-	if (cls(el, 'error') || cls(dom.player, 'fix')) {
-		if (cls(el, 'error')) console.log(s_error +' '+ el.textContent);
+	if (el.className == 'error' || cls(dom.player, 'fix')) {
+		if (el.className == 'error') log(s_error +' '+ el.textContent, true);
 		if (toast) clearTimeout(toast);
 		dom.toast.className = el.className;
 		dom.toast.textContent = el.textContent;
