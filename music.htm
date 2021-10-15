@@ -41,6 +41,7 @@
 		<button id="playlistbtn" title="Playlist options (P)" onclick="toggle(event)"><u>P</u>laylist</button>
 		<button id="share" title="Share options (S)" onclick="toggle(event)"><u>S</u>hare</button>
 		<button id="lock" title="Lock playlist and playback controls (L)" onclick="toggle(event)"><u>L</u>ock</button>
+		<button id="logbtn" title="Show log" onclick="toggle(event)">Log</button>
 		<div id="playlistoptions">
 			<div id="playlistsdiv">
 				<button id="load" title="Add songs from online playlist (D)" onclick="menu(event)">Loa<u>d</u></button>
@@ -112,6 +113,19 @@
 			</div>
 			<ul id="tree" onclick="libClick(event)" oncontextmenu="libClick(event, true)"
 				title="L: Open folder | Play/Enqueue song (Enter)&#xA;R: Enqueue folder | Play next (Shift-Enter)"></ul>
+		</div>
+	</div>
+	<div id="logdiv">
+		<div>
+			<div class="hoverdiv">
+				<button id="theme" title="Change theme (Shift+T)" onclick="changeTheme()"></button>
+				&nbsp;
+				<button class="clear" title="Clear log" onclick="dom.log.value = ''"></button>
+				<button class="copy" title="Copy log to clipboard" onclick="dom.log.select(); document.execCommand('copy')"></button>
+				<button class="download" title="Save log" onclick="saveLog()"></button>
+				<button class="min" title="Minimize log" onclick="dom.hide('logdiv')"></button>
+			</div>
+			<textarea id="log"></textarea>
 		</div>
 	</div>
 </body>

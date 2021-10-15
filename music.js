@@ -24,6 +24,7 @@ var
 	playlists,
 	retry,
 	toast,
+	touch,
 	track = 0,
 	tree,
 	tv;
@@ -73,6 +74,7 @@ function init() {
 		'randomfiltered': get('randomfiltered'),
 		'share': get('share'),
 		'lock': get('lock'),
+		'logbtn': get('logbtn'),
 		'shares': get('shares'),
 		'folderuri': get('folderuri'),
 		'songuri': get('songuri'),
@@ -88,6 +90,8 @@ function init() {
 		'filter': get('filter'),
 		'unfold': get('unfold'),
 		'tree': get('tree'),
+		'log': get('log'),
+		'logdiv': get('logdiv'),
 		'hide': function(el) { dom.show(el, false) },
 		'show': function(el, show = true) {
 			if (el.constructor === Array)
@@ -121,7 +125,8 @@ function init() {
 		buildPlaylist();
 		cls(get('splash'), 'show', REM);
 		cls(dom.doc, 'show', ADD);
-		console.log('https://github.com/ltGuillaume/MusicFolderPlayer'+ (mode ? '' : '\nSong count: '+ songs.length));
+		log('https://github.com/ltGuillaume/MusicFolderPlayer', true);
+		log('Song count: '+ songs.length, true);
 		log('PHP request = '+ lib.src);
 		if (songs.length == 1) prepSongMode();
 		if (autoplay > 1 || autoplay && url[1]) playPause();
@@ -148,6 +153,7 @@ function prepUI() {
 	if (whatsapp) cls(dom.options, 'whatsapp', ADD);
 	if (cfg.after == 'randomfiltered') cfg.after = 'randomlibrary';
 	cfg.remove = false;
+	if (!debug) dom.hide('logbtn');
 
 	if (url.length > 1 && url[1].startsWith('pl:')) {
 		prepPlaylistMode();
@@ -209,6 +215,7 @@ function prepUI() {
 }
 
 function touchUI() {
+	touch = true;
 	cls(dom.doc, 'touch', ADD);
 	if (mode) resizePlaylist();
 	else dom.show('trash');
@@ -246,7 +253,7 @@ function ls() {
 		var ls = JSON.stringify(cfg);
 		localStorage.setItem(lsid, ls);
 		if (localStorage.getItem(lsid) == ls) return true;
-		log('LocalStorage WTF');
+		log('LocalStorage issue');
 		return false;
 	} catch(e) {
 		log(e);
@@ -255,8 +262,23 @@ function ls() {
 	}
 }
 
-function log(s) {
-	if (debug) console.log(s);
+function log(s, force = false) {
+	if (debug || force) {
+		if (typeof s === "string") {
+			var t = new Date();
+			s = s.replace(/data\:audio\/mpeg.*/, '[autoplay fix]');
+			s = String(t.getHours()).padStart(2, '0') +':'+ String(t.getMinutes()).padStart(2, '0') +':'+ String(t.getSeconds()).padStart(2, '0') +'  '+ s +'\n';
+			dom.log.value += s;
+		}
+		if (!touch) console.log(s);
+	}
+}
+
+function saveLog() {
+	var l = new Blob([dom.log.value], { type: 'text/plain', endings: 'native' });
+	dom.a.href = window.URL.createObjectURL(l);
+	dom.a.download = def.title +"_"+ Math.floor(new Date()/1000) +'.log';
+	dom.a.click();
 }
 
 function prepPlaylistMode() {
@@ -319,7 +341,7 @@ function prepAudio(a) {
 	};
 
 	a.onerror = function() {
-		console.log(a.error);
+		log('Error: '+ a.error +' | '+ a.src, true);
 		dom.playlist.childNodes[cfg.index].setAttribute('error', 1);
 		errorcount++;
 		if (errorcount < maxerrors)
@@ -528,7 +550,7 @@ function clickItem(e) {
 }
 
 function findItem(e) {
-	if (mode || cls(dom.doc, 'touch')) return;
+	if (mode || touch) return;
 	e.preventDefault();
 	var tag = e.target.tagName.toLowerCase();
 	if (tag == 'li')
@@ -641,7 +663,7 @@ function getSongInfo(path) {
 	for(var i = pathexp.length - 1; i > -1; i--) {
 		try {
 			var nfo = path.match(pathexp[i]);
-			log(path);
+			log('getSongInfo: '+ path);
 			log(nfo.groups);
 			return nfo.groups;
 		} catch(e) {
@@ -667,7 +689,7 @@ function getAlbumInfo(nfo) {
 	var artist = nfo.artist ? nfo.artist : '';
 	var album = (nfo.year ? '('+ nfo.year +') ' : '') + (nfo.album || '');
 	album = artist + (album.length > 1 ? ' - '+ album : '');
-	log('getAlbumInfo(): '+ album);
+	log('getAlbumInfo: '+ album);
 	return album;
 }
 
@@ -789,7 +811,7 @@ function prepNext() {
 }
 
 function clearPlayed() {
-	console.log('User reloaded library or all songs have been played. Clearing played array.');
+	log('User reloaded library or all songs have been played. Clearing played array.', true);
 	played.length = 0;
 }
 
@@ -1104,7 +1126,7 @@ function start(a) {
 	if (typeof promise != 'undefined')
 		promise.catch(function(e) {
 			error = e;
-			console.log(e);
+			log(e, true);
 			if (e.code == 9)
 				setToast({ 'className': 'error', 'textContent': s_errorfile });
 			else if (autoplay && e.name == 'NotAllowedError')
@@ -1146,6 +1168,8 @@ function toggle(e) {
 			return;
 		case 'lock':
 			return toggleLock();
+		case 'logbtn':
+			return dom.show('logdiv');
 		case 'trash':
 			return cls(button, 'over', ADD);
 		case 'clear':
@@ -1202,7 +1226,7 @@ function password() {
 }
 
 function menu(e) {
-	if (e.type == 'mouseleave' && cls(dom.doc, 'touch')) return;
+	if (e.type == 'mouseleave' && touch) return;
 
 	var btn, el;
 	if (e == 'load' || dom.playlistsdiv.contains(e.target)) {
