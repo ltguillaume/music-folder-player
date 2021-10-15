@@ -908,7 +908,7 @@ function prepPlaylists(action) {
 				if (autoplay && audio[track].paused) playPause();
 		}
 	};
-	xhttp.open('GET', 'music.php?pl=1', true);
+	xhttp.open('GET', 'music.php?pl', true);
 	xhttp.send();
 }
 
@@ -1563,7 +1563,7 @@ document.addEventListener('keydown', function(e) {
 			menu('after');
 			break;
 		case 83:	// S
-			if (!sharing || url.length > 1) return;
+			if (!sharing) return;
 			dom.share.click();
 			setFocus(dom.share);
 			break;
