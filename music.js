@@ -82,6 +82,7 @@ function init() {
 		'a': get('a'),
 		'trash': get('trash'),
 		'remove': get('remove'),
+		'playlistdiv': get('playlistdiv'),
 		'playlist': get('playlist'),
 		'library': get('library'),
 		'filter': get('filter'),
@@ -382,7 +383,7 @@ function reloadLibrary() {
 function prepSongMode() {
 	prepPlaylistMode();
 	add(0);
-	dom.hide(['previous', 'next', 'options']);
+	dom.hide(['previous', 'next', 'options', 'playlistdiv']);
 	mode = 'song';
 }
 
