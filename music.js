@@ -216,12 +216,12 @@ function touchUI() {
 
 function fixPlayer() {
 	if (!cls(dom.player, 'fix') && !cls(dom.doc, 'dim')
-		&& window.pageYOffset > 2 * dom.player.offsetHeight
+		&& window.pageYOffset > 1.5 * dom.player.offsetHeight
 		&& dom.doc.offsetHeight - dom.player.offsetHeight > window.innerHeight) {
 		playerheight = dom.player.offsetHeight + parseInt(window.getComputedStyle(dom.player).getPropertyValue('margin-top'));
 		dom.doc.style.paddingTop = playerheight +'px';
 		cls(dom.player, 'fix', ADD);
-	} else if (window.pageYOffset < playerheight) {
+	} else if (window.pageYOffset < 1.1 * playerheight) {
 		dom.doc.style.paddingTop = '';
 		cls(dom.player, 'fix', REM);
 	}
