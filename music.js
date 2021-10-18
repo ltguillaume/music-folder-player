@@ -1617,7 +1617,7 @@ document.addEventListener('keydown', function(e) {
 			if (dom.filter.value != '') dom.filter.select();
 			break;
 		case 84:	// T
-			if (e.shiftKey) changeTheme();
+			if (e.shiftKey) return changeTheme();
 			if (cfg.locked || mode) return;
 			e.preventDefault();
 			dom.unfold.click();
