@@ -1169,7 +1169,7 @@ function toggle(e) {
 		case 'lock':
 			return toggleLock();
 		case 'logbtn':
-			return dom.show('logdiv');
+			return debug ? cls(dom.logdiv, 'show', TOG) : false;
 		case 'trash':
 			return cls(button, 'over', ADD);
 		case 'clear':
@@ -1607,6 +1607,9 @@ document.addEventListener('keydown', function(e) {
 			break;
 		case 76:	// L
 			dom.lock.click();
+			break;
+		case 71:	// G
+			dom.logbtn.click();
 			break;
 		case 67:	// C
 			if (!cfg.locked && !mode && confirm(s_clearplaylist)) clearPlaylist();

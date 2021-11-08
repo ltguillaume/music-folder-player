@@ -467,6 +467,7 @@ html:not(.dim) #player.fix {
 	opacity: 1 !important;
 	z-index: 1;
 }
+	#logdiv.show { display: block }
 	#logdiv:hover .hoverdiv { display: block }
 	#logdiv > div {
 		position: relative;

@@ -41,7 +41,7 @@
 		<button id="playlistbtn" title="Playlist options (P)" onclick="toggle(event)"><u>P</u>laylist</button>
 		<button id="share" title="Share options (S)" onclick="toggle(event)"><u>S</u>hare</button>
 		<button id="lock" title="Lock playlist and playback controls (L)" onclick="toggle(event)"><u>L</u>ock</button>
-		<button id="logbtn" title="Show log" onclick="toggle(event)">Log</button>
+		<button id="logbtn" title="Show log (G)" onclick="toggle(event)">Lo<u>g</u></button>
 		<div id="playlistoptions">
 			<div id="playlistsdiv">
 				<button id="load" title="Add songs from online playlist (D)" onclick="menu(event)">Loa<u>d</u></button>
@@ -123,7 +123,7 @@
 				<button class="clear" title="Clear log" onclick="dom.log.value = ''"></button>
 				<button class="copy" title="Copy log to clipboard" onclick="dom.log.select(); document.execCommand('copy')"></button>
 				<button class="download" title="Save log" onclick="saveLog()"></button>
-				<button class="min" title="Minimize log" onclick="dom.hide('logdiv')"></button>
+				<button class="min" title="Minimize log (G)" onclick="dom.logbtn.click()"></button>
 			</div>
 			<textarea id="log"></textarea>
 		</div>
