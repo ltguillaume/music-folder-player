@@ -201,6 +201,8 @@ input[type=range] {
 	}
 		input#volumeslider::-webkit-slider-runnable-track { margin-top: 0px }
 
+u { text-decoration: underline dotted var(--text-dim) }
+
 ul {
 	margin-left: 0;
 	list-style: none;
