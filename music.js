@@ -289,11 +289,17 @@ function prepPlaylistMode() {
 }
 
 function prepAudio(a) {
+	a.onloadstart = function() {
+		log('Load started: '+ a.src);
+	}
+
 	a.oncanplaythrough = function() {
+		log('Can play through: '+ a.src);
 		a.canplaythrough = true;
 	};
 
 	a.onplay = function() {
+		log('Play: '+ a.src);
 		cls(dom.playpause, 'playing', ADD);
 		cls(dom.album, 'dim', REM);
 		cls(dom.title, 'dim', REM);
@@ -303,8 +309,13 @@ function prepAudio(a) {
 				dom.playlist.scrollTop = dom.playlist.childNodes[cfg.index > 0 ? cfg.index - 1 : cfg.index].offsetTop - dom.playlist.offsetTop;
 		}
 	};
+	
+	a.onplaying = function() {
+		log('Playing: '+ a.src);
+	}
 
 	a.onpause = function(e) {
+		log('Pause: '+ a.src);
 		if (a == audio[track]) {
 			cls(dom.playpause, 'playing', REM);
 			cls(dom.album, 'dim', ADD);
@@ -313,6 +324,7 @@ function prepAudio(a) {
 	};
 
 	a.onended = function() {
+		log('Ended: '+ a.src);
 		if (audio[track].ended)	// For crossfade/"gapless"
 			playNext();
 	};
@@ -341,7 +353,7 @@ function prepAudio(a) {
 	};
 
 	a.onerror = function() {
-		log('Error: '+ a.error +' | '+ a.src, true);
+		log('Error: '+ a.error.code +' '+ a.error.message +' | '+ a.src, true);
 		dom.playlist.childNodes[cfg.index].setAttribute('error', 1);
 		errorcount++;
 		if (errorcount < maxerrors)
@@ -349,6 +361,22 @@ function prepAudio(a) {
 		else
 			errorcount = 0;
 	};
+	
+	a.onabort = function() {
+		log('Aborted: '+ a.src, true);
+	}
+	
+	a.onstalled = function() {
+		log('Stalled (media not available): '+ a.src, true);
+	}
+
+	a.onsuspend = function() {
+		log('Suspended (media prevented from loading): '+ a.src, true);
+	}
+	
+	a.onwaiting = function() {
+		log('Waiting (need to buffer): '+ a.src, true);
+	}
 
 	a.preload = 'auto';
 	a.load();
@@ -552,10 +580,9 @@ function clickItem(e) {
 function findItem(e) {
 	if (mode || touch) return;
 	e.preventDefault();
-	var tag = e.target.tagName.toLowerCase();
-	if (tag == 'li')
+	if (e.target.tagName == 'LI')
 		setFilter(e.target.firstChild.textContent.trim());
-	else if (tag == 'span')
+	else if (e.target.tagName == 'SPAN')
 		setFilter(e.target.textContent.replace(/^\(|\)$/g, ''));
 }
 
@@ -589,7 +616,7 @@ function dropItem(e) {
 	e.preventDefault();
 	e.stopPropagation();
 	var to = e.target;
-	if (to.tagName.toLowerCase() != 'li') to = to.parentNode;
+	if (to.tagName != 'LI') to = to.parentNode;
 	log('Drag ['+ drag.textContent +'] to place of ['+ to.textContent +']');
 	cls(to, 'over', REM);
 	var indexfrom = e.dataTransfer.getData('text');
@@ -949,7 +976,7 @@ function loadPlaylistBtn(e) {
 function removePlaylist(e) {
 	e.preventDefault();
 	var name = e.target.textContent;
-	if (e.target.tagName.toLowerCase() != 'button' || !confirm(s_removeplaylist +' '+ name +'?')) return true;
+	if (e.target.tagName != 'BUTTON' || !confirm(s_removeplaylist +' '+ name +'?')) return true;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onload = function() {
 		if (this.responseText != '')
@@ -1136,7 +1163,7 @@ function start(a) {
 }
 
 function toggle(e) {
-	var button = e.target.tagName.toLowerCase() == 'u' ? e.target.parentNode : e.target;
+	var button = e.target.tagName == 'U' ? e.target.parentNode : e.target;
 	switch (button.id) {
 		case 'cover':
 			e.preventDefault();
@@ -1469,10 +1496,10 @@ function changeTheme() {
 }
 
 document.addEventListener('keydown', function(e) {
-	if (e.altKey || e.ctrlKey) return;
 	var el = document.activeElement;
+	if (e.altKey || e.ctrlKey || el.tagName == 'TEXTAREA') return;
 
-	if (el.tagName.toLowerCase() == 'input') {
+	if (el.tagName == 'INPUT') {
 		if (el == dom.volumeslider && e.keyCode > 36 && e.keyCode < 41)	// Arrow keys
 			return;
 		if (el == dom.filter)
