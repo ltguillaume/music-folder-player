@@ -267,8 +267,8 @@ function log(s, force = false) {
 		if (typeof s === "string") {
 			var t = new Date();
 			s = s.replace(/data\:audio\/mpeg.*/, '[autoplay fix]');
-			s = String(t.getHours()).padStart(2, '0') +':'+ String(t.getMinutes()).padStart(2, '0') +':'+ String(t.getSeconds()).padStart(2, '0') +'  '+ s +'\n';
-			dom.log.value += s;
+			s = String(t.getHours()).padStart(2, '0') +':'+ String(t.getMinutes()).padStart(2, '0') +':'+ String(t.getSeconds()).padStart(2, '0') +'  '+ s;
+			dom.log.value += s +'\n';
 		}
 		if (!touch) console.log(s);
 	}
@@ -786,8 +786,8 @@ function next() {
 }
 
 function prepNext() {
-	log('prepNext()');
 	if (cfg.playlist.length > cfg.index + 1) {
+		log('prepNext from playlist');
 		if (cfg.random && !cfg.playlist[cfg.index + 1].playNext) {
 			var next = cfg.index + ~~(Math.random() * (cfg.playlist.length - cfg.index));
 			var drag = dom.playlist.childNodes[next],
@@ -798,6 +798,7 @@ function prepNext() {
 		}
 		load(cfg.index + 1);
 	} else if (cfg.after != 'stopplayback' || cfg.locked) {
+		log('prepNext from library');
 		if (played.length == songs.length) clearPlayed();
 		if (cfg.locked || cfg.after == 'randomlibrary' || cfg.after == 'randomfiltered') {
 			var set = cfg.after == 'randomlibrary' || cfg.locked || filteredsongs.length == 0 ? songs : filteredsongs;
