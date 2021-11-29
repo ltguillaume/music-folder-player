@@ -71,7 +71,10 @@ html.touch body {
 	html.touch .hoverdiv { display: block }
 
 html:not(.show) > body > div,
-html:not(.show) > body > div:before { opacity: 0 }
+html:not(.show) > body > div:before {
+	opacity: 0;
+	pointer-events: none;
+}
 
 html.dim > body { background: black }
 html.dim > body > div,
