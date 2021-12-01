@@ -904,7 +904,7 @@ function download(type) {
 	}
 }
 
-function share(type) {
+function clip(type) {
 	var share = dom[type +'uri'];
 	if (share.value) {
 		var clearVal = share.value;
@@ -914,11 +914,11 @@ function share(type) {
 			share.value = base +'?play=c:'+ escBase64(btoa(root + share.value));
 		share.select();
 		document.execCommand('copy');
-		cls(share.nextElementSibling.nextElementSibling, 'copy', ADD);
+		cls(share.nextElementSibling.nextElementSibling, 'clip', ADD);
 		share.blur();
 		share.value = clearVal;
 		setTimeout(function() {
-			cls(share.nextElementSibling.nextElementSibling, 'copy', REM);
+			cls(share.nextElementSibling.nextElementSibling, 'clip', REM);
 		}, 1500);
 	}
 }

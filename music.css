@@ -596,7 +596,7 @@ html:not(.dim) #player.fix {
 #volume.muted:before { content: "\f210" }
 
 .clear:before { content: "\f217" }
-.copy:before { content: "\f129" !important }
+.clip:before { content: "\f129" !important }
 .download:before { content: "\f143" }
 .filter:before { content: "\f14b" }
 .folder:before { content: "\f150" }

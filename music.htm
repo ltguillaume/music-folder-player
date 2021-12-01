@@ -67,19 +67,19 @@
 			<div class="folder sharediv">
 				<input id="folderuri" class="uri" onclick="this.select()" readonly>
 				<button id="folderdownload" class="download" title="Download folder" onclick="download('folder')"></button>
-				<button id="foldershare" class="link" title="Copy folder link to clipboard" onclick="share('folder')"></button>
+				<button id="folderclip" class="link" title="Copy folder link to clipboard" onclick="clip('folder')"></button>
 				<button id="folderwhatsapp" class="whatsapp hide" title="Share folder link via WhatsApp" onclick="shareWhatsApp('folder')"></button>
 			</div>
 			<div class="song sharediv">
 				<input id="songuri" class="uri" onclick="this.select()" readonly>
 				<button id="songdownload" class="download" title="Download song" onclick="download('song')"></button>
-				<button id="songshare" class="link" title="Copy song link to clipboard" onclick="share('song')"></button>
+				<button id="songclip" class="link" title="Copy song link to clipboard" onclick="clip('song')"></button>
 				<button id="songwhatsapp" class="whatsapp hide" title="Share song link via WhatsApp" onclick="shareWhatsApp('song')"></button>
 			</div>
 			<div id="shareplaylist" class="playlist sharediv">
 				<input id="playlisturi" class="uri" placeholder="&#x25BE;" list="playlistdata" onclick="this.select()" onfocus="prepPlaylists('share')">
 				<button id="playlistdownload" class="download" title="Download playlist" onclick="download('playlist')"></button>
-				<button id="playlistshare" class="link" title="Copy playlist link to clipboard" onclick="share('playlist')"></button>
+				<button id="playlistclip" class="link" title="Copy playlist link to clipboard" onclick="clip('playlist')"></button>
 				<button id="playlistwhatsapp" class="whatsapp hide" title="Share playlist link via WhatsApp" onclick="shareWhatsApp('playlist')"></button>
 				<datalist id="playlistdata"></datalist>
 			</div>
@@ -121,7 +121,7 @@
 				<button id="theme" title="Change theme (Shift+T)" onclick="changeTheme()"></button>
 				&nbsp;
 				<button class="clear" title="Clear log" onclick="dom.log.value = ''"></button>
-				<button class="copy" title="Copy log to clipboard" onclick="dom.log.select(); document.execCommand('copy')"></button>
+				<button class="clip" title="Copy log to clipboard" onclick="dom.log.select(); document.execCommand('copy')"></button>
 				<button class="download" title="Save log" onclick="saveLog()"></button>
 				<button class="min" title="Minimize log (G)" onclick="dom.logbtn.click()"></button>
 			</div>
