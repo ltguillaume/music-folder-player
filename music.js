@@ -668,10 +668,11 @@ function getIndex(li) {
 function fillShare(path) {
 	if (!sharing) return;
 	if (path.endsWith('/')) {
-		dom.folderuri.value = dom.songuri.value = root + path;
+		dom.folderuri.value = path;
+		dom.songuri.value = '';
 	} else {
-		dom.folderuri.value = root + path.substring(0, path.lastIndexOf('/'));
-		dom.songuri.value = root + path;
+		dom.folderuri.value = path.substring(0, path.lastIndexOf('/'));
+		dom.songuri.value = path;
 	}
 }
 
@@ -910,7 +911,7 @@ function share(type) {
 		if (type == 'playlist')
 			share.value = base +'?play=pl:'+ esc(share.value);
 		else
-			share.value = base +'?play=c:'+ escBase64(btoa(share.value));
+			share.value = base +'?play=c:'+ escBase64(btoa(root + share.value));
 		share.select();
 		document.execCommand('copy');
 		cls(share.nextElementSibling.nextElementSibling, 'copy', ADD);
@@ -927,7 +928,7 @@ function shareWhatsApp(type) {
 	if (share.value) {
 		var msg = prompt(s_whatsapp, s_whatsappmsg);
 		if (msg != null) window.open('https://api.whatsapp.com/send?text='+ msg +' '
-			+ base +'?play=c:'+ escBase64(btoa(share.value)));
+			+ base +'?play=c:'+ escBase64(btoa(root + share.value)));
 	}
 }
 
