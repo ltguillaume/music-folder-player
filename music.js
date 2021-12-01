@@ -685,13 +685,13 @@ function escBase64(s) {
 }
 
 function getSongInfo(path) {
+	log('getSongInfo: '+ path);
 	if (path.indexOf('/') == -1 && url.length > 1)
 		path = root + path;	// For shared songs/folders
 
 	for(var i = pathexp.length - 1; i > -1; i--) {
 		try {
 			var nfo = path.match(pathexp[i]);
-			log('getSongInfo: '+ path);
 			log(nfo.groups);
 			return nfo.groups;
 		} catch(e) {
@@ -1154,7 +1154,6 @@ function start(a) {
 	var promise = a.play();
 	if (typeof promise != 'undefined')
 		promise.catch(function(e) {
-			error = e;
 			log(e, true);
 			if (e.code == 9)
 				setToast({ 'className': 'error', 'textContent': s_errorfile });
