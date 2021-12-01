@@ -363,19 +363,19 @@ function prepAudio(a) {
 	};
 	
 	a.onabort = function() {
-		log('Aborted: '+ a.src, true);
+		log('Aborted: '+ a.src);
 	}
 	
 	a.onstalled = function() {
-		log('Stalled (media not available): '+ a.src, true);
+		log('Stalled (media not available): '+ a.src);
 	}
 
 	a.onsuspend = function() {
-		log('Suspended (media prevented from loading): '+ a.src, true);
+		log('Suspended (media prevented from loading): '+ a.src);
 	}
 	
 	a.onwaiting = function() {
-		log('Waiting (need to buffer): '+ a.src, true);
+		log('Waiting (need to buffer): '+ a.src);
 	}
 
 	a.preload = 'auto';
