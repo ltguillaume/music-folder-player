@@ -1279,7 +1279,7 @@ function menu(e) {
 				if (!cls(dom.options, 'playlistbtn'))
 					dom.playlistbtn.click();
 				cls(dom.stopplayback, 'on', cfg.after == 'stopplayback' ? ADD : REM);
-				cls(repeatplaylist, 'on', cfg.after == 'repeatplaylist' ? ADD : REM);
+				cls(dom.repeatplaylist, 'on', cfg.after == 'repeatplaylist' ? ADD : REM);
 				cls(dom.playlibrary, 'on', cfg.after == 'playlibrary' ? ADD : REM);
 				cls(dom.randomfiltered, 'on', cfg.after == 'randomfiltered' ? ADD : REM);
 				cls(dom.randomlibrary, 'on', cfg.after == 'randomlibrary' ? ADD : REM);
