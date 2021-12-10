@@ -130,6 +130,7 @@ function init() {
 		log('PHP request = '+ lib.src);
 		if (songs.length == 1) prepSongMode();
 		if (autoplay > 1 || autoplay && url[1]) playPause();
+		library = null;
 	};
 	document.body.appendChild(lib);
 }
@@ -415,7 +416,6 @@ function buildLibrary(root, folder, element) {
 			}
 		}
 	}
-	library = null;
 }
 
 function reloadLibrary() {
@@ -426,6 +426,7 @@ function reloadLibrary() {
 		buildLibrary('', library, dom.tree);
 		tree = dom.tree.querySelectorAll('li');
 		clearPlayed();
+		library = null;
 	}
 	document.body.appendChild(lib);
 }
