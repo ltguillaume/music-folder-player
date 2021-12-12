@@ -1690,10 +1690,11 @@ document.addEventListener('keydown', function(e) {
 			break;
 		case tv ? 53 : '':	// 5
 		case 13:	// Enter
-			if (e.shiftKey) {
-				e.preventDefault();
+			e.preventDefault();
+			if (e.shiftKey)
 				el.dispatchEvent(new CustomEvent('contextmenu', { bubbles: true }));
-			} else el.click();
+			else
+				el.click();
 			break;
 		case tv ? 57 : '':	// 9
 		case 66:	// B
