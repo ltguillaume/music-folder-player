@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="manifest" href="/music.webmanifest">
+	<link rel="manifest" href="/music.webmanifest" crossorigin="use-credentials">
 	<link rel="stylesheet" href="music.css" type="text/css">
 	<link rel="stylesheet" href="music.theme.css" type="text/css">
 	<link rel="shortcut icon" href="music.png" type="image/png">
@@ -83,7 +83,7 @@
 				<button id="playlistwhatsapp" class="whatsapp hide" title="Share playlist link via WhatsApp" onclick="shareWhatsApp('playlist')"></button>
 				<datalist id="playlistdata"></datalist>
 			</div>
-			<a id="a" class="hide" src="#" target="_blank" download></a>
+			<a id="a" class="hide" href="#" target="_blank" download></a>
 		</div>
 	</div>
 	<div id="playlistdiv" onmouseup="resizePlaylist()">
