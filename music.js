@@ -197,9 +197,7 @@ function prepUI() {
 		}
 	}
 
-	audio = [new Audio(), new Audio()];
-	prepAudio(audio[0]);
-	prepAudio(audio[1]);
+	audio = [prepAudio(0), prepAudio(1)];
 
 	if ('mediaSession' in navigator) {
 		navigator.mediaSession.setActionHandler('play', playPause);
@@ -289,18 +287,22 @@ function prepPlaylistMode() {
 	mode = 'playlist';
 }
 
-function prepAudio(a) {
+function prepAudio(id) {
+	var a = new Audio();
+
+	a.log = function(msg) { log(msg +' ['+ id +']: '+ a.src) };
+
 	a.onloadstart = function() {
-		log('Load started: '+ a.src);
+		a.log('Load started');
 	}
 
 	a.oncanplaythrough = function() {
-		log('Can play through: '+ a.src);
+		a.log('Can play through');
 		a.canplaythrough = true;
 	};
 
 	a.onplay = function() {
-		log('Play: '+ a.src);
+		a.log('Play');
 		cls(dom.playpause, 'playing', ADD);
 		cls(dom.album, 'dim', REM);
 		cls(dom.title, 'dim', REM);
@@ -312,11 +314,11 @@ function prepAudio(a) {
 	};
 	
 	a.onplaying = function() {
-		log('Playing: '+ a.src);
+		a.log('Playing');
 	}
 
 	a.onpause = function(e) {
-		log('Pause: '+ a.src);
+		a.log('Pause');
 		if (a == audio[track]) {
 			cls(dom.playpause, 'playing', REM);
 			cls(dom.album, 'dim', ADD);
@@ -325,7 +327,7 @@ function prepAudio(a) {
 	};
 
 	a.onended = function() {
-		log('Ended: '+ a.src);
+		a.log('Ended');
 		if (audio[track].ended)	// For crossfade/"gapless"
 			playNext();
 	};
@@ -338,7 +340,7 @@ function prepAudio(a) {
 		if ((a.duration - a.currentTime) < 20) {
 			if (!audio[+!track].prepped) prepNext();
 			if (cfg.crossfade && !a.fade && a.duration - a.currentTime < 10) {
-				log('Fade out: '+ dom.title.textContent);
+				a.log('Fade out: '+ dom.title.textContent);
 				a.fade = setInterval(function() {
 					a.volume -= a.volume > 0.04 ? 0.04 : a.volume;
 					if (a.volume == 0) clearInterval(a.fade);
@@ -354,7 +356,7 @@ function prepAudio(a) {
 	};
 
 	a.onerror = function() {
-		log('Error: '+ a.error.code +' '+ a.error.message +' | '+ a.src, true);
+		a.log('Error: '+ a.error.code +' '+ a.error.message, true);
 		dom.playlist.childNodes[cfg.index].setAttribute('error', 1);
 		errorcount++;
 		if (errorcount < maxerrors)
@@ -364,23 +366,25 @@ function prepAudio(a) {
 	};
 	
 	a.onabort = function() {
-		log('Aborted: '+ a.src);
+		a.log('Aborted');
 	}
 	
 	a.onstalled = function() {
-		log('Stalled (media not available): '+ a.src);
+		a.log('Stalled (media not available)');
 	}
 
 	a.onsuspend = function() {
-		log('Suspended (media prevented from loading): '+ a.src);
+		a.log('Suspended (media prevented from loading)');
 	}
 	
 	a.onwaiting = function() {
-		log('Waiting (need to buffer): '+ a.src);
+		a.log('Waiting (need to buffer)');
 	}
 
 	a.preload = 'auto';
 	a.load();
+
+	return a;
 }
 
 function buildLibrary(root, folder, element) {
