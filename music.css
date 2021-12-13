@@ -52,7 +52,6 @@ html.touch body {
 	word-spacing: 1px;
 }
 	html.touch button, html.touch input, html.touch li {
-		padding: .4em;
 		user-select: none;
 		-moz-user-select: none;
 		-ms-user-select: none;
@@ -60,8 +59,9 @@ html.touch body {
 		-webkit-touch-callout: none;
 		-webkit-tap-highlight-color: transparent;
 	}
-	html.touch u { text-decoration: none }
+	html.touch input, html.touch li { padding: .4em }
 	html.touch input[type=range] { width: 18em }
+	html.touch u { text-decoration: none }
 	html.touch #current { line-height: 1.25em }
 	html.touch #playlist {
 		overflow-x: auto;
