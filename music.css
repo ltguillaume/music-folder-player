@@ -462,7 +462,7 @@ html:not(.dim) #player.fix {
 
 #logdiv {
 	display: none;
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
 	right: 0;
@@ -479,6 +479,7 @@ html:not(.dim) #player.fix {
 	#log {
 		width: 100%;
 		height: calc(100% - 3em);
+		resize: none;
 		margin-top: 3em;
 		color: var(--text);
 		white-space: pre;

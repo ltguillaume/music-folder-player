@@ -245,7 +245,7 @@ function ls() {
 		if (sav != null) {
 			cfg = JSON.parse(sav) || {};
 			for (var c in def)
-				if (typeof cfg[c] == 'undefined' || cfg[c] == null) cfg[c] = def[c];
+				if (typeof cfg[c] === 'undefined' || cfg[c] == null) cfg[c] = def[c];
 			return true;
 		}
 		cfg = def;
@@ -263,7 +263,7 @@ function ls() {
 
 function log(s, force = false) {
 	if (debug || force) {
-		if (typeof s === "string") {
+		if (typeof s === 'string') {
 			var t = new Date();
 			s = s.replace(/data\:audio\/mpeg.*/, '[autoplay fix]');
 			s = String(t.getHours()).padStart(2, '0') +':'+ String(t.getMinutes()).padStart(2, '0') +':'+ String(t.getSeconds()).padStart(2, '0') +'  '+ s;
@@ -1157,7 +1157,7 @@ function start(a) {
 			log('Playback was delayed: no "canplaythrough" yet');
 		}, 1000);*/
 	var promise = a.play();
-	if (typeof promise != 'undefined')
+	if (typeof promise !== 'undefined')
 		promise.catch(function(e) {
 			log(e, true);
 			if (e.code == 9)
@@ -1392,10 +1392,12 @@ function ffor(items, callback, scope) {
 
 function setFilter(f) {
 	if (mode) return;
-	if (f.constructor === String)
+	if (typeof f === 'string')
 		dom.filter.value = f;
+	else if (cfg.index == -1)
+		return;
 	else if (f.target && f.target.id == 'album') {
-		var f = cfg.playlist[cfg.index].path.split('/');
+		f = cfg.playlist[cfg.index].path.split('/');
 		if (f.length < 2) return;
 		dom.filter.value = f[f.length - 2];
 	} else
