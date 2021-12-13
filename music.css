@@ -61,13 +61,13 @@ html.touch body {
 		-webkit-tap-highlight-color: transparent;
 	}
 	html.touch u { text-decoration: none }
-	html.touch ul { margin-left: .5em }
 	html.touch input[type=range] { width: 18em }
 	html.touch #current { line-height: 1.25em }
 	html.touch #playlist {
 		overflow-x: auto;
 		white-space: nowrap;
 	}
+	html.touch #tree ul { margin-left: .5em }
 	html.touch .hoverdiv { display: block }
 
 html:not(.show) > body > div,
