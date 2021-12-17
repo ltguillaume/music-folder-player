@@ -32,7 +32,7 @@ var
 const
 	ADD =  1,
 	TOG = .1,
-	REM = -1;
+	REM =  0;
 
 function init() {
 	url = document.URL.split('?play=', 2);
@@ -1202,7 +1202,9 @@ function toggle(e) {
 		case 'lock':
 			return toggleLock();
 		case 'logbtn':
-			return debug ? cls(dom.logdiv, 'show', TOG) : false;
+			if (!debug) return;
+			cls(dom.doc, 'dim', !cls(dom.logdiv, 'show'));
+			return cls(dom.logdiv, 'show', TOG);
 		case 'trash':
 			return cls(button, 'over', ADD);
 		case 'clear':
@@ -1371,9 +1373,9 @@ function filter(instant = false) {	// Gets event from oninput
 	if (!instant) keyNav(null, 'down');
 }
 
-function cls(el, name, act = false) {
+function cls(el, name, act = null) {
 	var found = el.classList.contains(name);
-	if (!act) return found;
+	if (act == null) return found;
 	if (!found && act >= TOG)
 		el.classList.add(name);
 	else if (found && act <= TOG)
