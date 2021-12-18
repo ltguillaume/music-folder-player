@@ -1439,13 +1439,16 @@ function keyNav(el, direction) {
 				}
 				break;
 			case 'left':
-				if (cls(el, 'open') && !cls(el, 'parent'))
-					return el.click();
+				if (cls(el, 'open'))
+					if (cls(el, 'parent'))
+						return cls(el, 'open', REM);
+					else
+						return el.click();
 				else
 					to = el.parentNode.parentNode;
 				break;
 			case 'right':
-				if (cls(el, 'open'))
+				if (cls(el, 'open') && !cls(el, 'parent'))
 					keyNav(el, 'down');
 				else if (cls(el, 'folder'))
 					el.click();
