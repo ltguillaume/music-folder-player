@@ -36,7 +36,7 @@ const
 
 function init() {
 	url = document.URL.split('?play=', 2);
-	if (url[1] && url[1].startsWith('c:')) url[1] = atob(decodeURIComponent(url[1].substring(2)));
+	if (url[1] && url[1].startsWith('c:')) url[1] = atob(decodeURIComponent(url[1].slice(2)));
 	base = window.location.protocol +'//'+ window.location.host + window.location.pathname;
 
 	var get = function(id) { return document.getElementById(id) };
@@ -413,7 +413,7 @@ function buildLibrary(root, folder, element) {
 				cls(li, 'song', ADD);
 				li.path = root + f;
 				if (cover) li.cover = cover;
-				li.textContent = f.substring(f.lastIndexOf('/') + 1, f.lastIndexOf('.'));
+				li.textContent = f.slice(f.lastIndexOf('/') + 1, f.lastIndexOf('.'));
 				li.tabIndex = 1;
 				songs.push(li);
 				element.appendChild(li);
@@ -468,7 +468,7 @@ function addFolder(e) {
 	e.preventDefault();
 	e.stopPropagation();
 	var li = e.target;
-	if (confirm(s_addfolder +'\n'+ li.path.substring(li.path.lastIndexOf('/') + 1))) {
+	if (confirm(s_addfolder +'\n'+ li.path.slice(li.path.lastIndexOf('/') + 1))) {
 		cls(li, 'dim', ADD);
 		ffor(li.querySelectorAll('li.song'), function(s) {
 			add(s.id);
@@ -676,7 +676,7 @@ function fillShare(path) {
 		dom.folderuri.value = path;
 		dom.songuri.value = '';
 	} else {
-		dom.folderuri.value = path.substring(0, path.lastIndexOf('/'));
+		dom.folderuri.value = path.slice(0, path.lastIndexOf('/'));
 		dom.songuri.value = path;
 	}
 }
@@ -702,15 +702,15 @@ function getSongInfo(path) {
 		} catch(e) {
 			log(e);
 			if (i < 1) {
-				var nfo, artalb = path.substring(path.lastIndexOf('/', path.lastIndexOf('/') - 1) + 1, path.lastIndexOf('/'));
+				var nfo, artalb = path.slice(path.lastIndexOf('/', path.lastIndexOf('/') - 1) + 1, path.lastIndexOf('/'));
 				if (artalb.indexOf(' -') == -1)
 					nfo = { 'artist': artalb }
 				else
 					nfo = {
-						'artist': artalb.substring(0, artalb.indexOf(' -')),
-						'album': artalb.substring(artalb.indexOf('- ') + 2)
+						'artist': artalb.slice(0, artalb.indexOf(' -')),
+						'album': artalb.slice(artalb.indexOf('- ') + 2)
 					}
-				nfo.title = path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.'));
+				nfo.title = path.slice(path.lastIndexOf('/') + 1, path.lastIndexOf('.'));
 				log(nfo);
 				return nfo;
 			}
@@ -779,7 +779,7 @@ function skipArtist(e) {
 	e.preventDefault();
 	if (!cfg.locked) {
 		var artist = dom.album.textContent;
-		artist = artist.indexOf(' -') > 0 ? artist.substring(0, artist.indexOf(' -')) : false;
+		artist = artist.indexOf(' -') > 0 ? artist.slice(0, artist.indexOf(' -')) : false;
 		if (artist && confirm(artist +'\n'+ s_skipartist)) {
 			cfg.skip.push(artist);
 			next();
@@ -960,7 +960,7 @@ function prepPlaylists(action) {
 				dom.playlistdata.innerHTML = playlistElements;
 				break;
 			case 'playlist':
-				loadPlaylist(decodeURIComponent(url[1].substring(3)));
+				loadPlaylist(decodeURIComponent(url[1].slice(3)));
 				if (autoplay && audio[track].paused) playPause();
 		}
 	};
@@ -1123,7 +1123,7 @@ function playNext() {
 		nfo = getSongInfo(path),
 		cover = cfg.playlist[cfg.index].cover,
 		prevcover = dom.cover.src || def.cover;
-	cover = cover ? esc(root + path.substring(0, path.lastIndexOf('/') + 1) + cover) : def.cover;
+	cover = cover ? esc(root + path.slice(0, path.lastIndexOf('/') + 1) + cover) : def.cover;
 	if (prevcover.indexOf(cover) == -1) {
 		dom.cover.style.opacity = 0;
 		if (cls(dom.player, 'full')) dom.current.style.opacity = 0;
@@ -1342,7 +1342,7 @@ function filter(instant = false) {	// Gets event from oninput
 	if (clear != '') {
 		var term = dom.filter.value.toLowerCase();
 		ffor(tree, function(f) {
-			var path = f.path.substring(f.path.lastIndexOf('/') + 1);
+			var path = f.path.slice(f.path.lastIndexOf('/') + 1);
 			if (path.toLowerCase().indexOf(term) != -1) {
 				f.style.display = '';
 

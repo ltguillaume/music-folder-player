@@ -6,8 +6,7 @@
 	"scope": "/",
 	"display": "standalone",
 	"background_color": "#1a1a1a",
-	"theme_color": "#1a1a1a",
-	"splash_pages": null,
+	"theme_color": "#10100f",
 	"icons": [
 		{
 			"src": "music.png",
