@@ -78,7 +78,10 @@ html:not(.show) > body > div:before {
 
 html.dim > body { background: black }
 html.dim > body > div,
-html.dim > body > div:before { opacity: .25 }
+	html.dim > body > div:before {
+		opacity: .25;
+		border-color: transparent !important;
+	}
 
 body, button, input {
 	font-family: Barlow, "Segoe UI", sans-serif;
@@ -101,7 +104,7 @@ body > div {
 	border: 1px solid var(--border);
 	border-radius: 2px;
 	cursor: default;
-	transition: opacity .2s ease-in;
+	transition: opacity .2s ease-in, border-color .2s ease-in;
 }
 	body > div:before {
 		position: absolute;
