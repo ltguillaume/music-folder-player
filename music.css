@@ -232,6 +232,7 @@ li.filtered:hover, li.filtered:hover:before,
 li.filtered:focus, li.filtered:focus:before { color: var(--focus) !important }
 
 li:hover, li:hover:before,
+li span.artist, li span.artist:hover,
 li.parent:hover, li.parent:hover:before { transition: color .05s ease-in }
 
 li#last:before { visibility: hidden }
