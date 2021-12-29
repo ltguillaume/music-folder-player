@@ -41,57 +41,6 @@ function init() {
 
 	var get = function(id) { return document.getElementById(id) };
 	dom = {
-		'doc': document.documentElement,
-		'player': get('player'),
-		'cover': get('cover'),
-		'current': get('current'),
-		'album': get('album'),
-		'title': get('title'),
-		'time': get('time'),
-		'seek': get('seek'),
-		'volume': get('volume'),
-		'volumeslider': get('volumeslider'),
-		'playpause': get('playpause'),
-		'previous': get('previous'),
-		'next': get('next'),
-		'toast': get('toast'),
-		'options': get('options'),
-		'crossfade': get('crossfade'),
-		'enqueue': get('enqueue'),
-		'random': get('random'),
-		'playlistbtn': get('playlistbtn'),
-		'playlistsdiv': get('playlistsdiv'),
-		'load': get('load'),
-		'save': get('save'),
-		'playlists': get('playlists'),
-		'afterdiv': get('afterdiv'),
-		'after': get('after'),
-		'afteroptions': get('afteroptions'),
-		'stopplayback': get('stopplayback'),
-		'repeatplaylist': get('repeatplaylist'),
-		'playlibrary': get('playlibrary'),
-		'randomlibrary': get('randomlibrary'),
-		'randomfiltered': get('randomfiltered'),
-		'share': get('share'),
-		'lock': get('lock'),
-		'logbtn': get('logbtn'),
-		'shares': get('shares'),
-		'folderuri': get('folderuri'),
-		'songuri': get('songuri'),
-		'shareplaylist': get('shareplaylist'),
-		'playlisturi': get('playlisturi'),
-		'playlistdata': get('playlistdata'),
-		'a': get('a'),
-		'trash': get('trash'),
-		'remove': get('remove'),
-		'playlistdiv': get('playlistdiv'),
-		'playlist': get('playlist'),
-		'library': get('library'),
-		'filter': get('filter'),
-		'unfold': get('unfold'),
-		'tree': get('tree'),
-		'log': get('log'),
-		'logdiv': get('logdiv'),
 		'hide': function(el) { dom.show(el, false) },
 		'show': function(el, show = true) {
 			if (el.constructor === Array)
@@ -101,8 +50,9 @@ function init() {
 				dom[el].style.display = show ? 'unset' : 'none';
 		}
 	};
+	document.querySelectorAll('[id]').forEach(function(el) { dom[el.id] = el });
 
-	cls(get('splash'), 'show', ADD);
+	cls(dom.splash, 'show', ADD);
 
 	var lib = document.createElement('script');
 	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ esc(url[1]) : '');
@@ -123,7 +73,7 @@ function init() {
 		prepUI();
 		buildLibrary('', library, dom.tree);
 		buildPlaylist();
-		cls(get('splash'), 'show', REM);
+		cls(dom.splash, 'show', REM);
 		cls(dom.doc, 'show', ADD);
 		log('https://github.com/ltGuillaume/MusicFolderPlayer', true);
 		log('Song count: '+ songs.length, true);
@@ -137,7 +87,7 @@ function init() {
 
 function prepUI() {
 	ls = ls();
-	pagetitle.textContent = def.title;
+	dom.pagetitle.textContent = def.title;
 	dom.doc.className = cfg.theme || def.theme;
 	dom.volumeslider.max = def.volume;
 	dom.volumeslider.value = cfg.volume;
@@ -265,7 +215,6 @@ function log(s, force = false) {
 	if (debug || force) {
 		if (typeof s === 'string') {
 			var t = new Date();
-			s = s.replace(/data\:audio\/mpeg.*/, '[autoplay fix]');
 			s = String(t.getHours()).padStart(2, '0') +':'+ String(t.getMinutes()).padStart(2, '0') +':'+ String(t.getSeconds()).padStart(2, '0') +'  '+ s;
 			dom.log.value += s +'\n';
 		}
