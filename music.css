@@ -483,7 +483,6 @@ html:not(.dim) #player.fix {
 	#log {
 		width: 100%;
 		height: calc(100% - 3em);
-		resize: none;
 		margin-top: 3em;
 		color: var(--text);
 		white-space: pre;
