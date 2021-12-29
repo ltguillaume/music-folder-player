@@ -19,6 +19,7 @@
 	--bg-button-hv: #ebf2f7;
 	--bg-menu: #fcfcfd;
 	--bg-player-fix: #fcfcfd;
+	--bg-scroll: #fafafa;
 	--bg-splash: #eee;
 	--bg-thumb: #eee;
 	--bg-thumb-hv: #ddd;
@@ -30,6 +31,8 @@
 	--box-shadow: #fefeff;
 	--focus: #ef6c00;
 	--focus-dim: #f3934d;
+	--scroll: #ececec;
+	--scroll-hv: #ccc;
 	--text: #444;
 	--text-dim: #999;
 	--text-li-parent: #ccc;
@@ -38,7 +41,16 @@
 	--text-shadow-button: #eee;
 }
 
+::-webkit-scrollbar { width: 10px }
+::-webkit-scrollbar-track { background: var(--bg-scroll); border-radius: 2px }
+::-webkit-scrollbar-thumb { background: var(--scroll); border-radius: 2px }
+::-webkit-scrollbar-thumb:hover { background: var(--scroll-hv) }
+::-webkit-resizer { background: var(--scroll) }
+
 * {
+	scrollbar-color: var(--scroll) var(--bg-scroll);
+	scrollbar-width: thin;
+
 	max-width: 100%;
 	margin: 0;
 	padding: 0;
@@ -67,6 +79,7 @@ html.touch body {
 		overflow-x: auto;
 		white-space: nowrap;
 	}
+	html.touch *::-webkit-scrollbar { width: 4px !important }
 	html.touch #tree ul { margin-left: .5em }
 	html.touch .hoverdiv { display: block }
 

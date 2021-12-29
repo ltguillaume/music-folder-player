@@ -1,13 +1,11 @@
+/* Dark theme */
 :root {
 	--bg: #10100f;
 	--bg-body: #1a1a1a;
 	--bg-button-hv: #1c1c1c;
 	--bg-menu: #121211;
 	--bg-player-fix: #121211;
-	--bg-resizer: #171717;
-	--bg-scrollbar-thumb: #212121;
-	--bg-scrollbar-thumb-hv: #313131;
-	--bg-scrollbar-track: #141414;
+	--bg-scroll: #141414;
 	--bg-splash: #212121;
 	--bg-toast: var(--bg);
 	--bg-toast-error: #911d1d;
@@ -17,35 +15,13 @@
 	--box-shadow: #10100f;
 	--focus: #1d91f0;
 	--focus-dim: #1a6eac;
+	--scroll: #292929;
+	--scroll-hv: #3c3c3c;
 	--text: #b4b4b4;
 	--text-dim: #696969;
 	--text-li-parent: #4c4c4c;
 	--text-locked: #5a5a5a;
 /*	--text-shadow* not used */
-}
-
-/* Dark theme */
-*, *:before { text-shadow: none !important }
-
-#cover { opacity: .7 }
-	#cover:hover, #cover.nofade { opacity: 1 }
-
-@media (min-width: 541px) {
-	body, #player.fix, #player.fix button:hover { background-image: url("music.theme.svg") }
-	#player.fix button:not(:hover) { background: none }
-	body > div { box-shadow: 0 0 3px #242424 }
-}
-
-/* Dark scrollbars */
-::-webkit-scrollbar { width: 12px }
-::-webkit-scrollbar-track { background: var(--bg-scrollbar-track); border-radius: 2px }
-::-webkit-scrollbar-thumb { background: var(--bg-scrollbar-thumb); border-radius: 2px }
-::-webkit-scrollbar-thumb:hover { background: var(--bg-scrollbar-thumb-hv) }
-::-webkit-resizer { background: var(--bg-resizer) }
-
-html, #playlist {
-	scrollbar-color: var(bg-scrollbar-thumb) var(--bg-scrollbar-track);
-  scrollbar-width: thin;
 }
 
 /* Based on mov.im, orange focus */
@@ -55,12 +31,11 @@ html.blue {
 	--bg-body: #141a21;
 	--bg-menu: #141a21;
 	--bg-player-fix: #141a21;
-	--bg-resizer: #141a21;
 	--bg-toast: var(--bg);
 	--bg-trash: #10151aaa;
-	--bg-scrollbar-track: #181e27;
-	--bg-scrollbar-thumb-hv: #5a6367;
-	--bg-scrollbar-thumb: #30353c;
+	--bg-scroll: #181e27;
+	--scroll: #30353c;
+	--scroll-hv: #5a6367;
 	--bg-splash: #30353c;
 	--border: #171f26;
 	--border-cover: #212b36;
@@ -75,12 +50,11 @@ html.green {
 	--bg-body: #14211b;
 	--bg-menu: #14211b;
 	--bg-player-fix: #14211b;
-	--bg-resizer: #14211b;
 	--bg-toast: var(--bg);
 	--bg-trash: #101a15aa;
-	--bg-scrollbar-track: #182620;
-	--bg-scrollbar-thumb-hv: #59665d;
-	--bg-scrollbar-thumb: #313d38;
+	--bg-scroll: #182620;
+	--scroll: #313d38;
+	--scroll-hv: #59665d;
 	--bg-splash: #313d38;
 	--border: #17261e;
 	--border-cover: #21362b;
@@ -92,6 +66,17 @@ html.green {
 html.focusgreen {
 	--focus: #00bd35;
 	--focus-dim: #00800f;
+}
+
+*, *:before { text-shadow: none !important }
+
+#cover { opacity: .7 }
+	#cover:hover, #cover.nofade { opacity: 1 }
+
+@media (min-width: 541px) {
+	body, #player.fix, #player.fix button:hover { background-image: url("music.theme.svg") }
+	#player.fix button:not(:hover) { background: none }
+	body > div { box-shadow: 0 0 3px #242424 }
 }
 
 /* Display songs in tree horizontally 
