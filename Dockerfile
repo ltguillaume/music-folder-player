@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM docker.io/alpine
 
 ENV ADDRESS=
 ENV PORT=

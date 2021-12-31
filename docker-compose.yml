@@ -8,7 +8,9 @@ services:
         target: /app/srv/library
         type: bind
         read_only: true
-      - mfp:/app/cfg
+      - source: mfp
+        target: /app/cfg
+        type: volume
     build:
       context: https://github.com/ltGuillaume/MusicFolderPlayer.git#docker
     container_name: mfp
