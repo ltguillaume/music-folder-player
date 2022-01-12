@@ -32,7 +32,8 @@ var
 const
 	ADD =  1,
 	TOG = .1,
-	REM =  0;
+	REM =  0,
+	SET =  2;
 
 function init() {
 	url = document.URL.split('?play=', 2);
@@ -43,16 +44,12 @@ function init() {
 	dom = {
 		'hide': function(el) { dom.show(el, false) },
 		'show': function(el, show = true) {
-			if (el.constructor === Array)
-				for (var i = 0; i < el.length; i++)
-					dom[el[i]].style.display = show ? 'unset' : 'none';
-			else
-				dom[el].style.display = show ? 'unset' : 'none';
+			if (el.constructor !== Array) el = [el];
+			for (var i = 0; i < el.length; i++)
+				cls(dom[el[i]], 'hide', show ? REM : ADD);
 		}
 	};
 	document.querySelectorAll('[id]').forEach(function(el) { dom[el.id] = el });
-
-	cls(dom.splash, 'show', ADD);
 
 	var lib = document.createElement('script');
 	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ esc(url[1]) : '');
@@ -73,8 +70,8 @@ function init() {
 		prepUI();
 		buildLibrary('', library, dom.tree);
 		buildPlaylist();
-		cls(dom.splash, 'show', REM);
-		cls(dom.doc, 'show', ADD);
+		dom.hide('splash');
+		dom.show('doc');
 		log('https://github.com/ltGuillaume/MusicFolderPlayer', true);
 		log('Song count: '+ songs.length, true);
 		log('PHP request = '+ lib.src);
@@ -899,7 +896,7 @@ function prepPlaylists(action) {
 		switch (action) {
 			case 'load':
 				dom.playlists.innerHTML = playlistElements;
-				dom.playlists.style.display = 'block';
+				dom.show('playlists');
 				setFocus(dom.playlists.firstElementChild);
 				break;
 			case 'save':
@@ -937,7 +934,7 @@ function removePlaylist(e) {
 	xhttp.onload = function() {
 		if (this.responseText != '')
 			alert(s_error +'\n\n'+ this.responseText);
-		else if (dom.playlists.style.display != 'block')
+		else if (cls(dom.playlists, 'hide'))
 			menu('load');
 		else {
 			dom.playlists.removeChild(e.target);
@@ -1089,7 +1086,7 @@ function playNext() {
 		dom.title.innerHTML = nfo.title;
 	}
 
-	pagetitle.textContent = nfo.title + (nfo.artist ? ' - '+ nfo.artist : '');
+	dom.pagetitle.textContent = nfo.title + (nfo.artist ? ' - '+ nfo.artist : '');
 	fillShare(path);
 	if ('mediaSession' in navigator) {
 		navigator.mediaSession.metadata.title = nfo.title;
@@ -1125,7 +1122,7 @@ function toggle(e) {
 			cls(dom.cover, 'nofade', TOG);
 			return;
 		case 'volume':
-			dom.volumeslider.style.display = dom.volumeslider.style.display == 'unset' ? '' : 'unset';
+			cls(dom.volumeslider, 'hide', TOG);
 			return;
 		case 'playlistbtn':
 			if (cfg.locked) return;
@@ -1152,8 +1149,12 @@ function toggle(e) {
 			return toggleLock();
 		case 'logbtn':
 			if (!debug) return;
-			cls(dom.doc, 'dim', !cls(dom.logdiv, 'show'));
-			return cls(dom.logdiv, 'show', TOG);
+			cls(dom.doc, 'dim', cls(dom.logdiv, 'hide'));
+			if (cls(dom.logdiv, 'hide', TOG))
+				dom.log.blur();
+			else
+				dom.log.focus();
+			return;
 		case 'trash':
 			return cls(button, 'over', ADD);
 		case 'clear':
@@ -1221,7 +1222,7 @@ function menu(e) {
 		btn = dom.after;
 	}
 
-	if (el.style.display != 'block' && e.type !== 'mouseleave') {
+	if (el.style.display == '' && e.type !== 'mouseleave') {
 		const { bottom, left } = btn.getBoundingClientRect();
 		el.top = bottom;
 		el.left = left;
@@ -1240,7 +1241,7 @@ function menu(e) {
 				cls(dom.randomfiltered, 'on', cfg.after == 'randomfiltered' ? ADD : REM);
 				cls(dom.randomlibrary, 'on', cfg.after == 'randomlibrary' ? ADD : REM);
 				cls(dom.randomfiltered, 'dim', dom.filter.value == '' ? ADD : REM);
-				el.style.display = 'block';
+				dom.show(el.id);
 				setFocus(dom.afteroptions.firstElementChild);
 		}
 	} else switch (el) {
@@ -1324,7 +1325,10 @@ function filter(instant = false) {	// Gets event from oninput
 
 function cls(el, name, act = null) {
 	var found = el.classList.contains(name);
-	if (act == null) return found;
+	if (act == null)
+		return found;
+	if (act == SET)
+		return name == (el.className = name);
 	if (!found && act >= TOG)
 		el.classList.add(name);
 	else if (found && act <= TOG)
@@ -1459,7 +1463,14 @@ function changeTheme() {
 
 document.addEventListener('keydown', function(e) {
 	var el = document.activeElement;
-	if (e.altKey || e.ctrlKey || el.tagName == 'TEXTAREA') return;
+	if (e.altKey || e.ctrlKey) return;
+	
+	if (e.keyCode == 27) {	// Esc
+		if (!cls(dom.popupdiv, 'hide'))
+			return Popup.close();
+		if (el == dom.log && !cls(dom.logdiv, 'hide'))
+			return logbtn.click();
+	}
 
 	if (el.tagName == 'INPUT') {
 		if (el == dom.volumeslider && e.keyCode > 36 && e.keyCode < 41)	// Arrow keys
@@ -1479,6 +1490,8 @@ document.addEventListener('keydown', function(e) {
 		}
 		return;
 	}
+	
+	if (el.tagName == 'TEXTAREA') return;
 
 	switch (e.keyCode) {
 		case 116:	// F5
@@ -1598,6 +1611,7 @@ document.addEventListener('keydown', function(e) {
 			dom.lock.click();
 			break;
 		case 71:	// G
+			e.preventDefault();
 			dom.logbtn.click();
 			break;
 		case 67:	// C

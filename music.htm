@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html id="doc">
+<html id="doc" class="hide">
 <head>
 	<meta charset="UTF-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,7 +24,7 @@
 				onchange="seek('c')" oninput="seek('i')" ontouchstart="onseek=true" ontouchend="onseek=false" disabled>
 			<div id="controls">
 				<button id="volume" title="L: Volume (U)&#xA;R: Mute (M)" onclick="toggle(event)" oncontextmenu="mute(event)"></button>
-				<input id="volumeslider" type="range" min="0" step=".05" onchange="setVolume(event)" oninput="setVolume(event)">
+				<input  id="volumeslider" class="hide" type="range" min="0" step=".05" onchange="setVolume(event)" oninput="setVolume(event)">
 				<button id="stop" title="Stop playback (Backspace)" onclick="stop()"></button>
 				<button id="playpause" title="Play or pause (Space)" onclick="playPause()"></button>
 				<button id="previous" title="Play previous ([)" onclick="previous()"></button>
@@ -32,7 +32,7 @@
 					onclick="next()" oncontextmenu="skipArtist(event)"></button>
 			</div>
 		</div>
-		<button id="toast"></button>
+		<button id="toast" class="hide"></button>
 	</div>
 	<div id="options">
 		<button id="enqueue" title="Enqueue songs on click (E)" onclick="toggle(event)"><u>E</u>nqueue</button>
@@ -45,7 +45,7 @@
 		<div id="playlistoptions">
 			<div id="playlistsdiv">
 				<button id="load" title="Add songs from online playlist (D)" onclick="menu(event)">Loa<u>d</u></button>
-				<div id="playlists" title="L: Add songs (Enter)&#xA;R: Remove playlist" class="menu" onmouseleave="menu(event)"
+				<div id="playlists" title="L: Add songs (Enter)&#xA;R: Remove playlist" class="menu hide" onmouseleave="menu(event)"
 					onclick="loadPlaylistBtn(event)" oncontextmenu="removePlaylist(event)">
 				</div>
 			</div>
@@ -54,7 +54,7 @@
 			<button id="export" title="Export current playlist to file (X)" onclick="exportPlaylist()">E<u>x</u>port</button>
 			<div id="afterdiv">
 				<button id="after" title="Define action after last playlist item (A)" onclick="menu(event)"><u>A</u>fter playlist</button>
-				<div id="afteroptions" class="menu" onmouseleave="menu(event)" onclick="toggle(event)">
+				<div id="afteroptions" class="menu hide" onmouseleave="menu(event)" onclick="toggle(event)">
 					<button id="stopplayback" title="Stop playing songs after last playlist item">Stop playback</button>
 					<button id="repeatplaylist" title="Restart playback from the top">Repeat playlist</button>
 					<button id="playlibrary" title="Continue from last song's position in library">Continue from library</button>
@@ -88,7 +88,7 @@
 	</div>
 	<div id="playlistdiv" onmouseup="resizePlaylist()">
 		<div>
-			<div id="trash" onclick="toggle(event)"
+			<div id="trash" class="hide" onclick="toggle(event)"
 					ondragover="allowDrop(event)" ondrop="removeItem(event); cls(this, 'drop', REM)"
 					ondragenter="cls(this, 'drop', ADD)" ondragleave="cls(this 'drop', REM)">
 				<button id="clear" class="clear" title="Clear the playlist (C)"><u>C</u>lear</button>
@@ -115,7 +115,7 @@
 				title="L: Open folder | Play/Enqueue song (Enter)&#xA;R: Enqueue folder | Play next (Shift-Enter)"></ul>
 		</div>
 	</div>
-	<div id="logdiv">
+	<div id="logdiv" class="hide">
 		<div>
 			<div class="hoverdiv">
 				<button id="theme" title="Change theme (Shift+T)" onclick="changeTheme()"></button>

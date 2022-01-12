@@ -83,14 +83,14 @@ html.touch body {
 	html.touch #tree ul { margin-left: .5em }
 	html.touch .hoverdiv { display: block }
 
-html:not(.show) > body > div,
-html:not(.show) > body > div:before {
+html.hide > body > div,
+html.hide > body > div:before {
 	opacity: 0;
 	pointer-events: none;
 }
 
 html.dim > body { background: black }
-html.dim > body > div,
+	html.dim > body > div,
 	html.dim > body > div:before {
 		opacity: .25;
 		border-color: transparent !important;
@@ -214,7 +214,6 @@ input[type=range] {
 		border: none;
 	}
 	input#volumeslider {
-		display: none;
 		width: unset;
 		margin: 3px 0 0 -3px;
 	}
@@ -263,14 +262,12 @@ li.over { border-top: 1px dotted var(--focus) }
 	margin: auto;
 	font-size: 150px;
 	color: var(--bg-splash);
-	opacity: 0;
 	border: none;
 	z-index: -1;
+	animation: fade;
+	animation-duration: 4s;
 }
-	#splash.show {
-		opacity: 1;
-		transition: opacity 4s;
-	}
+	@keyframes fade { from { opacity: 0 }}
 
 #player {
 	white-space: nowrap;
@@ -338,7 +335,6 @@ li.over { border-top: 1px dotted var(--focus) }
 	#controls > button:before { margin: .25em }
 
 #toast {
-	display: none;
 	position: fixed;
 	top: 0;
 	right: 0;
@@ -349,6 +345,7 @@ li.over { border-top: 1px dotted var(--focus) }
 	z-index: 3;
 }
 	#toast.error { background: var(--bg-toast-error) !important }
+	#toast.hide { display: none }
 
 html:not(.dim) #player.fix {
 	position: fixed;
@@ -407,7 +404,6 @@ html:not(.dim) #player.fix {
 #library > div { position: relative }
 
 #trash {
-	display: none;
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -478,16 +474,14 @@ html:not(.dim) #player.fix {
 #tree li:hover > ul, #tree li:focus > ul { color: var(--text) }
 
 #logdiv {
-	display: none;
 	position: fixed;
 	top: 0;
 	left: 0;
 	right: 0;
 	bottom: -.5em;
-	opacity: 1 !important;
+	opacity: 1;
 	z-index: 2;
 }
-	#logdiv.show { display: block }
 	#logdiv:hover .hoverdiv { display: block }
 	#logdiv > div {
 		position: relative;
@@ -505,14 +499,14 @@ html:not(.dim) #player.fix {
 		overscroll-behavior: contain;
 	}
 
+:not(html).hide { display: none }
+
 .title {
 	height: 1.25em;
 	cursor: alias;
 }
 
 .artist, .dim { color: var(--text-dim) }
-
-.hide { display: none }
 
 .hoverdiv {
 	display: none;
@@ -523,7 +517,6 @@ html:not(.dim) #player.fix {
 }
 
 .menu {
-	display: none;
 	position: absolute;
 	background: var(--bg-menu);
 	border: 1px solid var(--border);
