@@ -1481,12 +1481,14 @@ document.addEventListener('keydown', function(e) {
 				case 40: return keyNav(null, "down");	// ArrowDown
 			}
 
+		var refocus = true;
 		if (e.keyCode == 27) {	// Esc
 			e.preventDefault();
+			if (el.value == '') refocus = false;
 			el.value = '';
 			el.blur();
-			if (el = dom.filter) filter();
-			el.focus();
+			if (el == dom.filter) filter();
+			if (refocus) el.focus();
 		}
 		return;
 	}
