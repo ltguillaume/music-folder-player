@@ -22,6 +22,7 @@ var
 	playerheight,
 	playlistloaded,
 	playlists,
+	removingsongs,
 	retry,
 	toast,
 	touch,
@@ -100,7 +101,6 @@ function prepUI() {
 	if (!sharing) dom.hide('share');
 	if (whatsapp) cls(dom.options, 'whatsapp', ADD);
 	if (cfg.after == 'randomfiltered') cfg.after = 'randomlibrary';
-	cfg.remove = false;
 	if (!debug) dom.hide('logbtn');
 
 	if (url.length > 1 && url[1].startsWith('pl:')) {
@@ -522,7 +522,7 @@ function playlistItem(s) {
 
 function clickItem(e) {
 	if (cfg.locked || e.target.id == 'playlist') return;
-	if (cfg.remove) {
+	if (removingsongs) {
 		drag = cls(e.target, 'artist') ? e.target.parentNode : e.target;
 		removeItem(e);
 	} else play(getIndex(e.target));
@@ -1168,7 +1168,7 @@ function toggle(e) {
 			cfg[button.id] ^= true;
 			cls(button, 'on', cfg[button.id] ? ADD : REM);
 		}
-		if (button.id == 'remove') cls(dom.trash, 'on', cfg.remove ? ADD : REM);
+		if (button.id == 'remove') cls(dom.trash, 'on', removingsongs ? ADD : REM);
 }
 
 function buildFilteredLibrary() {
@@ -1261,7 +1261,7 @@ function clearPlaylist() {
 		dom.playlist.innerHTML = '';
 		resizePlaylist();
 	}
-	if (cfg.remove) dom.remove.click();
+	if (removingsongs) dom.remove.click();
 }
 
 function resizePlaylist() {
