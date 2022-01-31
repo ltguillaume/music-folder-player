@@ -151,7 +151,6 @@ function prepUI() {
 		navigator.mediaSession.setActionHandler('pause', playPause);
 		navigator.mediaSession.setActionHandler('previoustrack', previous);
 		navigator.mediaSession.setActionHandler('nexttrack', next);
-		navigator.mediaSession.metadata = new MediaMetadata();
 	}
 
 	if (instantfilter) dom.filter.oninput = filter;	// Gives event as parameter
@@ -1089,9 +1088,11 @@ function playNext() {
 	dom.pagetitle.textContent = nfo.title + (nfo.artist ? ' - '+ nfo.artist : '');
 	fillShare(path);
 	if ('mediaSession' in navigator) {
-		navigator.mediaSession.metadata.title = nfo.title;
-		navigator.mediaSession.metadata.artist = nfo.artist;
-		navigator.mediaSession.metadata.artwork = [{ src: cover }];
+		navigator.mediaSession.metadata = new MediaMetadata({
+			title: nfo.title,
+			artist: nfo.artist,
+			artwork: [{ src: cover }]
+		});
 	}
 }
 
