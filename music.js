@@ -847,8 +847,9 @@ function setVolume(input) {
 }
 
 function download(type) {
-	var uri = dom[type +'uri'].value;
-	if (uri) {
+	var share = dom[type +'uri'];
+	if (share.value || type == 'folder') {
+		var uri = (type != 'playlist' ? root : "") + share.value;
 		dom.a.href = 'music.php?dl'+ (type == 'playlist' ? 'pl' : '') +'='+ esc(uri);
 		dom.a.click();
 	}
@@ -856,7 +857,7 @@ function download(type) {
 
 function clip(type) {
 	var share = dom[type +'uri'];
-	if (share.value) {
+	if (share.value || type == 'folder') {
 		var clearVal = share.value;
 		if (type == 'playlist')
 			share.value = base +'?play=pl:'+ esc(share.value);
@@ -875,7 +876,7 @@ function clip(type) {
 
 function shareWhatsApp(type) {
 	var share = dom[type +'uri'];
-	if (share.value) {
+	if (share.value || type == 'folder') {
 		var msg = prompt(s_whatsapp, s_whatsappmsg);
 		if (msg != null) window.open('https://api.whatsapp.com/send?text='+ msg +' '
 			+ base +'?play=c:'+ escBase64(btoa(root + share.value)));
