@@ -18,7 +18,8 @@
 			if (!chdir($dl)) die('Could not open folder: '. $dl);
 			return_zip($dl, ['.'], false);
 		} elseif (file_exists($dl)) {
-			header('Content-type: '. mime_content_type($dl));
+			header('Content-Type: '. mime_content_type($dl));
+			header('Content-Length: '. filesize($dl));
 			header('Content-Disposition: attachment; filename="'. basename($dl) .'"');
 			readfile($dl);
 			exit;

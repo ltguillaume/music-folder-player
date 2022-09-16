@@ -22,7 +22,6 @@ var
 	playerheight,
 	playlistloaded,
 	playlists,
-	removingsongs,
 	retry,
 	toast,
 	touch,
@@ -101,6 +100,7 @@ function prepUI() {
 	if (!sharing) dom.hide('share');
 	if (whatsapp) cls(dom.options, 'whatsapp', ADD);
 	if (cfg.after == 'randomfiltered') cfg.after = 'randomlibrary';
+	cfg.remove = false;
 	if (!debug) dom.hide('logbtn');
 
 	if (url.length > 1 && url[1].startsWith('pl:')) {
@@ -257,7 +257,7 @@ function prepAudio(id) {
 				dom.playlist.scrollTop = dom.playlist.childNodes[cfg.index > 0 ? cfg.index - 1 : cfg.index].offsetTop - dom.playlist.offsetTop;
 		}
 	};
-	
+
 	a.onplaying = function() {
 		a.log('Playing');
 	}
@@ -309,11 +309,11 @@ function prepAudio(id) {
 		else
 			errorcount = 0;
 	};
-	
+
 	a.onabort = function() {
 		a.log('Aborted');
 	}
-	
+
 	a.onstalled = function() {
 		a.log('Stalled (media not available)');
 	}
@@ -321,7 +321,7 @@ function prepAudio(id) {
 	a.onsuspend = function() {
 		a.log('Suspended (media prevented from loading)');
 	}
-	
+
 	a.onwaiting = function() {
 		a.log('Waiting (need to buffer)');
 	}
@@ -521,7 +521,7 @@ function playlistItem(s) {
 
 function clickItem(e) {
 	if (cfg.locked || e.target.id == 'playlist') return;
-	if (removingsongs) {
+	if (cfg.remove) {
 		drag = cls(e.target, 'artist') ? e.target.parentNode : e.target;
 		removeItem(e);
 	} else play(getIndex(e.target));
@@ -1170,7 +1170,7 @@ function toggle(e) {
 			cfg[button.id] ^= true;
 			cls(button, 'on', cfg[button.id] ? ADD : REM);
 		}
-		if (button.id == 'remove') cls(dom.trash, 'on', removingsongs ? ADD : REM);
+		if (button.id == 'remove') cls(dom.trash, 'on', cfg.remove ? ADD : REM);
 }
 
 function buildFilteredLibrary() {
@@ -1263,7 +1263,7 @@ function clearPlaylist() {
 		dom.playlist.innerHTML = '';
 		resizePlaylist();
 	}
-	if (removingsongs) dom.remove.click();
+	if (cfg.remove) dom.remove.click();
 }
 
 function resizePlaylist() {
@@ -1466,7 +1466,7 @@ function changeTheme() {
 document.addEventListener('keydown', function(e) {
 	var el = document.activeElement;
 	if (e.altKey || e.ctrlKey) return;
-	
+
 	if (e.keyCode == 27) {	// Esc
 		if (!cls(dom.popupdiv, 'hide'))
 			return Popup.close();
@@ -1494,7 +1494,7 @@ document.addEventListener('keydown', function(e) {
 		}
 		return;
 	}
-	
+
 	if (el.tagName == 'TEXTAREA') return;
 
 	switch (e.keyCode) {
