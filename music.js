@@ -100,6 +100,7 @@ function prepUI() {
 	if (!sharing) dom.hide('share');
 	if (whatsapp) cls(dom.options, 'whatsapp', ADD);
 	if (cfg.after == 'randomfiltered') cfg.after = 'randomlibrary';
+	cfg.remove = false;
 	if (!debug) dom.hide('logbtn');
 
 	if (url.length > 1 && url[1].startsWith('pl:')) {
