@@ -37,7 +37,7 @@ const
 
 function init() {
 	url = document.URL.split('?play=', 2);
-	if (url[1] && url[1].startsWith('c:')) url[1] = atob(decodeURIComponent(url[1].substring(2)));
+	if (url[1] && url[1].startsWith('c:')) url[1] = deBase64(url[1].substring(2));
 	base = window.location.protocol +'//'+ window.location.host + window.location.pathname;
 
 	var get = function(id) { return document.getElementById(id) };
@@ -630,8 +630,13 @@ function esc(s) {
 	return s.replace(/\/+$/, '').replace(/[(\?=&#% ]/g, function(char) { return escape(char) });
 }
 
-function escBase64(s) {
+function base64(s) {
+	s = btoa(unescape(encodeURIComponent(s)));
 	return s.replace(/=+$/, '').replace(/[\/+=]/g, function(char) { return escape(char) });
+}
+
+function deBase64(s) {
+	return decodeURIComponent(escape(atob(s)));
 }
 
 function getSongInfo(path) {
@@ -862,7 +867,7 @@ function clip(type) {
 		if (type == 'playlist')
 			share.value = base +'?play=pl:'+ esc(share.value);
 		else
-			share.value = base +'?play=c:'+ escBase64(btoa(root + share.value));
+			share.value = base +'?play=c:'+ base64(root + share.value);
 		share.select();
 		document.execCommand('copy');
 		cls(share.nextElementSibling.nextElementSibling, 'clip', ADD);
@@ -879,7 +884,7 @@ function shareWhatsApp(type) {
 	if (share.value || type == 'folder') {
 		var msg = prompt(s_whatsapp, s_whatsappmsg);
 		if (msg != null) window.open('https://api.whatsapp.com/send?text='+ msg +' '
-			+ base +'?play=c:'+ escBase64(btoa(root + share.value)));
+			+ base +'?play=c:'+ base64(root + share.value));
 	}
 }
 
