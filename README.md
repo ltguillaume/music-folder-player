@@ -38,7 +38,10 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 #### Sharing
 - Download a song or zipped folder
 - Share a song, folder or playlist link (library features/options will be hidden)
-- Share links directly to WhatsApp (optional)
+- Share links directly to email, social media or use your device's native share options (optional)
+#### Translations
+- Currently supports English and Dutch
+- Easily translate to you own language with an .ini file
 
 ## List of hotkeys
 A list of all the hotkeys can be found in the [Wiki](https://github.com/ltGuillaume/MusicFolderPlayer/wiki/List-of-hotkeys).

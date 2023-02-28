@@ -18,9 +18,9 @@
 			if (!chdir($dl)) die('Could not open folder: '. $dl);
 			return_zip($dl, ['.'], false);
 		} elseif (file_exists($dl)) {
-			header('Content-Type: '. mime_content_type($dl));
-			header('Content-Length: '. filesize($dl));
 			header('Content-Disposition: attachment; filename="'. basename($dl) .'"');
+			header('Content-Length: '. filesize($dl));
+			header('Content-Type: '. mime_content_type($dl));
 			readfile($dl);
 			exit;
 		} else die('File not found: '. $dl);
@@ -66,15 +66,25 @@
 		die(file_put_contents($name, json_encode($pl['songs'])));
 	}
 
-	if (!isset($_GET['reload']))
+	if (!isset($_GET['reload'])) {
 		foreach($ini['client'] as $key => $value)
 			echo (stristr($key, '.') ? '' : 'var ') . $key .'='. $value .';'. PHP_EOL;
+		$lng = isset($_GET['lng']) ? $_GET['lng'] : 'en';
+		$lng = parse_ini_file('music.lang.'. $lng .'.ini', true, INI_SCANNER_RAW);
+		$notfound = $lng['strings']['notfound'];
+		foreach($lng['elements'] as $key => $value)
+			echo 'lng(dom.'. $key .',"'. $value .'");'. PHP_EOL;
+		foreach($lng['tooltips'] as $key => $value)
+			echo 'lng(dom.'. $key .',"'. $value .'",1);'. PHP_EOL;
+		foreach($lng['strings'] as $key => $value)
+			echo 'str[\''. $key .'\']="'. $value .'";'. PHP_EOL;
+	}
 
 	$dir = $cfg['root'];
 	if (isset($_GET['play']) && !in_array('..', explode('/', $_GET['play']))) {
 		$dir = trim($_GET['play'], '/');
-		if (!file_exists($dir))
-			die('var root="'. $cfg['root'] .'/";'. PHP_EOL .'var library={"'. $cfg['notfound'] .'":""}');
+		if (!file_exists($dir) || $dir == $cfg['root'])
+			die('var root="'. $cfg['root'] .'/";'. PHP_EOL .'var library={"'. $notfound .'":""}');
 		if (!is_dir($dir)) {
 			$files = array();
 			$files[$dir] = '';	// Add file
@@ -152,7 +162,6 @@
 			$cmd = '7z a dummy -tzip -mx1 -so -i@'. escapeshellarg($list_path);
 		} else {
 			foreach($paths as $path) fwrite($list, $path ."\n");
-			$stdin = array('file', $list_path, 'r');
 			$cmd = 'zip - -0 '. ($pl ? '-j' : '-r') .' -@ <'. escapeshellarg($list_path);
 		}
 		if ($pl) fwrite($list, $pl);

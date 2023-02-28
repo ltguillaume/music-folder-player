@@ -45,6 +45,7 @@
 ::-webkit-scrollbar-track { background: var(--bg-scroll); border-radius: 2px }
 ::-webkit-scrollbar-thumb { background: var(--scroll); border-radius: 2px }
 ::-webkit-scrollbar-thumb:hover { background: var(--scroll-hv) }
+::-webkit-scrollbar-corner { background: none }
 ::-webkit-resizer { background: var(--scroll) }
 
 * {
@@ -115,7 +116,7 @@ body > div {
 	padding: .25em;
 	background: var(--bg);
 	border: 1px solid var(--border);
-	border-radius: 2px;
+	border-radius: 4px;
 	cursor: default;
 	transition: opacity .2s ease-in, border-color .2s ease-in;
 }
@@ -152,9 +153,18 @@ button {
 	button:hover, .menu > button:focus { background: var(--bg-button-hv) }
 	button::-moz-focus-inner { border: none }
 
+button b {
+	padding: 0 .3em .1em .2em;
+	font-size: .7em;
+	color: var(--text-dim);
+	vertical-align: top;
+	border: 1px solid var(--border);
+	border-radius: 3px;
+}
+
 input, select {
 	width: 29.5em;
-	max-width: calc(100% - 7.5em);
+	max-width: calc(100% - 10em);
 	padding: .1em;
 	background: var(--bg);
 	font-size: .8em;
@@ -218,6 +228,8 @@ input[type=range] {
 		margin: 3px 0 0 -3px;
 	}
 		input#volumeslider::-webkit-slider-runnable-track { margin-top: 0px }
+
+span { margin-left: .25em }
 
 u { text-decoration: underline solid var(--text-dim) }
 
@@ -374,9 +386,8 @@ html:not(.dim) #player.fix {
 	#player.fix:before, #player.fix #time, #player.fix #seek { display: none }
 	#player.fix, #player.fix button:not(:hover) { background: var(--bg-player-fix) }
 
-#options button:before, #trash button:before, #toast:before, li:before { margin-right: .25em }
-#options.whatsapp button.whatsapp { display: inline-block }
-#options.whatsapp input.uri { max-width: calc(100% - 10em) }
+#options button:before, #trash button:before, #popup > button:before,
+#toast:before, li:before { margin-right: .25em }
 
 #playlistoptions, #shares {
 		max-height: 0;
@@ -473,6 +484,14 @@ html:not(.dim) #player.fix {
 #tree li.parent .song, #tree li.filtered,
 #tree li:hover > ul, #tree li:focus > ul { color: var(--text) }
 
+#copyleft {
+	padding-bottom: .8em;
+	font-size: .8em;
+	text-align: center;
+}
+	#copyleft * { color: var(--text-dim) }
+		#copyleft *:hover { color: var(--text) }
+
 #logdiv {
 	position: fixed;
 	top: 0;
@@ -498,6 +517,42 @@ html:not(.dim) #player.fix {
 		overflow-y: scroll;
 		overscroll-behavior: contain;
 	}
+
+#popupdiv {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: 0;
+	background: none;
+	opacity: 1;
+	pointer-events: auto;
+}
+	#popup {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		width: 20em;
+		max-width: 90%;
+		margin: auto;
+		padding: .5em;
+		background: var(--bg);
+		text-align: right;
+		box-shadow: 0 0 2px 1px var(--box-shadow);
+		animation: popup;
+		animation-duration: .4s;
+	}
+	@keyframes popup { from { transform: translateY(200%) }}
+	#popup button { margin: .1em }
+	#popup input {
+		max-width: calc(100% - 2em);
+		margin-bottom: .5em;
+	}
+	#popup > div { text-align: center }
+	#popupmsg { margin-top: 1em }
+		#popupmsg:before { font-size: 3em }
 
 :not(html).hide { display: none }
 
@@ -573,10 +628,8 @@ html:not(.dim) #player.fix {
 #after:before { content: "\f182" }
 #crossfade:before { content: "\f1b2" }
 #enqueue:before, .add:before { content: "\f199" }
-#export:before { content: "\f188" }
-#import:before { content: "\f17f" }
 #library:before { content: "\f17b" }
-#load:before { content: "\f180" }
+	#library.unfold #unfold:before { content: '\f10d' }
 #lock:before { content: "\f16a" !important }
 	#lock.on:before { content: "\f20a" !important }
 #logbtn:before { content: "\f1a1" }
@@ -587,13 +640,20 @@ html:not(.dim) #player.fix {
 #playlistdiv:before { content: "\f103" }
 #playpause:before, #playlibrary:before { content: "\f198" }
 	#playpause.playing:before { content: "\f191" }
+#playlistexport:before { content: "\f188" }
+#playlistimport:before { content: "\f17f" }
+#playlistload:before { content: "\f180" }
+#playlistsave:before { content: "\f184" }
+#popup #popupmsg:before { content: "\f127" }
+	#popup.lockdlg #popupmsg:before { content: "\f16a" }
+	#popup.savedlg #popupmsg:before { content: "\f1ac" }
+	#popup.sharedlg #popupmsg:before { content: "\f12f" }
 #previous:before { content: "\f19c" }
 #random:before, #randomlibrary:before { content: "\f13a" }
 #randomfiltered:before { content: "\f14b" }
 #reload:before { content: "\f18d" }
-#remove:before { content: "\f204" }
+#removesongs:before { content: "\f204" }
 #repeatplaylist:not(.on):before { content: "\f1a5"; margin-left: 1px; margin-right: calc(.25em - 1px); transform: scale(-1, 1) }
-#save:before { content: "\f184" }
 #share:before { content: "\f1ad" }
 #splash:before { content: "\f1ed" }
 #stop:before, #stopplayback:before { content: "\f1ef" }
@@ -601,20 +661,19 @@ html:not(.dim) #player.fix {
 #toast:before { content: "\f217" }
 #trash:before { content: "\f204" }
 #unfold:before { content: "\f10e" }
-	#library.unfold #unfold:before { content: '\f10d' }
 #volume:before { content: "\f211" }
-#volume.muted:before { content: "\f210" }
+	#volume.muted:before { content: "\f210" }
 
-.clear:before { content: "\f217" }
-.clip:before { content: "\f129" !important }
-.download:before { content: "\f143" }
-.filter:before { content: "\f14b" }
 .folder:before { content: "\f150" }
 .folder.open:before { content: "\f14e" }
-.min:before { content: "\f176" }
 .playing:before { content: "\f198" }
 .playlist:before { content: "\f18e" }
-.link:before { content: "\f165" }
 .song:not(.playing):before { content: "\f17b"; color: var(--text-dim) }
-button.on:before { content: "\f126" !important }
-button.whatsapp:before { content: "\f1a6" }
+button#cancel:before, button.clear:before, .close:before { content: "\f217" }
+button#ok:before, button.on:before { content: "\f126" !important }
+button.clip:before { content: "\f129" !important }
+button.download:before { content: "\f143" }
+button.filter:before { content: "\f14b" }
+button.link:before { content: "\f165" }
+button.min:before { content: "\f176" }
+button.share:before { content: "\f1a6" }

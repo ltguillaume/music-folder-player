@@ -25,7 +25,7 @@
 }
 
 /* Based on mov.im, orange focus */
-html.blue {
+:root.blue {
 	--bg: #10151a;
 	--bg-button-hv: #192028;
 	--bg-body: #141a21;
@@ -44,7 +44,7 @@ html.blue {
 }
 
 /* Blue + hue rotation -60, orange focus */
-html.green {
+:root.green {
 	--bg: #101a15;
 	--bg-button-hv: #1a2922;
 	--bg-body: #14211b;
@@ -63,7 +63,7 @@ html.green {
 }
 
 /* Green focus */
-html.focusgreen {
+:root.focusgreen {
 	--focus: #00bd35;
 	--focus-dim: #00800f;
 }
