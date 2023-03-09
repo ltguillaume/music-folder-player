@@ -1293,7 +1293,7 @@ function menu(e) {
 		btn = dom.after;
 	}
 
-	if (el.style.display == '' && e.type !== 'mouseleave') {
+	if (cls(el, 'hide') && e.type !== 'mouseleave') {
 		const { bottom, left } = btn.getBoundingClientRect();
 		el.top = bottom;
 		el.left = left;
@@ -1321,7 +1321,7 @@ function menu(e) {
 				dom.playlistbtn.click();
 				break;
 			default:
-				el.style.display = 'none';
+				cls(el, 'hide', ADD);
 	}
 }
 
