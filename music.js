@@ -290,7 +290,7 @@ function prepAudio(id) {
 				dom.playlist.scrollTop = dom.playlist.childNodes[cfg.index > 0 ? cfg.index - 1 : cfg.index].offsetTop - dom.playlist.offsetTop;
 		}
 	};
-	
+
 	a.onplaying = function() {
 		a.log('Playing');
 	}
@@ -344,11 +344,11 @@ function prepAudio(id) {
 		else
 			errorCount = 0;
 	};
-	
+
 	a.onabort = function() {
 		a.log('Aborted (user aborted download or error occurred)');
 	}
-	
+
 	a.onstalled = function() {
 		a.log('Stalled (media not available)');
 	}
@@ -356,7 +356,7 @@ function prepAudio(id) {
 	a.onsuspend = function() {
 		a.log('Suspended (download completed, or media has been paused)');
 	}
-	
+
 	a.onwaiting = function() {
 		a.log('Waiting (need to buffer)');
 	}
@@ -928,7 +928,7 @@ log('Share() triggered');
 		url: base +'?play='+ dom.popup.uri };
 	log(data);
 	sharemsg.uri = null;
-	
+
 	if (shareapi[name]) {
 		dom.a.href = shareapi[name].replace('{text}', data.text).replace('{url}', data.url);
 		dom.a.click();
@@ -1178,6 +1178,8 @@ function start(a) {
 
 function toggle(e) {
 	var button = e.target.tagName == 'U' ? e.target.parentNode : e.target;
+	if (button.id == 'options') return;
+
 	switch (button.id) {
 		case 'cover':
 			e.preventDefault();
@@ -1618,7 +1620,7 @@ function prepHotkeys() {
 	document.addEventListener('keydown', function(e) {
 		var el = document.activeElement;
 		if (e.altKey || e.ctrlKey) return;
-		
+
 		if (el.tagName == 'INPUT') {
 			if (el == dom.volumeslider) {
 				if (e.keyCode > 36 && e.keyCode < 41) return;	// Arrow keys
@@ -1640,7 +1642,7 @@ function prepHotkeys() {
 			}
 			return;
 		}
-		
+
 		if (e.key == 'Escape') {
 			if (!cls(dom.popupdiv, 'hide'))
 				return Popup.close();
@@ -1651,7 +1653,7 @@ function prepHotkeys() {
 		if (el.tagName == 'TEXTAREA') return;
 
 		var keyEl = dom.keys[e.key];
-		console.log(keyEl);
+
 		if (keyEl) {
 			e.preventDefault();
 			if (!dom.tree.contains(e.target))
@@ -1661,7 +1663,7 @@ function prepHotkeys() {
 			else
 				return keyEl.click();
 		}
-		
+
 		switch (e.key) {
 			case 'Escape':
 				if (el && cls(el.parentNode, 'menu') && cls(dom.options, 'playlistbtn'))
