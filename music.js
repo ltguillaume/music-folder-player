@@ -436,15 +436,18 @@ function libClick(e, context = false) {
 
 function openFolder(e) {
 	e.stopPropagation();
-	var li = e.target, dim = cls(li, 'dim') ? ' dim' : '';
+	var li = e.target,
+		dim = cls(li, 'dim') ? ' dim' : '',
+		match = cls(li, 'match') ? ' match' : '';
 	if (cls(li, 'filtered') || cls(li, 'parent')) {
 		ffor(li.querySelectorAll('ul > *'), function(c) {
 			if (c.style.display != '') c.style.display = '';
 		});
-		li.className = 'folder open'+ dim;
-	} else {
-		li.className = (cls(li, 'open') ? ' folder' : ' folder open') + dim;
-	}
+		cls(li, 'open', ADD);
+		cls(li, 'match', ADD);
+		cls(li, 'filtered', REM);
+	} else
+		cls(li, 'open', TOG)
 	setFocus(li);
 	if (audio[track].paused) fillShare(li.path +'/');
 }
