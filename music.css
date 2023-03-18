@@ -499,7 +499,7 @@ html:not(.dim) #player.fix {
 	top: 0;
 	left: 0;
 	right: 0;
-	bottom: -.5em;
+	bottom: 0;
 	opacity: 1;
 	z-index: 2;
 }
