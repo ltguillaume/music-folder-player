@@ -641,12 +641,12 @@ function removeItem(e) {
 	var playing = index == cfg.index;
 	cfg.playlist.splice(index, 1);
 	dom.playlist.removeChild(dom.playlist.childNodes[index]);
-	resizePlaylist();
 	if (cfg.index != -1 && index <= cfg.index)
 		cfg.index--;
 	if (cfg.index != -1 && !playing)
 		cls(dom.playlist.childNodes[cfg.index], 'playing', ADD);
 	endDrag();
+	resizePlaylist();
 }
 
 function getIndex(li) {
