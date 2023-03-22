@@ -1181,7 +1181,6 @@ function start(a) {
 
 function toggle(e) {
 	var button = e.target.tagName == 'U' ? e.target.parentNode : e.target;
-	if (button.id == 'options' || cls(button.parentNode, 'sharediv')) return;
 
 	switch (button.id) {
 		case 'cover':
