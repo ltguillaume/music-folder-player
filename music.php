@@ -1,4 +1,5 @@
 <?php
+	error_reporting(0);
 	$ini = parse_ini_file('music.defaults.ini', true, INI_SCANNER_RAW);
 	if (file_exists('music.ini'))
 		$ini = ini_merge($ini, parse_ini_file('music.ini', true, INI_SCANNER_RAW));

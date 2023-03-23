@@ -56,7 +56,8 @@ function init() {
 		lng = new URLSearchParams(window.location.search).get('lng') || navigator.language.substring(0, 2);
 	lib.src = 'music.php?lng='+ lng + (url.length > 1 ? '&play='+ esc(url[1]) : '');
 	lib.onload = function() {
-		if (!pathexp) alert(str.nopathexp);
+		if (!library) alert(str.nolibrary);
+		else if (!pathexp) alert(str.nopathexp);
 		if (pathexp.constructor !== Array) pathexp = [pathexp];
 		for(var i = 0; i < pathexp.length; i++) {
 			pathexp[i] = pathexp[i].replace(/[\/^$*+?.()|[\]{}]/g, '\\$&')
