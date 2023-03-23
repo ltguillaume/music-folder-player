@@ -1530,8 +1530,8 @@ function keyNav(el, direction) {
 function changeTheme() {
 	if (!themes.length) return;
 	var prev = cfg.theme;
-	if (cfg.theme == themes[0])
-		themes.push(themes.shift());
+	themes = themes.filter(t => t !== prev);
+	themes.push(prev);
 	cfg.theme = themes[0];
 	cls(dom.doc, 'dim', ADD);
 	setTimeout(function() {
