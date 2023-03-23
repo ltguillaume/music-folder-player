@@ -255,8 +255,6 @@ li:focus, li:focus:before,
 li.filtered:hover, li.filtered:hover:before,
 li.filtered:focus, li.filtered:focus:before { color: var(--focus) !important }
 
-li.match { color: var(--text) }
-
 li:hover, li:hover:before,
 li span.artist, li span.artist:hover,
 li.parent:hover, li.parent:hover:before { transition: color .05s ease-in }
@@ -483,7 +481,7 @@ html:not(.dim) #player.fix {
 #tree li.dim:focus, #tree li.parent:focus { text-decoration: underline solid var(--focus-dim) !important }
 #tree li.open > ul { display: block }
 #tree li.parent { color: var(--text-li-parent) }
-#tree li.parent .song, #tree li.filtered,
+#tree li.parent .song, #tree li.filtered, #tree li.match,
 #tree li:hover > ul, #tree li:focus > ul { color: var(--text) }
 
 #copyleft {

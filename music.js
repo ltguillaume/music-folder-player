@@ -446,6 +446,7 @@ function openFolder(e) {
 		cls(li, 'open', ADD);
 		cls(li, 'match', ADD);
 		cls(li, 'filtered', REM);
+		cls(li, 'parent', REM);
 	} else
 		cls(li, 'open', TOG)
 	setFocus(li);
