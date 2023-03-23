@@ -564,11 +564,12 @@ function playlistItem(s) {
 }
 
 function clickItem(e) {
+	var item = cls(e.target, 'artist') ? e.target.parentNode : e.target;
 	if (cfg.locked || e.target.id == 'playlist') return;
 	if (cfg.removesongs) {
-		drag = cls(e.target, 'artist') ? e.target.parentNode : e.target;
+		drag = item;
 		removeItem(e);
-	} else play(getIndex(e.target));
+	} else play(getIndex(item));
 }
 
 function findItem(e) {
