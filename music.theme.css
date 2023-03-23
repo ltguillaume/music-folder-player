@@ -2,7 +2,7 @@
 :root {
 	--bg: #10100f;
 	--bg-body: #1a1a1a;
-	--bg-button-hv: #1c1c1c;
+	--bg-button-hv: #1a1a1a;
 	--bg-menu: #121211;
 	--bg-player-fix: #121211;
 	--bg-scroll: #141414;
@@ -26,13 +26,13 @@
 
 /* Based on mov.im, orange focus */
 :root.blue {
-	--bg: #10151a;
-	--bg-button-hv: #192028;
+	--bg: #0e1317;
 	--bg-body: #141a21;
+	--bg-button-hv: #192028;
 	--bg-menu: #141a21;
-	--bg-player-fix: #141a21;
+	--bg-player-fix: #11161c;
 	--bg-toast: var(--bg);
-	--bg-trash: #10151aaa;
+	--bg-trash: #0e1317aa;
 	--bg-scroll: #181e27;
 	--scroll: #30353c;
 	--scroll-hv: #5a6367;
@@ -45,13 +45,13 @@
 
 /* Blue + hue rotation -60, orange focus */
 :root.green {
-	--bg: #101a15;
+	--bg: #0e1713;
+	--bg-body: #14221a;
 	--bg-button-hv: #1a2922;
-	--bg-body: #14211b;
-	--bg-menu: #14211b;
-	--bg-player-fix: #14211b;
+	--bg-menu: #131f19;
+	--bg-player-fix: #111c17;
 	--bg-toast: var(--bg);
-	--bg-trash: #101a15aa;
+	--bg-trash: #0e1713aa;
 	--bg-scroll: #182620;
 	--scroll: #313d38;
 	--scroll-hv: #59665d;
