@@ -103,7 +103,7 @@ body, button, input {
 
 body {
 	background: var(--bg-body);
-	transition: background .4s ease-out;
+	transition: background .2s;
 }
 
 body > div {
@@ -113,13 +113,13 @@ body > div {
 	border: 1px solid var(--border);
 	border-radius: 4px;
 	cursor: default;
-	transition: opacity .2s ease-in, border-color .2s ease-in;
 }
 	body > div:before {
 		position: absolute;
 		left: .75em;
 		margin-top: -.25em;
 	}
+	body > div, body > div * { transition: background .4s, border-color .4s, opacity .4s }
 
 body.locked #stop, body.locked #previous, body.locked #next,
 body.locked #enqueue, body.locked #random, body.locked #crossfade, body.locked #playlistbtn {
@@ -269,8 +269,7 @@ li.over { border-top: 1px dotted var(--focus) }
 	color: var(--bg-splash);
 	border: none;
 	z-index: -1;
-	animation: fade;
-	animation-duration: 4s;
+	animation: 4s fade;
 }
 	@keyframes fade { from { opacity: 0 }}
 
@@ -281,7 +280,7 @@ li.over { border-top: 1px dotted var(--focus) }
 	#player > * {
 		display: inline-block;
 		vertical-align: middle;
-		transition: max-width .4s, max-height .4s, min-width .4s, min-height .4s, opacity .4s;
+		transition: max-width .4s, max-height .4s, min-width .4s, min-height .4s, opacity .4s, border-color .4s;
 	}
 
 #cover {
@@ -361,8 +360,7 @@ html:not(.dim) #player.fix {
 	right: 0;
 	margin: 0;
 	box-shadow: 0 0 2px 1px var(--box-shadow);
-	animation: fix;
-	animation-duration: .4s;
+	animation: .4s fix;
 	z-index: 2;
 }
 	@keyframes fix { from { transform: translateY(-100%) }}
@@ -539,8 +537,7 @@ html:not(.dim) #player.fix {
 		border-bottom: none;
 		border-radius: 4px 4px 0 0;
 		box-shadow: 0 0 2px 1px var(--box-shadow);
-		animation: popup;
-		animation-duration: .4s;
+		animation: .4s popup;
 	}
 	@keyframes popup { from { transform: translateY(200%) }}
 	#popup button { margin: .1em }
