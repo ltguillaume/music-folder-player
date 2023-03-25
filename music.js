@@ -437,16 +437,13 @@ function libClick(e, context = false) {
 
 function openFolder(e) {
 	e.stopPropagation();
-	var li = e.target,
-		dim = cls(li, 'dim') ? ' dim' : '',
-		match = cls(li, 'match') ? ' match' : '';
-	if (cls(li, 'filtered') || cls(li, 'parent')) {
-		ffor(li.querySelectorAll('ul > *'), function(c) {
-			if (c.style.display != '') c.style.display = '';
-		});
+	var li = e.target;
+	ffor(li.querySelectorAll(':scope > ul > *'), function(c) {
+		if (c.style.display != '') c.style.display = '';
+	});
+	if (cls(li, 'closedmatch') || cls(li, 'parent')) {
 		cls(li, 'open', ADD);
-		cls(li, 'match', ADD);
-		cls(li, 'filtered', REM);
+		cls(li, 'closedmatch', REM);
 		cls(li, 'parent', REM);
 	} else
 		cls(li, 'open', TOG)
@@ -1360,28 +1357,29 @@ function resizePlaylist() {
 
 function filter(instant = false) {	// Gets event from oninput
 	if (instant && dom.filter.value.length < instantfilter) return;
-	var clear = dom.filter.value == '' ? '' : 'none';
+	var display = dom.filter.value == '' ? '' : 'none';
 	if (!tree) tree = dom.tree.querySelectorAll('li');
 	ffor(tree, function(f) {
-		f.style.display = clear;
+		f.style.display = display;
 		if (cls(f, 'open'))
 			f.className = 'folder'+ (cls(f, 'dim') ? ' dim' : '');
 	});
 
-	if (clear != '') {
+	if (display != '') {
 		var term = dom.filter.value.toLowerCase();
 		ffor(tree, function(f) {
-			var path = f.path.substring(f.path.lastIndexOf('/') + 1);
-			if (path.toLowerCase().indexOf(term) != -1) {
+			var path = f.path.substring(f.path.lastIndexOf('/') + 1).toLowerCase();
+			if (path.indexOf(term) != -1) {
 				f.style.display = '';
 
 				if (cls(f, 'folder')) {
+					cls(f, 'match', ADD);
 					if (path == dom.filter.value) {
 						ffor(f.querySelectorAll('ul > *'), function(c) {
 							c.style.display = '';
 						});
-						f.className = 'folder open filtered'+ (cls(f, 'dim') ? ' dim' : '');
-					} else f.className = 'folder filtered'+ (cls(f, 'dim') ? ' dim' : '');
+						cls(f, 'open', ADD);
+					} else cls(f, 'closedmatch', ADD);
 				}
 
 				for (var p = f.parentNode; p && p !== dom.tree; p = p.parentNode) {
@@ -1389,10 +1387,10 @@ function filter(instant = false) {	// Gets event from oninput
 						break;
 					if (p.style.display != '')
 						p.style.display = '';
-					if (cls(p, 'folder'))
-						p.className = 'parent folder open'
-							+ (cls(p, 'filtered') ? ' filtered' : '')
-							+ (cls(p, 'dim') ? ' dim' : '');
+					if (cls(p, 'folder')) {
+						cls(p, 'open', ADD);
+						cls(p, 'parent', ADD);
+					}
 				}
 			}
 		});
