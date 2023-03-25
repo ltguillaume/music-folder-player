@@ -1303,11 +1303,13 @@ function menu(e) {
 		el.left = left;
 		switch (el) {
 			case dom.playlists:
+				cls(el, 'delay', !cls(dom.options, 'playlistbtn'));
 				if (!cls(dom.options, 'playlistbtn'))
 					dom.playlistbtn.click();
 				prepPlaylists('load');
 				break;
 			case dom.afteroptions:
+				cls(el, 'delay', !cls(dom.options, 'playlistbtn'));
 				if (!cls(dom.options, 'playlistbtn'))
 					dom.playlistbtn.click();
 				cls(dom.stopplayback,   'on', cfg.after == 'stopplayback'   ? ADD : REM);
