@@ -1533,10 +1533,8 @@ function changeTheme() {
 	themes = themes.filter(t => t !== prev);
 	themes.push(prev);
 	cfg.theme = themes[0];
-	cls(dom.doc, 'dim', ADD);
 	setTimeout(function() {
 		dom.doc.className = dom.doc.className.replace(prev, cfg.theme);
-		cls(dom.doc, 'dim', REM);
 		log('Theme: '+ cfg.theme);
 	}, 400);
 }

@@ -14,31 +14,29 @@
 }
 
 :root {
-	--bg: #fefeff;
-	--bg-body: #fefeff;
-	--bg-button-hv: #ebf2f7;
-	--bg-menu: #fcfcfd;
-	--bg-player-fix: #fcfcfd;
-	--bg-scroll: #fafafa;
-	--bg-splash: #eee;
+	--bg: #10100f;
+	--bg-body: #1a1a1a;
+	--bg-button-hv: #1a1a1a;
+	--bg-menu: #121211;
+	--bg-player-fix: #121211;
+	--bg-scroll: #141414;
+	--bg-splash: #212121;
 	--bg-thumb: #eee;
 	--bg-thumb-hv: #ddd;
-	--bg-toast: #fcfcfd;
+	--bg-toast: var(--bg);
 	--bg-toast-error: #911d1d;
-	--bg-trash: #fefeffaa;
-	--border: #eee;
-	--border-cover: #fafafa;
-	--box-shadow: #fefeff;
-	--focus: #ef6c00;
-	--focus-dim: #f3934d;
-	--scroll: #ececec;
-	--scroll-hv: #ccc;
-	--text: #444;
-	--text-dim: #999;
-	--text-li-parent: #ccc;
-	--text-locked: #aaa;
-	--text-shadow: #ddd;
-	--text-shadow-button: #eee;
+	--bg-trash: #10100faa;
+	--border: #1e1e1e;
+	--border-cover: #3c3c3c;
+	--box-shadow: #10100f;
+	--focus: #1d91f0;
+	--focus-dim: #1a6eac;
+	--scroll: #292929;
+	--scroll-hv: #3c3c3c;
+	--text: #b4b4b4;
+	--text-dim: #696969;
+	--text-li-parent: #4c4c4c;
+	--text-locked: #5a5a5a;
 }
 
 ::-webkit-scrollbar { width: 10px }
@@ -92,10 +90,7 @@ html.hide > body > div:before {
 
 html.dim > body { background: black }
 	html.dim > body > div,
-	html.dim > body > div:before {
-		opacity: .25;
-		border-color: transparent !important;
-	}
+	html.dim > body > div:before { opacity: .25 }
 
 body, button, input {
 	font-family: Barlow, "Segoe UI", sans-serif;
@@ -124,7 +119,6 @@ body > div {
 		position: absolute;
 		left: .75em;
 		margin-top: -.25em;
-		text-shadow: .5px .5px var(--text-shadow);
 	}
 
 body.locked #stop, body.locked #previous, body.locked #next,
@@ -142,7 +136,6 @@ button {
 	display: inline-block;
 	padding: .5em;
 	font-size: .95em;
-	text-shadow: .5px .5px var(--text-shadow-button);
 	background: none;
 	border: none;
 	border-radius: 3px;
@@ -296,10 +289,12 @@ li.over { border-top: 1px dotted var(--focus) }
 	max-width: 7em;
 	min-height: 7em;
 	max-height: 7em;
+	opacity: .7;
 	border: 1px solid var(--border-cover);
 	border-radius: 3px;
 	cursor: zoom-in;
 }
+	#cover:hover, #cover.nofade { opacity: 1 }
 	#player.big:not(.fix) > #cover {
 		min-width: 300px;
 		min-height: 300px;
@@ -348,11 +343,11 @@ li.over { border-top: 1px dotted var(--focus) }
 
 #toast {
 	position: fixed;
-	top: 0;
-	right: 0;
+	top: -2px;
+	right: .5em;
 	padding: 1em;
 	background: var(--bg-toast) !important;
-	box-shadow: 0 0 2px 2px var(--bg-toast);
+	box-shadow: 0 0 2px 2px var(--border);
 	cursor: default;
 	z-index: 3;
 }
@@ -384,7 +379,7 @@ html:not(.dim) #player.fix {
 		padding: 0 0 0 .25em;
 	}
 	#player.fix:before, #player.fix #time, #player.fix #seek { display: none }
-	#player.fix, #player.fix button:not(:hover) { background: var(--bg-player-fix) }
+	#player.fix { background: var(--bg-player-fix) }
 
 #options button:before, #trash button:before, #popup > button:before,
 #toast:before, li:before { margin-right: .25em }
@@ -540,6 +535,9 @@ html:not(.dim) #player.fix {
 		padding: .5em;
 		background: var(--bg);
 		text-align: right;
+		border: 1px solid var(--border);
+		border-bottom: none;
+		border-radius: 4px 4px 0 0;
 		box-shadow: 0 0 2px 1px var(--box-shadow);
 		animation: popup;
 		animation-duration: .4s;
@@ -587,6 +585,10 @@ html:not(.dim) #player.fix {
 		border-radius: 0;
 	}
 	.menu p { padding: .5em }
+
+@media (min-width: 541px) {
+	body, #player.fix, #player.fix button:hover { background-image: url("music.theme.svg") }
+}
 
 @media (max-width: 480px) {
 	body > div { margin: 2px }

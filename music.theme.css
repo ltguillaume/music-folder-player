@@ -1,46 +1,20 @@
-/* Dark theme */
-:root {
-	--bg: #10100f;
-	--bg-body: #1a1a1a;
-	--bg-button-hv: #1a1a1a;
-	--bg-menu: #121211;
-	--bg-player-fix: #121211;
-	--bg-scroll: #141414;
-	--bg-splash: #212121;
-	--bg-toast: var(--bg);
-	--bg-toast-error: #911d1d;
-	--bg-trash: #10100faa;
-	--border: #1e1e1e;
-	--border-cover: #3c3c3c;
-	--box-shadow: #10100f;
-	--focus: #1d91f0;
-	--focus-dim: #1a6eac;
-	--scroll: #292929;
-	--scroll-hv: #3c3c3c;
-	--text: #b4b4b4;
-	--text-dim: #696969;
-	--text-li-parent: #4c4c4c;
-	--text-locked: #5a5a5a;
-/*	--text-shadow* not used */
-}
-
-/* Based on mov.im, orange focus */
+/* Loosely based on mov.im, orange focus */
 :root.blue {
 	--bg: #0e1317;
 	--bg-body: #141a21;
 	--bg-button-hv: #192028;
 	--bg-menu: #141a21;
 	--bg-player-fix: #11161c;
+	--bg-scroll: #181e27;
+	--bg-splash: #30353c;
 	--bg-toast: var(--bg);
 	--bg-trash: #0e1317aa;
-	--bg-scroll: #181e27;
-	--scroll: #30353c;
-	--scroll-hv: #5a6367;
-	--bg-splash: #30353c;
 	--border: #171f26;
 	--border-cover: #212b36;
 	--focus: #eb6600;
 	--focus-dim: #b35000;
+	--scroll: #30353c;
+	--scroll-hv: #5a6367;
 }
 
 /* Blue + hue rotation -60, orange focus */
@@ -50,40 +24,69 @@
 	--bg-button-hv: #1a2922;
 	--bg-menu: #131f19;
 	--bg-player-fix: #111c17;
+	--bg-scroll: #182620;
+	--bg-splash: #313d38;
 	--bg-toast: var(--bg);
 	--bg-trash: #0e1713aa;
-	--bg-scroll: #182620;
-	--scroll: #313d38;
-	--scroll-hv: #59665d;
-	--bg-splash: #313d38;
 	--border: #17261e;
 	--border-cover: #21362b;
 	--focus: #ef6c00;
 	--focus-dim: #b35000;
+	--scroll: #313d38;
+	--scroll-hv: #59665d;
 }
 
-/* Green focus */
+/* Green focus, use in music.ini as themes = ['blue focusgreen', ...] */
 :root.focusgreen {
 	--focus: #00bd35;
 	--focus-dim: #00800f;
 }
 
-*, *:before { text-shadow: none !important }
+/* Light theme */
+:root.light {
+	--bg: #f6f8fa;
+	--bg-body: #eaeef2;
+	--bg-button-hv: #e9f1f7;
+	--bg-menu: #f0f4f7;
+	--bg-player-fix: #f0f4f7;
+	--bg-scroll: #f6f8fa;
+	--bg-splash: #d0d7de;
+	--bg-thumb: #eee;
+	--bg-thumb-hv: #ddd;
+	--bg-toast: var(--bg-button-hv);
+	--bg-toast-error: #911d1d;
+	--bg-trash: #f6f8faaa;
+	--border: #d0d7de;
+	--border-cover: #fafafa;
+	--box-shadow: #eaeef2;
+	--focus: #ef6c00;
+	--focus-dim: #f3934d;
+	--scroll: #d0d7de;
+	--scroll-hv: #ccc;
+	--text: #444;
+	--text-dim: #999;
+	--text-li-parent: #ccc;
+	--text-locked: #aaa;
+	--text-shadow: #ddd;
+	--text-shadow-button: #eee;
+}
 
-#cover { opacity: .7 }
-	#cover:hover, #cover.nofade { opacity: 1 }
+html.light.dim > body { background: white }
+html.light body > div:before { text-shadow: .5px .5px var(--text-shadow) }
+html.light button { text-shadow: .5px .5px var(--text-shadow-button) }
+html.light #cover { opacity: 1 }
 
 @media (min-width: 541px) {
-	body, #player.fix, #player.fix button:hover { background-image: url("music.theme.svg") }
-	#player.fix button:not(:hover) { background: none }
-	body > div { box-shadow: 0 0 3px #242424 }
+	html.light body, html.light #player.fix, html.light #player.fix button { background-image: none }
 }
 
 /* Display songs in tree horizontally
 #tree li.song {
 	display: inline-block;
 	margin-right: 2.5em;
-}*/
+}
+*/
 
 /* Set a fixed height for the playlist
-#playlist { height: 7.75em !important }*/
+#playlist { height: 7.75em !important }
+*/
