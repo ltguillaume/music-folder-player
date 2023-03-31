@@ -52,7 +52,7 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 - Share links directly to email, social media or use your device's native share options (optional)
 
 #### Translations
-- Currently supports English and Dutch
+- Currently includes English and Dutch
 - Easily translate to you own language with an .ini file
 
 ## List of hotkeys
