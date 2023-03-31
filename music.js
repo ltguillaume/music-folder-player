@@ -1553,6 +1553,7 @@ var Popup = {
 		input.id = id;
 		input.value = value;
 		dom.popupcontent.appendChild(input);
+		return input;
 	},
 
 	share: function(type) {
@@ -1573,8 +1574,8 @@ var Popup = {
 
 		dom.popup.className = 'sharedlg';
 		dom.popup.uri = uri;
-		this.addInput('sharemsg', cfg.sharemsg || str.sharemsg, str.sharetitle);
-		this.addInput('sharenfo', nfo);
+		dom.sharemsg = this.addInput('sharemsg', cfg.sharemsg || str.sharemsg, str.sharetitle);
+		dom.sharenfo = this.addInput('sharenfo', nfo);
 		for (name in shareapi)
 			if (shareapi[name]) this.addButton(name);
 		if (navigator.canShare) this.addButton(str.sharenative, 'share(false)');
@@ -1586,6 +1587,7 @@ var Popup = {
 		cls(dom.doc, 'dim', ADD);
 		dom.show('popupdiv');
 		dom.popup.style.height = (9 + dom.popup.lastElementChild.getBoundingClientRect().bottom - dom.popup.getBoundingClientRect().top) +'px';
+		dom.sharemsg.focus();
 	},
 
 	close: function(e = false) {
