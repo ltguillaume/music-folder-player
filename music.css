@@ -452,7 +452,7 @@ html:not(.dim) #player.fix {
 #playlist li[error="1"] { color: red }
 
 #filter {
-	margin-left: .1em;
+	margin: .1em;
 	padding-top: .75em;
 }
 
