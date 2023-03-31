@@ -17,6 +17,8 @@
 	--bg: #10100f;
 	--bg-body: #1a1a1a;
 	--bg-button-hv: #1a1a1a;
+	--bg-dim: #000;
+	--bg-image: url(music.theme.svg);
 	--bg-menu: #121211;
 	--bg-player-fix: #121211;
 	--bg-scroll: #141414;
@@ -88,7 +90,7 @@ html.hide > body > div:before {
 	pointer-events: none;
 }
 
-html.dim > body { background: black }
+html.dim > body { background: var(--bg-dim) }
 	html.dim > body > div,
 	html.dim > body > div:before { opacity: .25 }
 
@@ -575,7 +577,7 @@ html:not(.dim) #player.fix {
 	.menu p { padding: .5em }
 
 @media (min-width: 541px) {
-	body, #player.fix, #player.fix button:hover { background-image: url("music.theme.svg") }
+	body, #player.fix, #player.fix button:hover { background-image: var(--bg-image) }
 }
 
 @media (max-width: 480px) {
