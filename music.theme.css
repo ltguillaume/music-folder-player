@@ -47,8 +47,8 @@
 	--bg-button-hv: #e9f1f7;
 	--bg-dim: #eaeef2;
 	--bg-image: none;
-	--bg-menu: #f0f4f7;
-	--bg-player-fix: #f0f4f7;
+	--bg-menu: #f2f6fa;
+	--bg-player-fix: #f2f6fa;
 	--bg-splash: #d0d7de;
 	--bg-thumb: #eee;
 	--bg-thumb-hv: #ddd;
@@ -66,12 +66,9 @@
 	--text-dim: #999;
 	--text-li-parent: #ccc;
 	--text-locked: #aaa;
-	--text-shadow: #ddd;
-	--text-shadow-button: #eee;
 }
 
-html.light body > div:before { text-shadow: .5px .5px var(--text-shadow) }
-html.light button { text-shadow: .5px .5px var(--text-shadow-button) }
+html.light #toast.error { color: #fff }
 html.light #cover { opacity: 1 }
 
 /* Display songs in tree horizontally
