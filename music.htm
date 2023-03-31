@@ -33,26 +33,26 @@
 		<button id="toast" class="hide"></button>
 	</div>
 	<div id="options">
-		<div class="toolbar" onclick="toggle(event)">
-			<button id="enqueue"     accesskey="e"></button>
-			<button id="random"      accesskey="r"></button>
-			<button id="crossfade"   accesskey="o"></button>
-			<button id="playlistbtn" accesskey="p"></button>
-			<button id="share"       accesskey="s"></button>
-			<button id="lock"        accesskey="l"></button>
-			<button id="logbtn"      accesskey="g"></button>
+		<div onclick="toggle(event)">
+			   <button id="enqueue"     accesskey="e"></button><!--
+			--><button id="random"      accesskey="r"></button><!--
+			--><button id="crossfade"   accesskey="o"></button><!--
+			--><button id="playlistbtn" accesskey="p"></button><!--
+			--><button id="share"       accesskey="s"></button><!--
+			--><button id="lock"        accesskey="l"></button><!--
+			--><button id="logbtn"      accesskey="g"></button>
 		</div>
-		<div id="playlistoptions" class="toolbar">
+		<div id="playlistoptions">
 			<div id="playlistsdiv">
 				<button id="playlistload" onclick="menu(event)" accesskey="d"></button>
 				<div id="playlists" class="menu hide" onclick="loadPlaylistBtn(event)"
 					oncontextmenu="removePlaylist(event)" onmouseleave="menu(event)">
 				</div>
-			</div>
-			<button id="playlistsave"   onclick="prepPlaylists('save')" accesskey="v"></button>
-			<button id="playlistimport" onclick="importPlaylist()"      accesskey="i"></button>
-			<button id="playlistexport" onclick="exportPlaylist()"      accesskey="x"></button>
-			<div id="afterdiv">
+			</div><!--
+			--><button id="playlistsave"   onclick="prepPlaylists('save')" accesskey="v"></button><!--
+			--><button id="playlistimport" onclick="importPlaylist()"      accesskey="i"></button><!--
+			--><button id="playlistexport" onclick="exportPlaylist()"      accesskey="x"></button><!--
+			--><div id="afterdiv">
 				<button id="after" onclick="menu(event)" accesskey="a"></button>
 				<div id="afteroptions" class="menu hide" onmouseleave="menu(event)" onclick="toggle(event)">
 					<button id="stopplayback"></button>
