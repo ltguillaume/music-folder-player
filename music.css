@@ -21,7 +21,7 @@
 	--bg-image: url(music.theme.svg);
 	--bg-menu: #121211;
 	--bg-player-fix: #121211;
-	--bg-scroll: #141414;
+	--bg-scroll: transparent;
 	--bg-splash: #212121;
 	--bg-thumb: #eee;
 	--bg-thumb-hv: #ddd;

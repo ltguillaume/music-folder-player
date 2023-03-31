@@ -5,7 +5,6 @@
 	--bg-button-hv: #192028;
 	--bg-menu: #141a21;
 	--bg-player-fix: #11161c;
-	--bg-scroll: #181e27;
 	--bg-splash: #30353c;
 	--bg-toast: var(--bg);
 	--bg-trash: #0e1317aa;
@@ -24,7 +23,6 @@
 	--bg-button-hv: #1a2922;
 	--bg-menu: #131f19;
 	--bg-player-fix: #111c17;
-	--bg-scroll: #182620;
 	--bg-splash: #313d38;
 	--bg-toast: var(--bg);
 	--bg-trash: #0e1713aa;
@@ -51,7 +49,6 @@
 	--bg-image: none;
 	--bg-menu: #f0f4f7;
 	--bg-player-fix: #f0f4f7;
-	--bg-scroll: #f6f8fa;
 	--bg-splash: #d0d7de;
 	--bg-thumb: #eee;
 	--bg-thumb-hv: #ddd;
