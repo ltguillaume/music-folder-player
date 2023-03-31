@@ -33,7 +33,7 @@
 		<button id="toast" class="hide"></button>
 	</div>
 	<div id="options">
-		<div onclick="toggle(event)">
+		<div class="toolbar" onclick="toggle(event)">
 			<button id="enqueue"     accesskey="e"></button>
 			<button id="random"      accesskey="r"></button>
 			<button id="crossfade"   accesskey="o"></button>
@@ -42,7 +42,7 @@
 			<button id="lock"        accesskey="l"></button>
 			<button id="logbtn"      accesskey="g"></button>
 		</div>
-		<div id="playlistoptions">
+		<div id="playlistoptions" class="toolbar">
 			<div id="playlistsdiv">
 				<button id="playlistload" onclick="menu(event)" accesskey="d"></button>
 				<div id="playlists" class="menu hide" onclick="loadPlaylistBtn(event)"
@@ -64,19 +64,19 @@
 			</div>
 		</div>
 		<div id="shares">
-			<div class="folder sharediv">
+			<div class="folder sharediv toolbar">
 				<input  id="folderuri"      class="uri"      onclick="this.select()" readonly>
 				<button id="folderdownload" class="download" onclick="download('folder')"></button>
 				<button id="folderclip"     class="link"     onclick="clip('folder')"></button>
 				<button id="foldershare"    class="share"    onclick="Popup.share('folder')"></button>
 			</div>
-			<div class="song sharediv">
+			<div class="song sharediv toolbar">
 				<input  id="songuri"      class="uri"      onclick="this.select()" readonly>
 				<button id="songdownload" class="download" onclick="download('song')"></button>
 				<button id="songclip"     class="link"     onclick="clip('song')"></button>
 				<button id="songshare"    class="share"    onclick="Popup.share('song')"></button>
 			</div>
-			<div id="shareplaylist" class="playlist sharediv">
+			<div id="shareplaylist" class="playlist sharediv toolbar">
 				<input  id="playlisturi"      class="uri"      onclick="this.select()"
 					onfocus="prepPlaylists('share')" list="playlistdata" placeholder="&#x25BE;">
 				<button id="playlistdownload" class="download" onclick="download('playlist')"></button>
@@ -89,7 +89,7 @@
 	</div>
 	<div id="playlistdiv" onmouseup="resizePlaylist()">
 		<div>
-			<div id="trash" class="hide" onclick="toggle(event)"
+			<div id="trash" class="hidden toolbar" onclick="toggle(event)"
 					ondragover="allowDrop(event)" ondrop="removeItem(event); cls(this, 'drop', REM)"
 					ondragenter="cls(this, 'drop', ADD)" ondragleave="cls(this 'drop', REM)">
 				<button id="playlistclear" class="clear" onclick="clearPlaylist()" accesskey="c"></button>
@@ -102,22 +102,21 @@
 		</div>
 	</div>
 	<div id="library">
-		<div>
-			<div class="hoverdiv">
+		<div class="toolbar">
+			<input  id="filter" onchange="filter()" onclick="setFocus(this)" accesskey="f" onfocus="this.select()">
+			<button id="filterbtn"   class="filter" onclick="filter()"></button>
+			<button id="filterclear" class="clear"  onclick="clearFilter()"></button>
+			<div class="spacer"></div>
+			<div class="hidden toolbar">
 				<button id="reload" onclick="reloadLibrary()" accesskey="F5"></button>
 				<button id="unfold" onclick="toggle(event)"   accesskey="t" ></button>
 			</div>
-			<div id="filterdiv">
-				<input  id="filter" onchange="filter()" onclick="setFocus(this)" accesskey="f" onfocus="this.select()">
-				<button id="filterbtn"   class="filter" onclick="filter()"></button>
-				<button id="filterclear" class="clear"  onclick="clearFilter()"></button>
-			</div>
-			<ul id="tree" onclick="libClick(event)" oncontextmenu="libClick(event, true)"></ul>
 		</div>
+		<ul id="tree" onclick="libClick(event)" oncontextmenu="libClick(event, true)"></ul>
 	</div>
 	<div id="logdiv" class="hide">
 		<div>
-			<div class="hoverdiv">
+			<div class="toolbar">
 				<button id="theme" onclick="changeTheme()" accesskey="T"></button>
 				&nbsp;
 				<button id="logclear"    class="clear"    onclick="dom.log.value = ''"></button>

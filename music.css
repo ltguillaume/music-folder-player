@@ -80,7 +80,7 @@ html.touch body {
 	}
 	html.touch *::-webkit-scrollbar { width: 4px !important }
 	html.touch #tree ul { margin-left: .5em }
-	html.touch .hoverdiv { display: block }
+	html.touch .toolbar.hidden { visibility: visible }
 
 html.hide > body > div,
 html.hide > body > div:before {
@@ -130,11 +130,11 @@ body.locked #enqueue, body.locked #random, body.locked #crossfade, body.locked #
 	body.locked #enqueue:before { content: "\f126" }
 	body.locked #playlistdiv #trash { display: none !important }
 body:not(.locked) #playlistdiv:hover #trash,
-body:not(.locked) #library:hover .hoverdiv { display: block }
+body:not(.locked) #library:hover .toolbar { visibility: visible }
 
 button {
 	display: inline-block;
-	padding: .5em;
+	padding: .5em .6em;
 	font-size: .95em;
 	background: none;
 	border: none;
@@ -157,7 +157,6 @@ button b {
 
 input, select {
 	width: 29.5em;
-	max-width: calc(100% - 10em);
 	padding: .1em;
 	background: var(--bg);
 	font-size: .8em;
@@ -379,6 +378,7 @@ html:not(.dim) #player.fix {
 	#player.fix:before, #player.fix #time, #player.fix #seek { display: none }
 	#player.fix { background: var(--bg-player-fix) }
 
+#options button { padding-right: .75em }
 #options button:before, #trash button:before, #popup > button:before,
 #toast:before, li:before { margin-right: .25em }
 
@@ -397,15 +397,15 @@ html:not(.dim) #player.fix {
 
 #playlistsdiv, #afterdiv { display: inline-block }
 
+#shares > .sharediv { max-width: 33em }
+#shares	.uri { flex-grow: 1 }
 #shares button:before { margin-right: 0 }
-#shares input { direction: rtl }
-#shares > .sharediv {
-	white-space: nowrap;
-	overflow: hidden;
+#shares input {
+	margin: 0 .25em;
+	direction: rtl;
 }
 
-#playlistdiv > div,
-#library > div { position: relative }
+#playlistdiv > div { position: relative }
 
 #trash {
 	position: absolute;
@@ -449,16 +449,12 @@ html:not(.dim) #player.fix {
 #playlist li:before { margin-left: -1.25em }
 #playlist li[error="1"] { color: red }
 
-#filterdiv {
-	margin-right: 2em;
-	white-space: nowrap;
-}
-
 #filter {
-	width: 21.5em;
-	max-width: calc(100% - 8.5em);
+	margin-left: .1em;
 	padding-top: .75em;
 }
+
+.spacer { flex-grow: 1 }
 
 #tree {
 	display: none;
@@ -494,15 +490,11 @@ html:not(.dim) #player.fix {
 	opacity: 1;
 	z-index: 2;
 }
-	#logdiv:hover .hoverdiv { display: block }
-	#logdiv > div {
-		position: relative;
-		height: 100%;
-	}
+	#logdiv > div { height: 100% }
+	#logdiv .toolbar { justify-content: flex-end }
 	#log {
 		width: 100%;
 		height: calc(100% - 3em);
-		margin-top: 3em;
 		color: var(--text);
 		white-space: pre;
 		background: none;
@@ -558,13 +550,11 @@ html:not(.dim) #player.fix {
 
 .artist, .dim { color: var(--text-dim) }
 
-.hoverdiv {
-	display: none;
-	position: absolute;
-	top: 0;
-	right: 0;
-	z-index: 1;
+.toolbar {
+	display: flex;
+	align-items: center;
 }
+	.toolbar.hidden { visibility: hidden }
 
 .menu {
 	position: absolute;
