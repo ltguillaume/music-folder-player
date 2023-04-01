@@ -149,7 +149,7 @@ button {
 	button::-moz-focus-inner { border: none }
 
 button b {
-	padding: 0 .3em .1em .2em;
+	padding: 0 .3em .3em .2em;
 	font-size: .7em;
 	color: var(--text-dim);
 	vertical-align: top;
