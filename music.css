@@ -380,7 +380,7 @@ html:not(.dim) #player.fix {
 	#player.fix:before, #player.fix #time, #player.fix #seek { display: none }
 	#player.fix { background: var(--bg-player-fix) }
 
-#options button { padding-right: .75em }
+#options > div > button { padding-right: .75em }
 #options button:before, #trash button:before, #popup > button:before,
 #toast:before, li:before { margin-right: .25em }
 
