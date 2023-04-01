@@ -1587,7 +1587,7 @@ var Popup = {
 		cls(dom.doc, 'dim', ADD);
 		dom.show('popupdiv');
 		dom.popup.style.height = (9 + dom.popup.lastElementChild.getBoundingClientRect().bottom - dom.popup.getBoundingClientRect().top) +'px';
-		dom.sharemsg.focus();
+		if (!cls(dom.doc, 'touch')) dom.sharemsg.focus();
 	},
 
 	close: function(e = false) {
