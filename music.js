@@ -1359,7 +1359,7 @@ function resizePlaylist() {
 
 function setTrashPos() {
 	var scrollBars = dom.playlist.offsetWidth - dom.playlist.clientWidth;
-	dom.trash.style.right = scrollBars == 0 ? '' : scrollBars + 4 +'px';
+	dom.trash.style.right = scrollBars == 0 ? '' : scrollBars + (cls(dom.doc, 'material') ? 8 : 4) +'px';
 }
 
 function filter(instant = false) {	// Gets event from oninput

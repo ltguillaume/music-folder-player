@@ -93,9 +93,10 @@ html.material #shares > .sharediv {
 	margin-left: .25em;
 }
 
-html.material #playlistdiv, html.material #library {
-	min-height: 3.7em;
-	padding-left: .75em;
+html.material #playlist, html.material #tree {
+	min-height: 2.64em;
+	margin-right: .25em;
+	padding-left: .25em;
 }
 html.material #trash { border-radius: 2em }
 	html.material #trash:before { padding: .6em }
