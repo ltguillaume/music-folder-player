@@ -584,6 +584,7 @@ function prepDrag(e) {
 	e.stopPropagation();
 	cls(dom.trash, 'drag', ADD);
 	dom.playlist.appendChild(playlistItem({ 'id': 'last' }));
+	setTrashPos();
 	if (cfg.index != -1)
 		cls(dom.playlist.childNodes[cfg.index], 'playing', REM);
 
@@ -602,6 +603,7 @@ function endDrag() {
 	if (dom.playlist.hasChildNodes() && dom.playlist.lastChild.id == 'last') {
 		dom.playlist.removeChild(dom.playlist.lastChild);
 	}
+	setTrashPos();
 	drag = null;
 }
 
@@ -1352,7 +1354,10 @@ function resizePlaylist() {
 		dom.playlist.style.height = '';
 		cls(dom.playlist, 'resize', REM);
 	}
+	setTrashPos();
+}
 
+function setTrashPos() {
 	var scrollBars = dom.playlist.offsetWidth - dom.playlist.clientWidth;
 	dom.trash.style.right = scrollBars == 0 ? '' : scrollBars + 4 +'px';
 }

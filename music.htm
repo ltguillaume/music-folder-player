@@ -91,13 +91,13 @@
 		<div>
 			<div id="trash" class="hidden toolbar" onclick="toggle(event)"
 					ondragover="allowDrop(event)" ondrop="removeItem(event); cls(this, 'drop', REM)"
-					ondragenter="cls(this, 'drop', ADD)" ondragleave="cls(this 'drop', REM)">
+					ondragenter="cls(this, 'drop', ADD)" ondragleave="cls(this, 'drop', REM)">
 				<button id="playlistclear" class="clear" onclick="clearPlaylist()" accesskey="c"></button><!--
 				--><button id="removesongs"></button>
 			</div>
 			<ul id="playlist" onclick="clickItem(event)" oncontextmenu="findItem(event)"
 				ondragstart="prepDrag(event)" ondragover="allowDrop(event)" ondragend="endDrag()" ondrop="dropItem(event)"
-				ondragenter="cls(event.target', 'over', ADD)" ondragleave="cls(event.target, 'over', REM)"
+				ondragenter="cls(event.target, 'over', ADD)" ondragleave="cls(event.target, 'over', REM)"
 				onmouseenter="onplaylist=true" onmouseleave="onplaylist=false"></ul>
 		</div>
 	</div>
