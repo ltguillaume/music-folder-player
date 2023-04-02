@@ -432,7 +432,7 @@ html:not(.dim) #player.fix {
 	#trash.drop, #trash.on { color: var(--focus) }
 
 #playlist {
-	min-height: 2.25em;
+	min-height: 2.14em;
 	max-height: 10.25em;
 	overflow-y: auto;
 	list-style: none;
