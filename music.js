@@ -1540,6 +1540,7 @@ function changeTheme() {
 	cfg.theme = themes[0];
 	setTimeout(function() {
 		dom.doc.className = dom.doc.className.replace(prev, cfg.theme);
+		resizePlaylist();
 		log('Theme: '+ cfg.theme);
 	}, 400);
 }
