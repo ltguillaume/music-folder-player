@@ -600,9 +600,7 @@ function allowDrop(e) {
 
 function endDrag() {
 	cls(dom.trash, 'drag', REM);
-	if (dom.playlist.hasChildNodes() && dom.playlist.lastChild.id == 'last') {
-		dom.playlist.removeChild(dom.playlist.lastChild);
-	}
+	dom.playlist.querySelectorAll('#last').forEach(li => dom.playlist.removeChild(li));
 	setTrashPos();
 	drag = null;
 }
