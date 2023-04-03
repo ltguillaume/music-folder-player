@@ -1225,7 +1225,7 @@ function toggle(e) {
 			cls(dom.doc, 'dim', cls(dom.logdiv, 'hide'));
 			if (cls(dom.logdiv, 'hide', TOG))
 				dom.log.blur();
-			else
+			else if (!cls(dom.doc, 'touch'))
 				dom.log.focus();
 			return;
 		case 'trash':
