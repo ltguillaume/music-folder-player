@@ -53,8 +53,8 @@ function init() {
 	document.querySelectorAll('[id]').forEach(function(el) { dom[el.id] = el });
 
 	var lib = document.createElement('script'),
-		lng = new URLSearchParams(window.location.search).get('lng') || navigator.language.substring(0, 2);
-	lib.src = 'music.php?lng='+ lng + (url.length > 1 ? '&play='+ esc(url[1]) : '');
+		lng = new URLSearchParams(window.location.search).get('lng') || false;
+	lib.src = 'music.php?'+ (lng ? 'lng='+ lng : '') + (url.length > 1 ? '&play='+ esc(url[1]) : '');
 	lib.onload = function() {
 		if (!library) alert(str.nolibrary);
 		else if (!pathexp) alert(str.nopathexp);

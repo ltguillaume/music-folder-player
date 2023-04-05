@@ -70,7 +70,18 @@
 	if (!isset($_GET['reload'])) {
 		foreach($ini['client'] as $key => $value)
 			echo (stristr($key, '.') ? '' : 'var ') . $key .'='. $value .';'. PHP_EOL;
-		$lng = isset($_GET['lng']) ? $_GET['lng'] : 'en';
+		if (isset($_GET['lng']))
+			$lng = $_GET['lng'];
+		else {
+			$langs = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+			foreach($langs as $lang) {
+				$lng = substr($lang, 0, 2);
+				if (file_exists('music.lang.'. $lng .'.ini'))
+					break;
+			}
+		}
+		if (!file_exists('music.lang.'. $lng .'.ini'))
+			$lng = 'en';
 		$lng = parse_ini_file('music.lang.'. $lng .'.ini', true, INI_SCANNER_RAW);
 		$notfound = $lng['strings']['notfound'];
 		foreach($lng['elements'] as $key => $value)
