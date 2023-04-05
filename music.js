@@ -77,7 +77,7 @@ function init() {
 		dom.show('doc');
 		log(sourceurl, true);
 		log('Song count: '+ songs.length, true);
-		log('PHP request = '+ lib.src);
+		log('PHP request = '+ lib.src.replace(/:\/\/.*?:.*?@/, '://'));
 		if (songs.length == 1) prepSongMode();
 		if (autoplay > 1 || autoplay && url[1]) playPause();
 		library = null;
