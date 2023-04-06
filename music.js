@@ -411,6 +411,7 @@ function reloadLibrary() {
 	var lib = document.createElement('script');
 	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ esc(url[1]) +'&' : '?') +'reload';
 	lib.onload = function() {
+		songs.length = 0;
 		buildLibrary('', library, dom.tree);
 		tree = dom.tree.querySelectorAll('li');
 		clearPlayed();
