@@ -1226,6 +1226,8 @@ function toggle(e) {
 			return;
 		case 'trash':
 			return cls(button, 'over', ADD);
+		case 'playlistclear':
+			return clearPlaylist();
 		case 'unfold':
 			if (cfg.locked) return;
 			return cls(dom.library, 'unfold', TOG);
