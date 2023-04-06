@@ -1361,7 +1361,7 @@ function filter(instant = false) {	// Gets event from oninput
 	var display = dom.filter.value == '' ? '' : 'none';
 	ffor(tree, function(f) {
 		f.style.display = display;
-		if (cls(f, 'open'))
+		if (cls(f, 'folder'))
 			f.className = 'folder'+ (cls(f, 'dim') ? ' dim' : '');
 	});
 
