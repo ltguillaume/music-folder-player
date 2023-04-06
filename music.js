@@ -924,13 +924,11 @@ function clip(type) {
 
 function share(name) {
 log('Share() triggered');
-	var sharemsg = dom.popup.querySelector('#sharemsg'),
-		sharenfo = dom.popup.querySelector('#sharenfo');
 	var data = {
-		text: sharemsg.value +' '+ sharenfo.value,
+		text: dom.sharemsg.value +' '+ dom.sharenfo.value,
 		url: base +'?play='+ dom.popup.uri };
 	log(data);
-	sharemsg.uri = null;
+	dom.sharemsg.uri = null;
 
 	if (shareapi[name]) {
 		dom.a.href = shareapi[name].replace('{text}', data.text).replace('{url}', data.url);
@@ -943,7 +941,7 @@ log('Share() triggered');
 			});
 		}
 	}
-	cfg.sharemsg = sharemsg.value;
+	cfg.sharemsg = dom.sharemsg.value;
 	Popup.close();
 }
 
@@ -1219,7 +1217,7 @@ function toggle(e) {
 			} else dom.randomfiltered.firstElementChild.textContent = '';
 			return;
 		case 'lock':
-			return toggleLock();
+			return Popup.lock();
 		case 'logbtn':
 			if (!debug) return;
 			cls(dom.doc, 'dim', cls(dom.logdiv, 'hide'));
@@ -1265,18 +1263,18 @@ function toggleLock() {
 }
 
 function password() {
-	if (cfg.locked && !cfg.password) return true;
+	var p = dom.password.value;
 
-	var p = prompt(str.enterpass, (!cfg.locked && cfg.password ? str.prevpass : ''));
-	if (p == null) return false;
-	if (p == str.prevpass) return true;
+	if (!cfg.locked && p == str.enterpass) return true;
+	if (cfg.locked && !cfg.password) return true;
+	if (!p) return false;
 
 	var pass = 0;
 	for (var i = 0; i < p.length; i++)
 		pass = pass * 7 + p.charCodeAt(i);
 
 	if (cfg.locked && cfg.password != pass) {
-		alert(str.wrongpass);
+		setToast({ 'className': 'error', 'textContent': str.wrongpass });
 		return false;
 	}
 	if (!cfg.locked) cfg.password = pass;
@@ -1545,19 +1543,33 @@ function changeTheme() {
 
 var Popup = {
 
-	addButton: function(txt) {
+	addButton: function(title, action) {
 		var btn = document.createElement('button');
-		btn.textContent = txt;
-		btn.setAttribute('onclick', 'share("'+ txt +'")');
+		btn.textContent = title;
+		btn.setAttribute('onclick', action);
 		dom.popupcontent.appendChild(btn);
 	},
 
-	addInput: function(id, value) {
+	addInput: function(value, type = false) {
 		var input = document.createElement('input');
-		input.id = id;
 		input.value = value;
+		if (type) input.type = type;
 		dom.popupcontent.appendChild(input);
 		return input;
+	},
+
+	addTitle: function(value) {
+		var title = document.createElement('p');
+		title.textContent = value;
+		dom.popupcontent.appendChild(title);
+		return title;
+	},
+
+	lock: function() {
+		dom.popup.className = cfg.locked ? 'unlockdlg' : 'lockdlg';
+		this.addTitle(str.enterpass);
+		dom.focus = dom.password = this.addInput(cfg.locked || !cfg.password ? '' : str.enterpass, 'password');
+		this.open();
 	},
 
 	share: function(type) {
@@ -1578,10 +1590,10 @@ var Popup = {
 
 		dom.popup.className = 'sharedlg';
 		dom.popup.uri = uri;
-		dom.sharemsg = this.addInput('sharemsg', cfg.sharemsg || str.sharemsg, str.sharetitle);
-		dom.sharenfo = this.addInput('sharenfo', nfo);
+		dom.focus = dom.sharemsg = this.addInput(cfg.sharemsg || str.sharemsg, str.sharetitle);
+		dom.sharenfo = this.addInput(nfo);
 		for (name in shareapi)
-			if (shareapi[name]) this.addButton(name);
+			if (shareapi[name]) this.addButton(name, 'share("'+ name +'")');
 		if (navigator.canShare) this.addButton(str.sharenative, 'share(false)');
 		dom.hide('ok');
 		this.open();
@@ -1591,13 +1603,20 @@ var Popup = {
 		cls(dom.doc, 'dim', ADD);
 		dom.show('popupdiv');
 		dom.popup.style.height = (9 + dom.popup.lastElementChild.getBoundingClientRect().bottom - dom.popup.getBoundingClientRect().top) +'px';
-		if (!cls(dom.doc, 'touch')) dom.sharemsg.focus();
+		dom.focus.select();
 	},
 
 	close: function(e = false) {
+		if (e) switch(dom.popup.className) {
+			case 'lockdlg':
+			case 'unlockdlg':
+				toggleLock();
+				break;
+		}
 		cls(dom.doc, 'dim', REM);
+		dom.focus = false;
 		dom.hide('popupdiv');
-		dom.popup.className = dom.popup.uri = dom.popupcontent.innerHTML = '';
+		dom.popup.className = dom.popup.uri = dom.popupcontent.innerHTML = dom.password = '';
 		dom.show('ok');
 	}
 }
@@ -1634,16 +1653,22 @@ function prepHotkeys() {
 			if (el == dom.volumeslider) {
 				if (e.keyCode > 36 && e.keyCode < 41) return;	// Arrow keys
 				if (e.key == 'Escape' || e.key == dom.volume.accessKey) return dom.volume.click();
-			} else if (el == dom.filter)
+			} else if (el == dom.filter) {
 				switch(e.key) {
 					case 'ArrowUp': return keyNav(null, "up");
 					case 'ArrowDown': return keyNav(null, "down");
 				}
+			} else if (e.key == 'Enter' && !cls(dom.popupdiv, 'hide') && !cls(dom.ok, 'hide'))
+				dom.ok.click();
 
 			var refocus = true;
 			if (e.key == 'Escape') {
 				e.preventDefault();
-				if (el.value == '') refocus = false;
+				if (el.value == '') {
+					if (!cls(dom.popup, 'hide'))
+						Popup.close();
+					else refocus = false;
+				}
 				el.value = '';
 				el.blur();
 				if (el == dom.filter) filter();

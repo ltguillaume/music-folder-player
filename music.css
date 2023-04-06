@@ -41,6 +41,11 @@
 	--text-locked: #5a5a5a;
 }
 
+::selection {
+	color: #fff;
+	background-color: var(--focus);
+}
+
 ::-webkit-scrollbar { width: 10px }
 ::-webkit-scrollbar-track { background: var(--bg-scroll); border-radius: 2px }
 ::-webkit-scrollbar-thumb { background: var(--scroll); border-radius: 2px }
@@ -542,8 +547,8 @@ html:not(.dim) #player.fix {
 		margin-bottom: .5em;
 	}
 	#popup > div { text-align: center }
-	#popupmsg { margin-top: 1em }
-		#popupmsg:before { font-size: 3em }
+	#popupicon { margin-top: 1em }
+		#popupicon:before { font-size: 3em }
 
 :not(html).hide { display: none }
 
@@ -638,10 +643,11 @@ html:not(.dim) #player.fix {
 #playlistimport:before { content: "\f17f" }
 #playlistload:before { content: "\f180" }
 #playlistsave:before { content: "\f184" }
-#popup #popupmsg:before { content: "\f127" }
-	#popup.lockdlg #popupmsg:before { content: "\f16a" }
-	#popup.savedlg #popupmsg:before { content: "\f1ac" }
-	#popup.sharedlg #popupmsg:before { content: "\f12f" }
+#popup #popupicon:before { content: "\f127" }
+	#popup.lockdlg #popupicon:before { content: "\f16a" }
+	#popup.savedlg #popupicon:before { content: "\f1ac" }
+	#popup.sharedlg #popupicon:before { content: "\f12f" }
+	#popup.unlockdlg #popupicon:before { content: "\f20a" }
 #previous:before { content: "\f19c" }
 #random:before, #randomlibrary:before { content: "\f13a" }
 #randomfiltered:before { content: "\f14b" }
