@@ -457,10 +457,7 @@ function addFolder(e) {
 	var li = e.target;
 	if (confirm(str.addfolder +'\n'+ li.path.substring(li.path.lastIndexOf('/') + 1))) {
 		cls(li, 'dim', ADD);
-		ffor(li.querySelectorAll('li.song'), function(s) {
-			add(s.id);
-			cls(li, 'dim', ADD);
-		});
+		ffor(li.querySelectorAll('li.song'), function(s) { add(s.id) });
 	}
 }
 
@@ -507,7 +504,6 @@ function addSong(e) {
 		else
 			playNext();
 	}
-	cls(li, 'dim', ADD);
 	if (audio[track].paused) fillShare(li.path);
 }
 
@@ -516,7 +512,6 @@ function addSongNext(e) {
 	e.stopPropagation();
 	var li = e.target;
 	add(li.id, true);
-	cls(li, 'dim', ADD);
 	if (audio[track].paused) fillShare(li.path);
 }
 
@@ -1100,6 +1095,7 @@ function add(id, next = false) {
 		cfg.playlist.push(s);
 		dom.playlist.appendChild(li);
 	}
+	cls(songs[id], 'dim', ADD);
 
 	resizePlaylist();
 	log('Add to playlist (#'+ i +'): '+ s.path);
