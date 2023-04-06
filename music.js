@@ -11,6 +11,7 @@ var
 	songs = [],
 	str = {},
 	themes = [],
+	tree = [],
 	url,
 
 	drag,
@@ -28,7 +29,6 @@ var
 	toast,
 	touch,
 	track = 0,
-	tree,
 	tv;
 
 const
@@ -379,6 +379,7 @@ function buildLibrary(root, folder, element) {
 			li.path = root + i;
 			li.textContent = i;
 			li.tabIndex = 1;
+			tree.push(li);
 			element.appendChild(li);
 			var ul = li.appendChild(document.createElement('ul'));
 			buildLibrary(root + i +'/', folder[i], ul);
@@ -398,6 +399,7 @@ function buildLibrary(root, folder, element) {
 				if (cover) li.cover = cover;
 				li.textContent = f.substring(f.lastIndexOf('/') + 1, f.lastIndexOf('.'));
 				li.tabIndex = 1;
+				tree.push(li);
 				songs.push(li);
 				element.appendChild(li);
 			}
@@ -407,13 +409,12 @@ function buildLibrary(root, folder, element) {
 
 function reloadLibrary() {
 	if (cfg.locked) return;
-	dom.tree.innerHTML = '';
+	dom.tree.innerHTML = '',
+		tree.length = songs.length = 0;
 	var lib = document.createElement('script');
 	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ esc(url[1]) +'&' : '?') +'reload';
 	lib.onload = function() {
-		songs.length = 0;
 		buildLibrary('', library, dom.tree);
-		tree = dom.tree.querySelectorAll('li');
 		clearPlayed();
 		library = null;
 		if (dom.filter.value.length)
@@ -1358,7 +1359,6 @@ function setTrashPos() {
 function filter(instant = false) {	// Gets event from oninput
 	if (instant && dom.filter.value.length < instantfilter) return;
 	var display = dom.filter.value == '' ? '' : 'none';
-	if (!tree) tree = dom.tree.querySelectorAll('li');
 	ffor(tree, function(f) {
 		f.style.display = display;
 		if (cls(f, 'open'))
