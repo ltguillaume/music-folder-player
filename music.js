@@ -1242,7 +1242,7 @@ function toggle(e) {
 }
 
 function buildFilteredLibrary() {
-	songsFiltered = [];
+	songsFiltered.length = 0;
 	var term = dom.filter.value.toLowerCase();
 	for (var s in songs)
 		if (songs[s].path.toLowerCase().indexOf(term) != -1)
@@ -1330,7 +1330,7 @@ function menu(e) {
 function clearPlaylist() {
 	if (cfg.locked || mode || !confirm(str.clearplaylist)) return;
 	if (cfg.playlist.length > 0) {
-		cfg.playlist = [];
+		cfg.playlist.length = 0;
 		cfg.index = -1;
 		dom.playlist.innerHTML = '';
 		resizePlaylist();
