@@ -770,9 +770,13 @@ function skipArtist(e) {
 	if (!cfg.locked) {
 		var artist = dom.album.textContent;
 		artist = artist.indexOf(' -') > 0 ? artist.substring(0, artist.indexOf(' -')) : false;
-		if (artist && confirm(artist +'\n'+ str.skipartist)) {
-			cfg.skip.push(artist);
-			next();
+		if (artist) {
+			if (cfg.skip.indexOf(artist) != -1 && confirm(artist +'\n'+ str.unskipartist))
+				cfg.skip = cfg.skip.filter(t => t !== artist);
+			else if (confirm(artist +'\n'+ str.skipartist)) {
+				cfg.skip.push(artist);
+				next();
+			}
 		}
 	}
 }
