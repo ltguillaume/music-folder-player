@@ -503,6 +503,7 @@ html:not(.dim) #player.fix {
 	#log {
 		width: 100%;
 		height: calc(100% - 3em);
+		margin-top: .25em;
 		color: var(--text);
 		white-space: pre;
 		background: none;

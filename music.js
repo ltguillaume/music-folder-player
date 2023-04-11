@@ -268,11 +268,13 @@ function prepPlaylistMode() {
 function prepAudio(id) {
 	var a = new Audio();
 
-	a.log = function(msg) { log(msg +' ['+ id +']: '+ decodeURI(a.src.replace(a.baseURI, ''))) };
+	a.log = function(msg) {
+		log(msg +' ['+ id +']: '+ decodeURI(a.src.replace(a.baseURI, '')));
+	};
 
 	a.onloadstart = function() {
 		a.log('Load started');
-	}
+	};
 
 	a.oncanplaythrough = function() {
 		a.log('Can play through');
@@ -1363,15 +1365,16 @@ function setTrashPos() {
 }
 
 function filter(instant = false) {	// Gets event from oninput
-	if (instant && dom.filter.value.length < instantfilter) return;
-	var display = dom.filter.value == '' ? '' : 'none';
+	var length = dom.filter.value.length,
+		display = length ? 'none' : '';
+	if (instant && length < instantfilter) return;
 	ffor(tree, function(f) {
 		f.style.display = display;
 		if (cls(f, 'folder'))
 			f.className = 'folder'+ (cls(f, 'dim') ? ' dim' : '');
 	});
 
-	if (display != '') {
+	if (length) {
 		var term = dom.filter.value.toLowerCase();
 		ffor(tree, function(f) {
 			var path = f.path.substring(f.path.lastIndexOf('/') + 1).toLowerCase();
