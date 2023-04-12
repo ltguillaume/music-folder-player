@@ -445,9 +445,9 @@ function openFolder(e) {
 	ffor(li.querySelectorAll(':scope > ul > *'), function(c) {
 		if (c.style.display != '') c.style.display = '';
 	});
-	if (cls(li, 'closedmatch') || cls(li, 'parent')) {
+	if (cls(li, 'parent')) {
 		cls(li, 'open', ADD);
-		cls(li, 'closedmatch', REM);
+		cls(li, 'match', ADD);
 		cls(li, 'parent', REM);
 	} else
 		cls(li, 'open', TOG)
@@ -1387,15 +1387,15 @@ function filter(instant = false) {	// Gets event from oninput
 
 			if (match) {
 				f.style.display = '';
+				cls(f, 'match', ADD);
 
 				if (cls(f, 'folder')) {
-					cls(f, 'match', ADD);
 					if (path == dom.filter.value) {
 						ffor(f.querySelectorAll('ul > *'), function(c) {
 							c.style.display = '';
 						});
 						cls(f, 'open', ADD);
-					} else cls(f, 'closedmatch', ADD);
+					}
 				}
 
 				for (var p = f.parentNode; p && p !== dom.tree; p = p.parentNode) {
