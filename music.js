@@ -132,7 +132,8 @@ function prepUI() {
 	}
 
 	ffor(['TV', 'Andr0id', ' OMI/', 'Viera'], function(s) {
-		if (navigator.userAgent.indexOf(s) > -1) tv = true;
+		if (navigator.userAgent.indexOf(s) > -1)
+			return (tv = true);
 	});
 
 	window.addEventListener('click', function() {	// Solve autoplay issues
@@ -1381,8 +1382,10 @@ function filter(instant = false) {	// Gets event from oninput
 
 			var match = true;
 			ffor(terms, function(t) {
-				if (path.indexOf(t) == -1)
-					return (match = false);
+				if (path.indexOf(t) == -1) {
+					match = false;
+					return true;
+				}
 			});
 
 			if (match) {
@@ -1431,10 +1434,11 @@ function cls(el, name, act = null) {
 	return !found;
 }
 
-function ffor(items, callback, scope) {
+function ffor(items, callback) {
 	var length = items.length;
 	for (var i = 0; i < length; i++) {
-		callback.call(scope, items[i]);
+		if (callback(items[i]))	// If returns true, break the loop
+			break;
 	}
 }
 
