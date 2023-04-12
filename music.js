@@ -80,7 +80,7 @@ function init() {
 		log('Song count: '+ songs.length, true);
 		log('PHP request = '+ lib.src.replace(/:\/\/.*?:.*?@/, '://'));
 		if (songs.length == 1) prepSongMode();
-		if (autoplay > 1 || autoplay && url[1]) playPause();
+		if (cfg.autoplay > 1 || cfg.autoplay && url[1]) playPause();
 		library = null;
 	};
 	document.body.appendChild(lib);
@@ -107,7 +107,7 @@ function lng(el, string, tooltip) {
 function prepUI() {
 	ls = ls();
 	dom.source.href = sourceurl;
-	dom.pagetitle.textContent = def.title;
+	dom.pagetitle.textContent = pagetitle;
 	dom.filter.placeholder = str.filter;
 	dom.doc.className = cfg.theme || def.theme;
 	dom.volumeslider.max = def.volume;
@@ -125,7 +125,7 @@ function prepUI() {
 	if (!sharing) dom.hide('share');
 	if (cfg.after == 'randomfiltered') cfg.after = 'randomlibrary';
 	cfg.removesongs = false;
-	if (!debug) dom.hide('logbtn');
+	if (!cfg.debug) dom.hide('logbtn');
 
 	if (url.length > 1 && url[1].startsWith('pl:')) {
 		prepPlaylistMode();
@@ -185,7 +185,7 @@ function prepUI() {
 		navigator.mediaSession.metadata = new MediaMetadata();
 	}
 
-	if (instantfilter) dom.filter.oninput = filter;	// Gives event as parameter
+	if (cfg.instantfilter) dom.filter.oninput = filter;	// Gives event as parameter
 
 	if (window.innerWidth > 360)
 		cls(dom.library, 'unfold', ADD);
@@ -242,7 +242,7 @@ function ls() {
 }
 
 function log(s, force = false) {
-	if (debug || force) {
+	if (cfg.debug || force) {
 		if (typeof s === 'string') {
 			var t = new Date();
 			s = s.replace(/data\:audio.*/, '(Autoplay Fix)');
@@ -256,7 +256,7 @@ function log(s, force = false) {
 function saveLog() {
 	var l = new Blob([dom.log.value], { type: 'text/plain', endings: 'native' });
 	dom.a.href = window.URL.createObjectURL(l);
-	dom.a.download = def.title +"_"+ Math.floor(new Date()/1000) +'.log';
+	dom.a.download = pagetitle +"_"+ Math.floor(new Date()/1000) +'.log';
 	dom.a.click();
 }
 
@@ -320,7 +320,7 @@ function prepAudio(id) {
 		if (a != audio[track] || a.src.startsWith('data:')) return;
 //		if (a != audio[track]) return;
 
-		if (a.currentTime >= a.duration - buffersec) return playNext();
+		if (a.currentTime >= a.duration - cfg.buffersec) return playNext();
 
 		if ((a.duration - a.currentTime) < 20) {
 			if (!audio[+!track].prepped) prepNext();
@@ -849,7 +849,7 @@ function clearPlayed() {
 
 function artistSkipped(path) {
 	var artist = getSongInfo(path).artist;
-	if (debug && cfg.skip.indexOf() != -1)
+	if (cfg.debug && cfg.skip.indexOf() != -1)
 		log('Artist '+ artist +' skipped');
 	return cfg.skip.indexOf(artist) != -1;
 }
@@ -974,7 +974,7 @@ function prepPlaylists(action) {
 				break;
 			case 'playlist':
 				loadPlaylist(decodeURIComponent(url[1].substring(3)));
-				if (autoplay && audio[track].paused) playPause();
+				if (cfg.autoplay && audio[track].paused) playPause();
 		}
 	};
 	xhttp.open('GET', 'music.php?pl', true);
@@ -1177,7 +1177,7 @@ function start(a) {
 			log(e, true);
 			if (e.code == 9)
 				setToast({ 'className': 'error', 'textContent': str.errorfile });
-			else if (autoplay && e.name == 'NotAllowedError')
+			else if (cfg.autoplay && e.name == 'NotAllowedError')
 				setToast({ 'className': 'error', 'textContent': str.errorautoplay });
 		});
 	dom.seek.disabled = 0;
@@ -1225,7 +1225,7 @@ function toggle(e) {
 		case 'lock':
 			return Popup.lock();
 		case 'logbtn':
-			if (!debug) return;
+			if (!cfg.debug) return;
 			cls(dom.doc, 'dim', cls(dom.logdiv, 'hide'));
 			if (cls(dom.logdiv, 'hide', TOG))
 				dom.log.blur();
@@ -1369,7 +1369,7 @@ function setTrashPos() {
 function filter(instant = false) {	// Gets event from oninput
 	var length = dom.filter.value.length,
 		display = length ? 'none' : '';
-	if (instant && length < instantfilter) return;
+	if (instant && length < cfg.instantfilter) return;
 	ffor(tree, function(f) {
 		f.style.display = display;
 		if (cls(f, 'folder'))
