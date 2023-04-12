@@ -1375,10 +1375,17 @@ function filter(instant = false) {	// Gets event from oninput
 	});
 
 	if (length) {
-		var term = dom.filter.value.toLowerCase();
+		var terms = dom.filter.value.toLowerCase().split(' ');
 		ffor(tree, function(f) {
 			var path = f.path.substring(f.path.lastIndexOf('/') + 1).toLowerCase();
-			if (path.indexOf(term) != -1) {
+
+			var match = true;
+			ffor(terms, function(t) {
+				if (path.indexOf(t) == -1)
+					return (match = false);
+			});
+
+			if (match) {
 				f.style.display = '';
 
 				if (cls(f, 'folder')) {
