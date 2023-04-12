@@ -16,6 +16,7 @@ var
 
 	drag,
 	errorCount = 0,
+	filterResult,
 	mode,
 	onPlaylist,
 	onSeek,
@@ -1374,6 +1375,7 @@ function filter(instant = false) {	// Gets event from oninput
 		if (cls(f, 'folder'))
 			f.className = 'folder'+ (cls(f, 'dim') ? ' dim' : '');
 	});
+	filterResult = false;
 
 	if (length) {
 		var terms = dom.filter.value.toLowerCase().split(' ');
@@ -1389,6 +1391,7 @@ function filter(instant = false) {	// Gets event from oninput
 			});
 
 			if (match) {
+				filterResult = true;
 				f.style.display = '';
 				cls(f, 'match', ADD);
 
@@ -1539,7 +1542,7 @@ function keyNav(el, direction) {
 	}
 
 	if (to) {
-		if (to.style.display == 'none')
+		if (filterResult && to.style.display == 'none')
 			return keyNav(to, direction);
 		setFocus(to);
 	}
