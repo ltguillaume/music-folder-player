@@ -14,9 +14,9 @@ var
 	tree = [],
 	url,
 
+	currentFilter,
 	drag,
 	errorCount = 0,
-	filterResult,
 	mode,
 	onPlaylist,
 	onSeek,
@@ -185,7 +185,10 @@ function prepUI() {
 		navigator.mediaSession.metadata = new MediaMetadata();
 	}
 
-	if (cfg.instantfilter) dom.filter.oninput = filter;	// Gives event as parameter
+	if (cfg.instantfilter) {
+		dom.filter.onchange = null;	// Prevent multiple triggers for the same term
+		dom.filter.oninput = filter;	// Gives event as parameter
+	}
 
 	if (window.innerWidth > 360)
 		cls(dom.library, 'unfold', ADD);
@@ -1367,23 +1370,26 @@ function setTrashPos() {
 }
 
 function filter(instant = false) {	// Gets event from oninput
-	var length = dom.filter.value.length,
+	var terms = dom.filter.value.trim(),
+		length = terms.length,
 		display = length ? 'none' : '';
-	if (instant && length < cfg.instantfilter) return;
+	if (instant && (length < cfg.instantfilter || terms == currentFilter)) return;
+
+	log('Filtering for: "'+ terms +'"');
 	ffor(tree, function(f) {
 		f.style.display = display;
 		if (cls(f, 'folder'))
 			f.className = 'folder'+ (cls(f, 'dim') ? ' dim' : '');
 	});
-	filterResult = false;
+	currentFilter = false;
 
 	if (length) {
-		var terms = dom.filter.value.toLowerCase().split(' ');
+		var termsArray = terms.toLowerCase().split(' ');
 		ffor(tree, function(f) {
 			var path = f.path.substring(f.path.lastIndexOf('/') + 1).toLowerCase();
 
 			var match = true;
-			ffor(terms, function(t) {
+			ffor(termsArray, function(t) {
 				if (path.indexOf(t) == -1) {
 					match = false;
 					return true;
@@ -1391,7 +1397,7 @@ function filter(instant = false) {	// Gets event from oninput
 			});
 
 			if (match) {
-				filterResult = true;
+				currentFilter = true;
 				f.style.display = '';
 				cls(f, 'match', ADD);
 
@@ -1419,7 +1425,10 @@ function filter(instant = false) {	// Gets event from oninput
 	}
 
 	cls(dom.library, 'unfold', ADD);
-	if (!instant) keyNav(null, 'down');
+	if (currentFilter) {
+		currentFilter = terms;
+		if (!instant) keyNav(null, 'down');
+	}
 }
 
 function cls(el, name, act = null) {
@@ -1542,7 +1551,7 @@ function keyNav(el, direction) {
 	}
 
 	if (to) {
-		if (filterResult && to.style.display == 'none')
+		if (to.style.display == 'none')
 			return keyNav(to, direction);
 		setFocus(to);
 	}
