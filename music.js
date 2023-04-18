@@ -1372,63 +1372,65 @@ function setTrashPos() {
 function filter(instant = false) {	// Gets event from oninput
 	var terms = dom.filter.value.trim(),
 		length = terms.length,
-		display = length ? 'none' : '';
+		display = length ? 'none' : '',
+		results = false;
 	if (instant && (length < cfg.instantfilter || terms == currentFilter)) return;
 
 	log('Filtering for: "'+ terms +'"');
 	ffor(tree, function(f) {
-		f.style.display = display;
 		if (cls(f, 'folder'))
 			f.className = 'folder'+ (cls(f, 'dim') ? ' dim' : '');
+		f.style.display = display;
 	});
-	currentFilter = false;
 
 	if (length) {
 		var termsArray = terms.toLowerCase().split(' ');
+
 		ffor(tree, function(f) {
-			var path = f.path.substring(f.path.lastIndexOf('/') + 1).toLowerCase();
+			var path = f.path.toLowerCase();
 
-			var match = true;
-			ffor(termsArray, function(t) {
-				if (path.indexOf(t) == -1) {
-					match = false;
-					return true;
-				}
-			});
+			if (matchTerms(path, termsArray)) {
+				if (cls(f, 'song') && !matchTerms(path.substring(path.lastIndexOf('/') + 1), termsArray)
+					&& cls(f.parentNode.parentNode, 'match')) return;	// If parent is already a match, only continue if song is a full match
 
-			if (match) {
-				currentFilter = true;
-				f.style.display = '';
+				results = true;
 				cls(f, 'match', ADD);
+				f.style.display = '';
 
-				if (cls(f, 'folder')) {
-					if (path == dom.filter.value) {
-						ffor(f.querySelectorAll('ul > *'), function(c) {
-							c.style.display = '';
-						});
-						cls(f, 'open', ADD);
-					}
-				}
+				if (cls(f, 'folder') && f.path.substring(f.path.lastIndexOf('/') + 1) == dom.filter.value)	// When clicking on folder in player
+					ffor(f.querySelectorAll('ul > *'), function(c) {
+						c.style.display = '';
+					});
 
 				for (var p = f.parentNode; p && p !== dom.tree; p = p.parentNode) {
 					if (cls(p, 'parent'))
 						break;
-					if (p.style.display != '')
-						p.style.display = '';
 					if (cls(p, 'folder')) {
 						cls(p, 'open', ADD);
 						cls(p, 'parent', ADD);
 					}
+					p.style.display = '';
 				}
 			}
 		});
 	}
 
 	cls(dom.library, 'unfold', ADD);
-	if (currentFilter) {
+	if (results) {
 		currentFilter = terms;
 		if (!instant) keyNav(null, 'down');
 	}
+}
+
+function matchTerms(path, termsArray) {
+	var match = true;
+	ffor(termsArray, function(t) {
+		if (path.indexOf(t) == -1) {
+			match = false;
+			return true;
+		}
+	});
+	return match;
 }
 
 function cls(el, name, act = null) {
