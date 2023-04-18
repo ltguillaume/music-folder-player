@@ -349,8 +349,8 @@ li#last:before { visibility: hidden }
 
 #toast {
 	position: fixed;
-	top: -2px;
-	right: .5em;
+	top: 1em;
+	right: 1em;
 	padding: 1em;
 	background: var(--bg-toast) !important;
 	box-shadow: 0 0 2px 2px var(--border);
