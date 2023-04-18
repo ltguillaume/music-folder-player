@@ -155,8 +155,10 @@ button {
 	button::-moz-focus-inner { border: none }
 
 button b {
-	padding: 0 .3em .3em .2em;
-	font-size: .7em;
+	margin-left: .5em;
+	padding: 0 .3em .2em .2em;
+	font-size: .8em;
+	font-weight: normal;
 	color: var(--text-dim);
 	vertical-align: top;
 	border: 1px solid var(--border);

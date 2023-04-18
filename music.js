@@ -22,6 +22,7 @@ var
 	onSeek,
 	onScrollWait,
 	played = [],
+	playedFiltered = [],
 	playerheight,
 	playlistLoaded,
 	playlists,
@@ -98,7 +99,7 @@ function lng(el, string, tooltip) {
 			return el.innerHTML = string;
 		var index = string.toLowerCase().indexOf(el.accessKey);
 		if (index == -1)
-			el.innerHTML = string +' <b>'+ el.accessKey +'</b>';
+			el.innerHTML = string +'<b>'+ el.accessKey +'</b>';
 		else
 			el.innerHTML = string.substring(0, Math.max(index, 0)) +'<u>'+ string.substring(index, index + 1) +'</u>'+ string.substring(index + 1);
 	}
@@ -416,16 +417,19 @@ function buildLibrary(root, folder, element) {
 
 function reloadLibrary() {
 	if (cfg.locked) return;
+	if (!confirm(str.reloadlibrary)) return;
 	dom.tree.innerHTML = '',
 		tree.length = songs.length = 0;
 	var lib = document.createElement('script');
 	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ esc(url[1]) +'&' : '?') +'reload';
 	lib.onload = function() {
 		buildLibrary('', library, dom.tree);
-		clearPlayed();
+		clearPlayed('reload');
 		library = null;
 		if (dom.filter.value.length)
 			filter();
+		if (cfg.after == 'randomfiltered')
+			buildFilteredLibrary(dom.randomfiltered.firstElementChild.textContent.trim());
 	}
 	document.body.appendChild(lib);
 }
@@ -437,7 +441,7 @@ function prepSongMode() {
 	mode = 'song';
 }
 
-function libClick(e, context = false) {
+function treeClick(e, context = false) {
 	if (cls(e.target, 'folder'))
 		context ? addFolder(e) : openFolder(e);
 	else
@@ -804,26 +808,33 @@ function prepNext() {
 			moveItem(drag, to, indexfrom, indexto);
 		}
 		load(cfg.index + 1);
-	} else if (cfg.after != 'stopplayback' || cfg.locked) {
+	} else if (cfg.after != 'stopplayback') {
 		log('prepNext from library');
-		if (played.length == songs.length) clearPlayed();
-		if (cfg.locked || cfg.after == 'randomlibrary' || cfg.after == 'randomfiltered') {
-			var set = cfg.after == 'randomlibrary' || cfg.locked || songsFiltered.length == 0 ? songs : songsFiltered;
+		if (cfg.after == 'randomfiltered' || cfg.after == 'randomlibrary') {
 			var next = null;
 			do {
-				next = ~~((Math.random() * set.length));
-				if (played.indexOf(next.toString()) != -1)
-					next = null;
-				else if (artistSkipped(set[next].path)) {
-					if (played.length == songs.length)
-						clearPlayed();
-					else {
-						played.push(set[next].id);
+				var count = cfg.after == 'randomfiltered' ? songsFiltered.length : songs.length;
+				if ((cfg.after == 'randomfiltered' ? playedFiltered.length : played.length) == count)
+					clearPlayed(cfg.after);
+
+				next = ~~((Math.random() * count));
+
+				if (cfg.after == 'randomfiltered') {
+					next = songsFiltered[next];	// songsFiltered is an array of id's from songs
+					if (playedFiltered.indexOf(next.toString()) != -1)
 						next = null;
-					}
+				} else if (played.indexOf(next.toString()) != -1)
+					next = null;
+
+				if (next != null && artistSkipped(songs[next].path)) {
+					if (cfg.after == 'randomfiltered')
+						playedFiltered.push(next);
+					played.push(next);
+					log('Artist of '+ songs[next].path +' is skipped.')
+					next = null;
 				}
 			} while (next == null);
-			load(set[next].id, true);
+			load(songs[next].id, true);
 		} else if (cfg.after == 'playlibrary')	{
 			if (cfg.index == -1) return load(songs[0].id, true);
 			var path = cfg.playlist[cfg.index].path;
@@ -845,9 +856,19 @@ function prepNext() {
 	}
 }
 
-function clearPlayed() {
-	log('User reloaded library or all songs have been played. Clearing played array.', true);
-	played.length = 0;
+function clearPlayed(action) {
+	let msg = 'Clearing played';
+	if (action == 'randomfiltered') {
+		playedFiltered.length = 0;
+		msg += 'Filtered[]: all songs from the filtered library have been played.'
+	} else {
+		played.length = 0;
+		if (action == 'reload')
+			msg += '[]: user reloaded library.';
+		else
+			msg += '[]: all songs have been played.';
+	}
+	log(msg, true);
 }
 
 function artistSkipped(path) {
@@ -1114,6 +1135,8 @@ function add(id, next = false) {
 	log('Add to playlist (#'+ i +'): '+ s.path);
 	if (!played.includes(id)) {
 		played.push(id);
+		if (cfg.after == 'randomfiltered')
+			playedFiltered.push(id);
 		log('Add id '+ id +' to played');
 	}
 }
@@ -1219,9 +1242,9 @@ function toggle(e) {
 			dom.hide('afteroptions');
 			menu('after');
 			if (!dom.randomfiltered.firstElementChild)
-				dom.randomfiltered.appendChild(document.createElement('span'));
+				dom.randomfiltered.appendChild(document.createElement('b'));
 			if (button.id == 'randomfiltered') {
-				dom.randomfiltered.firstElementChild.textContent = '['+ dom.filter.value +']';
+				dom.randomfiltered.firstElementChild.textContent = dom.filter.value;
 				buildFilteredLibrary();
 			} else dom.randomfiltered.firstElementChild.textContent = '';
 			return;
@@ -1254,12 +1277,13 @@ function toggle(e) {
 			cls(dom.trash, 'on', cfg.removesongs ? ADD : REM);
 }
 
-function buildFilteredLibrary() {
-	songsFiltered.length = 0;
-	var term = dom.filter.value.toLowerCase();
+function buildFilteredLibrary(terms = dom.filter.value.trim()) {
+	var termsArray = terms.toLowerCase().split(' ');
+	playedFiltered.length = songsFiltered.length = 0;
+
 	for (var s in songs)
-		if (songs[s].path.toLowerCase().indexOf(term) != -1)
-			songsFiltered.push(songs[s]);
+		if (matchTerms(songs[s].path.toLowerCase(), termsArray))
+			songsFiltered.push(songs[s].id);
 }
 
 function toggleLock() {
