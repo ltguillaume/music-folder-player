@@ -119,7 +119,6 @@ function prepUI() {
 	if (cfg.locked) {
 		cls(document.body, 'locked', ADD);
 		cls(dom.lock, 'on', ADD);
-		dom.lock.textContent = 'Unlock';
 	}
 	lng(dom.lock, cfg.locked ? str.unlock : str.lock);
 	if (url.length > 1 || !onlinepls) dom.hide(['playlistsdiv', 'playlistsave', 'shareplaylist']);
