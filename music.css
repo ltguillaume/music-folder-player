@@ -177,9 +177,8 @@ input, select {
 input[type=range] {
 	width: 14em;
 	max-width: 90%;
-	height: 15px;
-	margin-top: -1px;
-	padding: 0 0 0 .2em;
+	height: 1em;
+	margin-top: 1px;
 	background: transparent;
 	vertical-align: text-top;
 	opacity: .5;
@@ -195,8 +194,8 @@ input[type=range] {
 		background: var(--text);
 	}
 	input[type=range]::-moz-range-thumb {
-		width: 13px;
-		height: 13px;
+		width: 12px;
+		height: 12px;
 		background: var(--bg-thumb);
 		border: 1px solid var(--text);
 		border-radius: 50%;
@@ -205,13 +204,12 @@ input[type=range] {
 		input[type=range]:hover::-moz-range-thumb { background: var(--bg-thumb-hv) }
 	input[type=range]::-webkit-slider-runnable-track {
 		height: 1px;
-		margin-top: -1px;
 		background: var(--text);
 	}
 	input[type=range]::-webkit-slider-thumb {
-		width: 13px;
-		height: 13px;
-		margin-top: -6px;
+		width: 1em;
+		height: 1em;
+		margin-top: -.5em;
 		background: var(--bg-thumb);
 		border: 1px solid var(--text);
 		border-radius: 50%;
@@ -227,7 +225,7 @@ input[type=range] {
 	}
 	input#volumeslider {
 		width: unset;
-		margin: 3px 0 0 -3px;
+		margin: calc(.3em + 1px) .3em .3em .3em;
 	}
 		input#volumeslider::-webkit-slider-runnable-track { margin-top: 0px }
 

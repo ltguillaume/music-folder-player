@@ -1735,7 +1735,7 @@ function prepHotkeys() {
 		if (e.key == 'Escape') {
 			if (!cls(dom.popupdiv, 'hide'))
 				return Popup.close();
-			if (el == dom.log && !cls(dom.logdiv, 'hide'))
+			if (!cls(dom.logdiv, 'hide'))
 				return logbtn.click();
 		}
 
