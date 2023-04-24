@@ -17,6 +17,8 @@ var
 	currentFilter,
 	drag,
 	errorCount = 0,
+	jingles,
+	jinglesCountdown,
 	mode,
 	onPlaylist,
 	onSeek,
@@ -75,6 +77,7 @@ function init() {
 		prepUI();
 		buildLibrary('', library, dom.tree);
 		buildPlaylist();
+		prepJingles();
 		dom.hide('splash');
 		dom.show('doc');
 		log(sourceurl, true);
@@ -203,6 +206,21 @@ function touchUI() {
 	else dom.show('trash');
 }
 
+function prepJingles() {
+	if (jinglesinterval && url.length == 1) {
+		jinglesCountdown = jinglesinterval;
+		jingles = [];
+		for (var s in songs)
+			if (songs[s].path.toLowerCase().startsWith("!jingles/"))
+				jingles.push(songs[s]);
+
+		if (jingles.length == 0)
+			jingles = false;
+		else
+			log('Playing jingle between every '+ jinglesinterval +' songs');
+	}
+}
+
 function fixPlayer() {
 	if (!cls(dom.player, 'fix') && !cls(dom.doc, 'dim')
 		&& window.pageYOffset > 1.5 * dom.player.offsetHeight
@@ -325,7 +343,7 @@ function prepAudio(id) {
 
 		if (a.currentTime >= a.duration - cfg.buffersec) return playNext();
 
-		if ((a.duration - a.currentTime) < 20) {
+		if (a.duration > 30 && (a.duration - a.currentTime) < 15) {
 			if (!audio[+!track].prepped) prepNext();
 			if (cfg.crossfade && !a.fade && a.duration - a.currentTime < 10) {
 				a.log('Fade out');
@@ -796,6 +814,12 @@ function next() {
 }
 
 function prepNext() {
+	if (jingles) {
+		if (jinglesCountdown == 0)
+			return prepNextJingle();
+		else
+			jinglesCountdown--;
+	}
 	if (cfg.playlist.length > cfg.index + 1) {
 		log('prepNext from playlist');
 		if (cfg.random && !cfg.playlist[cfg.index + 1].playNext) {
@@ -855,6 +879,13 @@ function prepNext() {
 	}
 }
 
+function prepNextJingle() {
+	jinglesCountdown = jinglesinterval;
+	var next = ~~((Math.random() * jingles.length));
+	load(jingles[next].id, 'next');
+	log('Playing jingle');
+}
+
 function clearPlayed(action) {
 	let msg = 'Clearing played';
 	if (action == 'randomfiltered') {
@@ -885,7 +916,7 @@ function load(id, addtoplaylist = false) {
 	else if (addtoplaylist) add(id);
 
 	var a = audio[+!track];
-	a.prepped = !addtoplaylist;
+	a.prepped = true;
 	a.index = addtoplaylist ? cfg.index + 1 : id;
 	log('a.index = '+ a.index);
 	a.canplaythrough = false;
