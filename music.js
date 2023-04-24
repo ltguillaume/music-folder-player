@@ -1599,6 +1599,7 @@ var Popup = {
 
 	addButton: function(title, action) {
 		var btn = document.createElement('button');
+		btn.className = title.toLowerCase();
 		btn.textContent = title;
 		btn.setAttribute('onclick', action);
 		dom.popupcontent.appendChild(btn);

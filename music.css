@@ -385,7 +385,7 @@ html:not(.dim) #player.fix {
 	#player.fix { background: var(--bg-player-fix) }
 
 #options > div > button { padding-right: .75em }
-#options button:before, #trash button:before, #popup > button:before,
+#options button:before, #trash button:before, #popup button:before,
 #toast:before, li:before { margin-right: .25em }
 
 #playlistoptions, #shares {
@@ -678,3 +678,8 @@ button.filter:before { content: "\f14b" }
 button.link:before { content: "\f165" }
 button.min:before { content: "\f176" }
 button.share:before { content: "\f1a6" }
+	button.email:before { content: "\f16d" }
+	button.facebook:before, button.fbmessenger:before { content: "\f1c4" }
+	button.telegram:before { content: "\f132" }
+	button.twitter:before { content: "\f1e4" }
+	button.whatsapp:before { content: "\f131" }
