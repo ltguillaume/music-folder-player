@@ -325,7 +325,7 @@ function prepAudio(id) {
 
 		if (a.currentTime >= a.duration - cfg.buffersec) return playNext();
 
-		if ((a.duration - a.currentTime) < 20) {
+		if (a.duration > 30 && (a.duration - a.currentTime) < 20) {
 			if (!audio[+!track].prepped) prepNext();
 			if (cfg.crossfade && !a.fade && a.duration - a.currentTime < 10) {
 				a.log('Fade out');
@@ -885,7 +885,7 @@ function load(id, addtoplaylist = false) {
 	else if (addtoplaylist) add(id);
 
 	var a = audio[+!track];
-	a.prepped = !addtoplaylist;
+	a.prepped = true;
 	a.index = addtoplaylist ? cfg.index + 1 : id;
 	log('a.index = '+ a.index);
 	a.canplaythrough = false;
