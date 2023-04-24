@@ -494,14 +494,16 @@ function setFocus (el) {
 }
 
 function setToast(el) {
-	if (el.className == 'error' || cls(dom.player, 'fix')) {
-		if (el.className == 'error') log(str.error +' '+ el.textContent, true);
-		if (toast) clearTimeout(toast);
-		dom.toast.className = el.className;
-		dom.toast.textContent = el.textContent;
-		dom.show('toast');
-		toast = setTimeout(function() { dom.hide('toast') }, 4000);
-	}
+	setTimeout(function() {
+		if (el.className == 'error' || cls(dom.player, 'fix')) {
+			if (el.className == 'error') log(str.error +' '+ el.textContent, true);
+			if (toast) clearTimeout(toast);
+			dom.toast.className = el.className;
+			dom.toast.textContent = el.textContent;
+			dom.show('toast');
+			toast = setTimeout(function() { dom.hide('toast') }, 4000);
+		}
+	}, onScrollWait ? 400 : 0);
 }
 
 function addSong(e) {
