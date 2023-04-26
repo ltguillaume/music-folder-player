@@ -46,7 +46,10 @@
 	background-color: var(--focus);
 }
 
-::-webkit-scrollbar { width: 10px }
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
 ::-webkit-scrollbar-track { background: var(--bg-scroll); border-radius: 2px }
 ::-webkit-scrollbar-thumb { background: var(--scroll); border-radius: 2px }
 ::-webkit-scrollbar-thumb:hover { background: var(--scroll-hv) }
@@ -85,7 +88,10 @@ html.touch body {
 		overflow-x: auto;
 		white-space: nowrap;
 	}
-	html.touch *::-webkit-scrollbar { width: 4px !important }
+	html.touch *::-webkit-scrollbar {
+		width: 4px !important;
+		height: 4px !important;
+	}
 	html.touch #tree ul { margin-left: .5em }
 	html.touch .toolbar.hidden { visibility: visible }
 
@@ -502,7 +508,7 @@ html:not(.dim) #player.fix {
 	#logdiv .toolbar { justify-content: flex-end }
 	#log {
 		width: 100%;
-		height: calc(100% - 3em);
+		height: calc(100% - 3.25em);
 		margin-top: .25em;
 		color: var(--text);
 		white-space: pre;
@@ -589,7 +595,7 @@ html:not(.dim) #player.fix {
 }
 
 @media (max-width: 480px) {
-	body > div { margin: 2px }
+	body > div { margin: .3em }
 	body > div:before { display: none }
 }
 
