@@ -83,7 +83,10 @@ html.material button {
 html.material li { padding: .2em 0 }
 
 html.material #player.fix { border-radius: 0 0 2em 2em }
-html.material #cover { border-radius: 1em }	
+html.material #cover {
+	margin-left: .25em;
+	border-radius: 1em;
+}
 html.material #controls > button { min-width: 3.25em }
 
 html.material #shares > .sharediv {
