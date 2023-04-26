@@ -697,12 +697,13 @@ function getSongInfo(path) {
 		path = root + path;	// For shared songs/folders
 
 	for(var i = pathexp.length - 1; i > -1; i--) {
+		var nfo;
 		try {
-			var nfo = path.match(pathexp[i]);
+			nfo = path.match(pathexp[i]);
 			log(nfo.groups);
 			return nfo.groups;
 		} catch(e) {
-			log(e);
+			if (nfo) log(e);
 			if (i < 1) {
 				var nfo, artalb = path.substring(path.lastIndexOf('/', path.lastIndexOf('/') - 1) + 1, path.lastIndexOf('/'));
 				if (artalb.indexOf(' -') == -1)
@@ -1153,6 +1154,10 @@ function playNext() {
 		log('PlayNext: not prepped');
 		prepNext();
 		stop();
+	}
+	if (audio[+!track].index && (!cfg.playlist[audio[+!track].index] || esc(root + cfg.playlist[audio[+!track].index].path) != audio[+!track].getAttribute('src'))) {
+		log('PlayNext: last minute adjustment to playlist detected, prepping next track', true);
+		prepNext();
 	}
 	if (!cfg.crossfade) stop();
 
