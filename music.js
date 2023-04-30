@@ -1427,10 +1427,12 @@ function filter(instant = false) {	// Gets event from oninput
 				cls(f, 'match', ADD);
 				f.style.display = '';
 
-				if (cls(f, 'folder') && f.path.substring(f.path.lastIndexOf('/') + 1) == dom.filter.value)	// When clicking on folder in player
+				if (cls(f, 'folder') && f.path.substring(f.path.lastIndexOf('/') + 1) == dom.filter.value) {	// When clicking on folder in player
 					ffor(f.querySelectorAll('ul > *'), function(c) {
 						c.style.display = '';
 					});
+					cls(f, 'open', ADD);
+				}
 
 				for (var p = f.parentNode; p && p !== dom.tree; p = p.parentNode) {
 					if (cls(p, 'parent'))
