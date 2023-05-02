@@ -70,6 +70,8 @@ html.light #toast.error { color: #fff }
 html.light #cover { opacity: 1 }
 
 /* Material Design 3(ish) rounded corners */
+html.material ::-webkit-scrollbar-thumb { border-radius: 4px }
+
 html.material body { font-size: 1.1em }
 html.material body > div, html.material .menu {
 	padding: .5em;
