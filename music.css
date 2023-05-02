@@ -46,7 +46,10 @@
 	background-color: var(--focus);
 }
 
-::-webkit-scrollbar { width: 10px }
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
 ::-webkit-scrollbar-track { background: var(--bg-scroll); border-radius: 2px }
 ::-webkit-scrollbar-thumb { background: var(--scroll); border-radius: 2px }
 ::-webkit-scrollbar-thumb:hover { background: var(--scroll-hv) }
@@ -85,7 +88,10 @@ html.touch body {
 		overflow-x: auto;
 		white-space: nowrap;
 	}
-	html.touch *::-webkit-scrollbar { width: 4px !important }
+	html.touch *::-webkit-scrollbar {
+		width: 4px !important;
+		height: 4px !important;
+	}
 	html.touch #tree ul { margin-left: .5em }
 	html.touch .toolbar.hidden { visibility: visible }
 
@@ -193,6 +199,15 @@ input[type=range] {
 		height: 1px;
 		background: var(--text);
 	}
+	input[type=range]::-webkit-slider-runnable-track {
+		height: 1px;
+		background: var(--text);
+	}
+	input[type=range]::-ms-track {
+		height: 1px;
+		background: var(--text);
+		border: none;
+	}
 	input[type=range]::-moz-range-thumb {
 		width: 12px;
 		height: 12px;
@@ -202,14 +217,10 @@ input[type=range] {
 		-moz-appearance: none;
 	}
 		input[type=range]:hover::-moz-range-thumb { background: var(--bg-thumb-hv) }
-	input[type=range]::-webkit-slider-runnable-track {
-		height: 1px;
-		background: var(--text);
-	}
 	input[type=range]::-webkit-slider-thumb {
-		width: 1em;
-		height: 1em;
-		margin-top: -.5em;
+		width: 12px;
+		height: 12px;
+		margin-top: -6px;
 		background: var(--bg-thumb);
 		border: 1px solid var(--text);
 		border-radius: 50%;
@@ -218,11 +229,6 @@ input[type=range] {
 		input[type=range]:hover::-webkit-slider-thumb { background: var(--bg-thumb-hv) }
 	input[type=range]::-ms-thumb { margin: 0 }
 	input[type=range]::-ms-tooltip { display: none }
-	input[type=range]::-ms-track {
-		height: 1px;
-		background: var(--text);
-		border: none;
-	}
 	input#volumeslider {
 		width: unset;
 		margin: calc(.3em + 1px) .3em .3em .3em;
@@ -502,7 +508,7 @@ html:not(.dim) #player.fix {
 	#logdiv .toolbar { justify-content: flex-end }
 	#log {
 		width: 100%;
-		height: calc(100% - 3em);
+		height: calc(100% - 3.25em);
 		margin-top: .25em;
 		color: var(--text);
 		white-space: pre;
@@ -589,7 +595,7 @@ html:not(.dim) #player.fix {
 }
 
 @media (max-width: 480px) {
-	body > div { margin: 2px }
+	body > div { margin: .3em }
 	body > div:before { display: none }
 }
 
@@ -621,6 +627,7 @@ html:not(.dim) #player.fix {
 *:before {
 	display: inline-block;
 	width: 1em;
+	flex-shrink: 0;
 	font-family: Foundation;
 	text-align: center;
 }

@@ -70,6 +70,8 @@ html.light #toast.error { color: #fff }
 html.light #cover { opacity: 1 }
 
 /* Material Design 3(ish) rounded corners */
+html.material ::-webkit-scrollbar-thumb { border-radius: 4px }
+
 html.material body { font-size: 1.1em }
 html.material body > div, html.material .menu {
 	padding: .5em;
@@ -83,7 +85,10 @@ html.material button {
 html.material li { padding: .2em 0 }
 
 html.material #player.fix { border-radius: 0 0 2em 2em }
-html.material #cover { border-radius: 1em }	
+html.material #cover {
+	margin-left: .25em;
+	border-radius: 1em;
+}
 html.material #controls > button { min-width: 3.25em }
 
 html.material #shares > .sharediv {

@@ -140,11 +140,11 @@ function prepUI() {
 			return (tv = true);
 	});
 
-	window.addEventListener('click', function() {	// Solve autoplay issues
-		if (audio[0].src.startsWith('data:'))
-			audio[0].play();
-		if (audio[1].src.startsWith('data:'))
-			audio[1].play();
+	window.addEventListener('click', function() {	// Try to solve autoplay issues
+		[0,1].forEach(function(i) {
+			if (audio[i].src.startsWith('data:'))
+				audio[i].play();
+		});
 	}, { once: true, passive: true });
 	if ('maxTouchPoints' in navigator && navigator.maxTouchPoints > 0) touchUI();
 	else window.addEventListener('touchstart', function() {
@@ -266,7 +266,7 @@ function log(s, force = false) {
 	if (cfg.debug || force) {
 		if (typeof s === 'string') {
 			var t = new Date();
-			s = s.replace(/data\:audio.*/, '(Autoplay Fix)');
+			s = s.replace(/data\:.*/, '(Autoplay Fix)');
 			s = String(t.getHours()).padStart(2, '0') +':'+ String(t.getMinutes()).padStart(2, '0') +':'+ String(t.getSeconds()).padStart(2, '0') +'  '+ s;
 			dom.log.value += s +'\n';
 		}
@@ -332,18 +332,16 @@ function prepAudio(id) {
 
 	a.onended = function() {
 		a.log('Ended');
-		if (a.src.startsWith('data:')) return;
-		if (audio[track].ended)	// For crossfade/"gapless"
-			playNext();
+//		if (audio[track].ended)	// For crossfade/"gapless"
+//			playNext();
 	};
 
 	a.ontimeupdate = function() {
-		if (a != audio[track] || a.src.startsWith('data:')) return;
-//		if (a != audio[track]) return;
+		if (a != audio[track] || a.src.startsWith('data:')) return;	// Already switched to other track (crossfade) || autoplay fix
 
 		if (a.currentTime >= a.duration - cfg.buffersec) return playNext();
 
-		if (a.duration > 30 && (a.duration - a.currentTime) < 15) {
+		if (a.duration > 30 && (a.duration - a.currentTime) < 20) {
 			if (!audio[+!track].prepped) prepNext();
 			if (cfg.crossfade && !a.fade && a.duration - a.currentTime < 10) {
 				a.log('Fade out');
@@ -388,7 +386,7 @@ function prepAudio(id) {
 	}
 
 	a.src = "data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQIAAACAgA==";
-
+	a.autoplay = true;
 	a.preload = 'auto';
 	a.load();
 
@@ -512,14 +510,16 @@ function setFocus (el) {
 }
 
 function setToast(el) {
-	if (el.className == 'error' || cls(dom.player, 'fix')) {
-		if (el.className == 'error') log(str.error +' '+ el.textContent, true);
-		if (toast) clearTimeout(toast);
-		dom.toast.className = el.className;
-		dom.toast.textContent = el.textContent;
-		dom.show('toast');
-		toast = setTimeout(function() { dom.hide('toast') }, 4000);
-	}
+	setTimeout(function() {
+		if (el.className == 'error' || cls(dom.player, 'fix')) {
+			if (el.className == 'error') log(str.error +' '+ el.textContent, true);
+			if (toast) clearTimeout(toast);
+			dom.toast.className = el.className;
+			dom.toast.textContent = el.textContent;
+			dom.show('toast');
+			toast = setTimeout(function() { dom.hide('toast') }, 4000);
+		}
+	}, onScrollWait ? 400 : 0);
 }
 
 function addSong(e) {
@@ -713,12 +713,13 @@ function getSongInfo(path) {
 		path = root + path;	// For shared songs/folders
 
 	for(var i = pathexp.length - 1; i > -1; i--) {
+		var nfo;
 		try {
-			var nfo = path.match(pathexp[i]);
+			nfo = path.match(pathexp[i]);
 			log(nfo.groups);
 			return nfo.groups;
 		} catch(e) {
-			log(e);
+			if (nfo) log(e);
 			if (i < 1) {
 				var nfo, artalb = path.substring(path.lastIndexOf('/', path.lastIndexOf('/') - 1) + 1, path.lastIndexOf('/'));
 				if (artalb.indexOf(' -') == -1)
@@ -919,6 +920,7 @@ function load(id, addtoplaylist = false) {
 	a.prepped = true;
 	a.index = addtoplaylist ? cfg.index + 1 : id;
 	log('a.index = '+ a.index);
+	a.autoplay = false;
 	a.canplaythrough = false;
 	a.src = esc(root + cfg.playlist[a.index].path);
 	a.load();
@@ -1183,6 +1185,10 @@ function playNext() {
 		prepNext();
 		stop();
 	}
+	if (audio[+!track].index && (!cfg.playlist[audio[+!track].index] || esc(root + cfg.playlist[audio[+!track].index].path) != audio[+!track].getAttribute('src'))) {
+		log('PlayNext: last minute adjustment to playlist detected, prepping next track', true);
+		prepNext();
+	}
 	if (!cfg.crossfade) stop();
 
 	track ^= 1;
@@ -1302,6 +1308,7 @@ function toggle(e) {
 			cfg[button.id] ^= true;
 			cls(button, 'on', cfg[button.id] ? ADD : REM);
 			setToast(button);
+			log('Toggle '+ button.id +' = '+ (cfg[button.id] == 1));
 		}
 		if (button.id == 'removesongs')
 			cls(dom.trash, 'on', cfg.removesongs ? ADD : REM);
@@ -1451,10 +1458,12 @@ function filter(instant = false) {	// Gets event from oninput
 				cls(f, 'match', ADD);
 				f.style.display = '';
 
-				if (cls(f, 'folder') && f.path.substring(f.path.lastIndexOf('/') + 1) == dom.filter.value)	// When clicking on folder in player
+				if (cls(f, 'folder') && f.path.substring(f.path.lastIndexOf('/') + 1) == dom.filter.value) {	// When clicking on folder in player
 					ffor(f.querySelectorAll('ul > *'), function(c) {
 						c.style.display = '';
 					});
+					cls(f, 'open', ADD);
+				}
 
 				for (var p = f.parentNode; p && p !== dom.tree; p = p.parentNode) {
 					if (cls(p, 'parent'))
