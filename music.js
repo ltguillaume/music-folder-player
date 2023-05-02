@@ -137,11 +137,11 @@ function prepUI() {
 			return (tv = true);
 	});
 
-	window.addEventListener('click', function() {	// Solve autoplay issues
-		if (audio[0].src.startsWith('data:'))
-			audio[0].play();
-		if (audio[1].src.startsWith('data:'))
-			audio[1].play();
+	window.addEventListener('click', function() {	// Try to solve autoplay issues
+		[0,1].forEach(function(i) {
+			if (audio[i].src.startsWith('data:'))
+				audio[i].play();
+		});
 	}, { once: true, passive: true });
 	if ('maxTouchPoints' in navigator && navigator.maxTouchPoints > 0) touchUI();
 	else window.addEventListener('touchstart', function() {
@@ -248,7 +248,7 @@ function log(s, force = false) {
 	if (cfg.debug || force) {
 		if (typeof s === 'string') {
 			var t = new Date();
-			s = s.replace(/data\:audio.*/, '(Autoplay Fix)');
+			s = s.replace(/data\:.*/, '(Autoplay Fix)');
 			s = String(t.getHours()).padStart(2, '0') +':'+ String(t.getMinutes()).padStart(2, '0') +':'+ String(t.getSeconds()).padStart(2, '0') +'  '+ s;
 			dom.log.value += s +'\n';
 		}
@@ -314,14 +314,12 @@ function prepAudio(id) {
 
 	a.onended = function() {
 		a.log('Ended');
-		if (a.src.startsWith('data:')) return;
-		if (audio[track].ended)	// For crossfade/"gapless"
-			playNext();
+//		if (audio[track].ended)	// For crossfade/"gapless"
+//			playNext();
 	};
 
 	a.ontimeupdate = function() {
-		if (a != audio[track] || a.src.startsWith('data:')) return;
-//		if (a != audio[track]) return;
+		if (a != audio[track] || a.src.startsWith('data:')) return;	// Already switched to other track (crossfade) || autoplay fix
 
 		if (a.currentTime >= a.duration - cfg.buffersec) return playNext();
 
@@ -370,7 +368,7 @@ function prepAudio(id) {
 	}
 
 	a.src = "data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQIAAACAgA==";
-
+	a.autoplay = true;
 	a.preload = 'auto';
 	a.load();
 
@@ -891,6 +889,7 @@ function load(id, addtoplaylist = false) {
 	a.prepped = true;
 	a.index = addtoplaylist ? cfg.index + 1 : id;
 	log('a.index = '+ a.index);
+	a.autoplay = false;
 	a.canplaythrough = false;
 	a.src = esc(root + cfg.playlist[a.index].path);
 	a.load();
@@ -1278,6 +1277,7 @@ function toggle(e) {
 			cfg[button.id] ^= true;
 			cls(button, 'on', cfg[button.id] ? ADD : REM);
 			setToast(button);
+			log('Toggle '+ button.id +' = '+ (cfg[button.id] == 1));
 		}
 		if (button.id == 'removesongs')
 			cls(dom.trash, 'on', cfg.removesongs ? ADD : REM);
