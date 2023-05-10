@@ -1232,7 +1232,7 @@ function toggle(e) {
 			if (cfg.locked) return;
 			dom.hide(['playlists', 'afteroptions']);	// Continue
 		case 'share':
-			if (!sharing) return;
+			if (!sharing && button.id == 'share') return;
 			cls(dom.options, button.id, TOG);
 			cls(button, 'on', TOG);
 			setFocus(dom.share);
