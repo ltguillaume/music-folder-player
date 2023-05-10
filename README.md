@@ -52,7 +52,7 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 - Share links directly to email, social media or use your device's native share options (optional)
 
 #### Translations
-- Currently includes English and Dutch
+- Currently includes English, Dutch, Portuguese and Spanish
 - You can [help translate here](https://translate.codeberg.org/projects/music-folder-player/music-lang-ini/) (see [Instructions for translators](https://translate.codeberg.org/projects/music-folder-player/music-lang-ini/#information))
 
 ## List of hotkeys
