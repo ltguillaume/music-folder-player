@@ -465,7 +465,7 @@ function addFolder(e) {
 	e.preventDefault();
 	e.stopPropagation();
 	var li = e.target;
-	if (confirm(str.addfolder +'\n'+ li.path.substring(li.path.lastIndexOf('/') + 1))) {
+	if (confirm(li.path.substring(li.path.lastIndexOf('/') + 1) +'\n'+ str.addfolder)) {
 		cls(li, 'dim', ADD);
 		ffor(li.querySelectorAll('li.song'), function(s) { add(s.id) });
 	}
