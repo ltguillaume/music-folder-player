@@ -39,7 +39,7 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 
 #### Parties
 - Password lock the playlist and playlist controls (allowing only Enqueue, Play next, Play/pause and Share)
-- Tip: use [OpenKiosk](http://openkiosk.mozdevgroup.com) and disable _Set inactive terminal_
+- Tip: use [OpenKiosk](http://openkiosk.mozdevgroup.com) and disable _Set Inactive Terminal_
 - Prevents adding a song if it's already queued up
 - Do not add previously played songs to playlist (optional)
 
@@ -52,8 +52,8 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 - Share links directly to email, social media or use your device's native share options (optional)
 
 #### Translations
-- Currently includes English and Dutch
-- Easily translate to you own language with an .ini file
+- Currently includes English, Dutch, Portuguese and Spanish
+- You can [help translate here](https://translate.codeberg.org/projects/music-folder-player/music-lang-ini/) (see [Instructions for translators](https://translate.codeberg.org/projects/music-folder-player/music-lang-ini/#information))
 
 ## List of hotkeys
 A list of all the hotkeys can be found in the [Wiki](https://codeberg.org/ltguillaume/music-folder-player/wiki/List-of-hotkeys).

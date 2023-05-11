@@ -483,7 +483,7 @@ function addFolder(e) {
 	e.preventDefault();
 	e.stopPropagation();
 	var li = e.target;
-	if (confirm(str.addfolder +'\n'+ li.path.substring(li.path.lastIndexOf('/') + 1))) {
+	if (confirm(li.path.substring(li.path.lastIndexOf('/') + 1) +'\n'+ str.addfolder)) {
 		cls(li, 'dim', ADD);
 		ffor(li.querySelectorAll('li.song'), function(s) { add(s.id) });
 	}
@@ -1263,7 +1263,7 @@ function toggle(e) {
 			if (cfg.locked) return;
 			dom.hide(['playlists', 'afteroptions']);	// Continue
 		case 'share':
-			if (!sharing) return;
+			if (!sharing && button.id == 'share') return;
 			cls(dom.options, button.id, TOG);
 			cls(button, 'on', TOG);
 			setFocus(dom.share);
