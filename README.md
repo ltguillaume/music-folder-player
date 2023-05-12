@@ -53,7 +53,7 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 
 #### Translations
 - Currently includes English, Dutch, Portuguese and Spanish
-- You can [help translate here](https://translate.codeberg.org/projects/music-folder-player/music-lang-ini/) (see [Instructions for translators](https://translate.codeberg.org/projects/music-folder-player/music-lang-ini/#information))
+- Instructions for creating new translations can be found in the [Wiki](https://codeberg.org/ltguillaume/music-folder-player/wiki/Translations)
 
 ## List of hotkeys
 A list of all the hotkeys can be found in the [Wiki](https://codeberg.org/ltguillaume/music-folder-player/wiki/List-of-hotkeys).
