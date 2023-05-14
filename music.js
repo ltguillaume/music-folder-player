@@ -531,8 +531,10 @@ function addSong(e) {
 		load(li.id, 'next');
 		if (cfg.playlist[cfg.index + 1].path != li.path)	// Other songs are set to be played first
 			return setToast({ 'className': 'error', 'textContent': str.othersongsnext });
-		else
+		else {
+			stop();
 			playNext();
+		}
 	}
 	if (audio[track].paused) fillShare(li.path);
 }
