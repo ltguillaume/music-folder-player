@@ -1,5 +1,11 @@
 <?php
 	error_reporting(0);
+
+	header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+	header('Cache-Control: post-check=0, pre-check=0', false);
+	header('Pragma: no-cache');
+	header('Content-Type: application/javascript; charset=utf-8');
+
 	$ini = parse_ini_file('music.defaults.ini', true, INI_SCANNER_RAW);
 	if (file_exists('music.ini'))
 		$ini = ini_merge($ini, parse_ini_file('music.ini', true, INI_SCANNER_RAW));
@@ -8,10 +14,33 @@
 	$ext = explode(',', $cfg['ext_songs'] .','. $cfg['ext_images']);
 	$img = explode(',', $cfg['ext_images']);
 
-	header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
-	header('Cache-Control: post-check=0, pre-check=0', false);
-	header('Pragma: no-cache');
-	header('Content-Type: application/javascript; charset=utf-8');
+	if (isset($_GET['lng']))
+		$lngcode = $_GET['lng'];
+	else {
+		$langs = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+		foreach($langs as $lang) {
+			$lngcode = substr($lang, 0, 2);
+			if (file_exists('music.lang.'. $lngcode .'.ini'))
+				break;
+		}
+	}
+
+	$lng = parse_ini_file('music.lang.en.ini', true, INI_SCANNER_RAW);
+	$lngfile = 'music.lang.'. $lngcode .'.ini';
+	if ($lngcode != 'en' && file_exists($lngfile))
+		$lng = ini_merge($lng, parse_ini_file($lngfile, true, INI_SCANNER_RAW));
+
+	if (!isset($_GET['reload'])) {
+		echo 'ext_images = '. json_encode($img) .';'. PHP_EOL;
+		foreach($ini['client'] as $key => $value)
+			echo (stristr($key, '.') ? '' : 'var ') . $key .'='. $value .';'. PHP_EOL;
+		foreach($lng['elements'] as $key => $value)
+			echo 'lng(dom.'. $key .',"'. $value .'");'. PHP_EOL;
+		foreach($lng['tooltips'] as $key => $value)
+			echo 'lng(dom.'. $key .',"'. $value .'",1);'. PHP_EOL;
+		foreach($lng['strings'] as $key => $value)
+			echo 'str[\''. $key .'\']="'. $value .'";'. PHP_EOL;
+	}
 
 	if (isset($_GET['dl']) && !in_array('..', explode('/', $_GET['dl']))) {
 		$dl = urldecode(trim($_GET['dl'], '/'));
@@ -67,43 +96,18 @@
 		die(file_put_contents($name, json_encode($pl['songs'])));
 	}
 
-	if (!isset($_GET['reload'])) {
-		foreach($ini['client'] as $key => $value)
-			echo (stristr($key, '.') ? '' : 'var ') . $key .'='. $value .';'. PHP_EOL;
-		if (isset($_GET['lng']))
-			$lng = $_GET['lng'];
-		else {
-			$langs = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-			foreach($langs as $lang) {
-				$lng = substr($lang, 0, 2);
-				if (file_exists('music.lang.'. $lng .'.ini'))
-					break;
-			}
-		}
-		if (!file_exists('music.lang.'. $lng .'.ini'))
-			$lng = 'en';
-		$lng = parse_ini_file('music.lang.'. $lng .'.ini', true, INI_SCANNER_RAW);
-		$notfound = $lng['strings']['notfound'];
-		foreach($lng['elements'] as $key => $value)
-			echo 'lng(dom.'. $key .',"'. $value .'");'. PHP_EOL;
-		foreach($lng['tooltips'] as $key => $value)
-			echo 'lng(dom.'. $key .',"'. $value .'",1);'. PHP_EOL;
-		foreach($lng['strings'] as $key => $value)
-			echo 'str[\''. $key .'\']="'. $value .'";'. PHP_EOL;
-	}
-
 	$dir = $cfg['root'];
 	if (isset($_GET['play']) && !in_array('..', explode('/', $_GET['play']))) {
 		$dir = trim($_GET['play'], '/');
 		if (!file_exists($dir) || $dir == $cfg['root'])
-			die('var root="'. $cfg['root'] .'/";'. PHP_EOL .'var library={"'. $notfound .'":""}');
+			die('var root="'. $cfg['root'] .'/";'. PHP_EOL .'var library={"'. $lng['strings']['notfound'] .'":""}');
 		if (!is_dir($dir)) {
 			$files = array();
 			$files[$dir] = '';	// Add file
 			$scan = scandir(dirname($dir));	// Scan parent folder for cover
 			foreach ($scan as $f) {
 				$ext = strtolower(substr($f, strrpos($f, '.') + 1));
-				if (in_array($ext, $GLOBALS['img'])) {
+				if (in_array($ext, $img)) {
 					$files[$f] = '';
 					break;
 				}
