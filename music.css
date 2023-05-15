@@ -46,6 +46,12 @@
 	background-color: var(--focus);
 }
 
+::-webkit-resizer {
+	border: 8px solid transparent;
+	border-bottom: 8px solid var(--scroll);
+	border-right: 8px solid var(--scroll);
+}
+
 ::-webkit-scrollbar {
 	width: 8px;
 	height: 8px;
@@ -54,7 +60,6 @@
 ::-webkit-scrollbar-thumb { background: var(--scroll); border-radius: 2px }
 ::-webkit-scrollbar-thumb:hover { background: var(--scroll-hv) }
 ::-webkit-scrollbar-corner { background: none }
-::-webkit-resizer { background: var(--scroll) }
 
 * {
 	scrollbar-color: var(--scroll) var(--bg-scroll);
