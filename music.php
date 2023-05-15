@@ -30,18 +30,6 @@
 	if ($lngcode != 'en' && file_exists($lngfile))
 		$lng = ini_merge($lng, parse_ini_file($lngfile, true, INI_SCANNER_RAW));
 
-	if (!isset($_GET['reload'])) {
-		echo 'ext_images = '. json_encode($img) .';'. PHP_EOL;
-		foreach($ini['client'] as $key => $value)
-			echo (stristr($key, '.') ? '' : 'var ') . $key .'='. $value .';'. PHP_EOL;
-		foreach($lng['elements'] as $key => $value)
-			echo 'lng(dom.'. $key .',"'. $value .'");'. PHP_EOL;
-		foreach($lng['tooltips'] as $key => $value)
-			echo 'lng(dom.'. $key .',"'. $value .'",1);'. PHP_EOL;
-		foreach($lng['strings'] as $key => $value)
-			echo 'str[\''. $key .'\']="'. $value .'";'. PHP_EOL;
-	}
-
 	if (isset($_GET['dl']) && !in_array('..', explode('/', $_GET['dl']))) {
 		$dl = urldecode(trim($_GET['dl'], '/'));
 		if (is_dir($dl)) {
@@ -94,6 +82,18 @@
 		if (!is_dir($cfg['playlistdir'])) mkdir($cfg['playlistdir']);
 		if (file_exists($name)) rename($name, $name .'.'. time());
 		die(file_put_contents($name, json_encode($pl['songs'])));
+	}
+
+	if (!isset($_GET['reload'])) {
+		echo 'ext_images = '. json_encode($img) .';'. PHP_EOL;
+		foreach($ini['client'] as $key => $value)
+			echo (stristr($key, '.') ? '' : 'var ') . $key .'='. $value .';'. PHP_EOL;
+		foreach($lng['elements'] as $key => $value)
+			echo 'lng(dom.'. $key .',"'. $value .'");'. PHP_EOL;
+		foreach($lng['tooltips'] as $key => $value)
+			echo 'lng(dom.'. $key .',"'. $value .'",1);'. PHP_EOL;
+		foreach($lng['strings'] as $key => $value)
+			echo 'str[\''. $key .'\']="'. $value .'";'. PHP_EOL;
 	}
 
 	$dir = $cfg['root'];
