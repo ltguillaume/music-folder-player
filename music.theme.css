@@ -76,17 +76,21 @@ html.material ::-webkit-scrollbar-thumb { border-radius: 4px }
 
 html.material body { font-size: 1.1em }
 html.material body > div, html.material .menu { padding: .5em }
-html.material button {
-	min-width: 2.75em;
-	padding: .75em;
-}
+
+html.material button { height: 2.75em }
+	html.material button:empty { width: 2.75em }
+	html.material #controls > button {
+		width: 3.25em;
+		height: 3.25em;
+	}
+	html.material #options > div > button { padding: 0 1em 0 .75em }
+
 html.material li { padding: .2em 0 }
 
 html.material #cover {
 	margin-left: .25em;
 	border-radius: 1em;
 }
-html.material #controls > button { min-width: 3.25em }
 
 html.material .menu button { border-radius: var(--radius) }
 
