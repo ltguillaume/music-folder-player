@@ -644,6 +644,7 @@ html:not(.dim) #player.fix {
 	flex-shrink: 0;
 	font-family: Foundation;
 	text-align: center;
+	letter-spacing: 0;
 }
 
 #after:before { content: "\f182" }
