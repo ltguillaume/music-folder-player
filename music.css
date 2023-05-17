@@ -39,6 +39,8 @@
 	--text-dim: #696969;
 	--text-li-parent: #4c4c4c;
 	--text-locked: #5a5a5a;
+
+	--radius: 4px;
 }
 
 ::selection {
@@ -56,8 +58,11 @@
 	width: 8px;
 	height: 8px;
 }
-::-webkit-scrollbar-track { background: var(--bg-scroll); border-radius: 2px }
-::-webkit-scrollbar-thumb { background: var(--scroll); border-radius: 2px }
+::-webkit-scrollbar-track { background: var(--bg-scroll) }
+::-webkit-scrollbar-thumb {
+	background: var(--scroll);
+	border-radius: 2px;
+}
 ::-webkit-scrollbar-thumb:hover { background: var(--scroll-hv) }
 ::-webkit-scrollbar-corner { background: none }
 
@@ -129,7 +134,7 @@ body > div {
 	padding: .25em;
 	background: var(--bg);
 	border: 1px solid var(--border);
-	border-radius: 4px;
+	border-radius: var(--radius);
 	cursor: default;
 }
 	body > div:before {
@@ -157,7 +162,7 @@ button {
 	font-size: .95em;
 	background: none;
 	border: none;
-	border-radius: 3px;
+	border-radius: var(--radius);
 	cursor: pointer;
 	transition: background .1s ease-in;
 }
@@ -173,7 +178,7 @@ button b {
 	color: var(--text-dim);
 	vertical-align: top;
 	border: 1px solid var(--border);
-	border-radius: 3px;
+	border-radius: var(--radius);
 }
 
 input, select {
@@ -306,7 +311,7 @@ li#last:before { visibility: hidden }
 	max-height: 7em;
 	opacity: .7;
 	border: 1px solid var(--border-cover);
-	border-radius: 3px;
+	border-radius: var(--radius);
 	cursor: zoom-in;
 }
 	#cover:hover, #cover.nofade { opacity: 1 }
@@ -393,7 +398,10 @@ html:not(.dim) #player.fix {
 		padding: 0 0 0 .25em;
 	}
 	#player.fix:before, #player.fix #time, #player.fix #seek { display: none }
-	#player.fix { background: var(--bg-player-fix) }
+	#player.fix {
+		background: var(--bg-player-fix);
+		border-radius: 0 0 var(--radius) var(--radius);
+	}
 
 #options > div > button { padding-right: .75em }
 #options button:before, #trash button:before, #popup button:before,
@@ -429,6 +437,7 @@ html:not(.dim) #player.fix {
 	top: 0;
 	right: 0;
 	background: var(--bg-trash);
+	border-radius: var(--radius);
 	box-shadow: -1px 1px 2px 1px var(--bg-trash);
 	z-index: 1;
 }
@@ -548,7 +557,7 @@ html:not(.dim) #player.fix {
 		text-align: right;
 		border: 1px solid var(--border);
 		border-bottom: none;
-		border-radius: 4px 4px 0 0;
+		border-radius: var(--radius) var(--radius) 0 0;
 		box-shadow: 0 0 2px 1px var(--box-shadow);
 		animation: .4s popup;
 	}
@@ -581,7 +590,7 @@ html:not(.dim) #player.fix {
 	position: absolute;
 	background: var(--bg-menu);
 	border: 1px solid var(--border);
-	border-radius: 3px;
+	border-radius: var(--radius);
 	box-shadow: 0 1px 2px 2px var(--box-shadow);
 	z-index: 2;
 }
