@@ -117,11 +117,13 @@
 	<div id="logdiv" class="hide">
 		<div>
 			<div class="toolbar">
-				<button id="theme" onclick="changeTheme()" accesskey="T"></button>
-				&nbsp;
-				<button id="logclear"    class="clear"    onclick="dom.log.value = ''"></button>
-				<button id="logclip"     class="clip"     onclick="dom.log.select(); document.execCommand('copy')"></button>
 				<button id="logdownload" class="download" onclick="saveLog()"></button>
+				<button id="logclip"     class="clip"     onclick="dom.log.select(); document.execCommand('copy')"></button>
+				<button id="logclear"    class="clear"    onclick="dom.log.value = ''"></button>
+				&nbsp;&nbsp;
+				<button id="theme"                        onclick="changeTheme()" accesskey="T"></button>
+				<button id="debug"                        onclick="toggle(event)"></button>
+				&nbsp;&nbsp;
 				<button id="logmin"      class="min"      onclick="dom.logbtn.click()"></button>
 			</div>
 			<textarea id="log" spellcheck="false"></textarea>

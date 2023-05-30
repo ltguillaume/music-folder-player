@@ -113,6 +113,7 @@ function prepUI() {
 	dom.doc.className = cfg.theme || def.theme;
 	dom.volumeslider.max = def.volume;
 	dom.volumeslider.value = cfg.volume;
+	if (cfg.debug) cls(dom.debug, 'on', ADD);
 	if (cfg.enqueue) cls(dom.enqueue, 'on', ADD);
 	if (cfg.random) cls(dom.random, 'on', ADD);
 	if (cfg.crossfade) cls(dom.crossfade, 'on', ADD);
