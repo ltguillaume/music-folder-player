@@ -108,6 +108,12 @@ html.touch body {
 	}
 	html.touch #tree ul { margin-left: .5em }
 	html.touch .toolbar.hidden { visibility: visible }
+	html.touch #popup {
+		top: 0;
+		border-top: none;
+		border-radius: 0 0 var(--radius) var(--radius);
+		animation: .4s popup-top;
+	}
 
 html.hide > body > div,
 html.hide > body > div:before {
@@ -558,7 +564,6 @@ html:not(.dim) #player.fix {
 }
 	#popup {
 		position: absolute;
-		bottom: 0;
 		left: 0;
 		right: 0;
 		width: 20em;
@@ -568,20 +573,23 @@ html:not(.dim) #player.fix {
 		background: var(--bg);
 		text-align: right;
 		border: 1px solid var(--border);
-		border-bottom: none;
 		border-radius: var(--radius) var(--radius) 0 0;
 		box-shadow: 0 0 2px 1px var(--box-shadow);
 		animation: .4s popup;
 	}
-	@keyframes popup { from { transform: translateY(200%) }}
-	#popup button { margin: .1em }
-	#popup input {
-		max-width: calc(100% - 2em);
-		margin-bottom: .5em;
-	}
-	#popup > div { text-align: center }
-	#popupicon { margin-top: 1em }
-		#popupicon:before { font-size: 3em }
+		html:not(.touch) #popup {
+			bottom: 0;
+			border-bottom: none;
+		}
+		#popup input {
+			max-width: calc(100% - 2em);
+			margin-bottom: .5em;
+		}
+		#popup > div { text-align: center }
+		#popupicon { margin-top: 1em }
+			#popupicon:before { font-size: 3em }
+		@keyframes popup { from { transform: translateY(200%) }}
+		@keyframes popup-top { from { transform: translateY(-200%) }}
 
 :not(html).hide { display: none }
 
