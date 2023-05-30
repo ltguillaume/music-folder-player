@@ -467,7 +467,7 @@ function setFocus (el) {
 	if (top < offset || bottom - top + offset > window.innerHeight - offset) {
 		window.scrollTo({
 			'top': window.scrollY + top - offset,
-			'behavior': 'smooth'
+			'behavior': !cls(dom.player, 'fix') && touch ? 'instant' : 'smooth'	// Instant scroll for mobile Chromium, otherwise fixed player will overlap and not adjust scrolling
 		});
 	} else if (bottom > window.innerHeight) {
 		window.scrollTo({
@@ -477,7 +477,7 @@ function setFocus (el) {
 	}
 	if (!offset) setTimeout(function() {
 		if (cls(dom.player, 'fix')) setFocus(el);
-	}, 500, el);
+	}, 500);
 }
 
 function setToast(el) {
