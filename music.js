@@ -143,21 +143,9 @@ function prepUI() {
 				audio[i].play();
 		});
 	}, { once: true, passive: true });
-	if ('maxTouchPoints' in navigator && navigator.maxTouchPoints > 0) touchUI();
-	else window.addEventListener('touchstart', function() {
+
+	if ('ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0)
 		touchUI();
-		window.addEventListener('touchend', function(e) {
-			e.preventDefault();
-/*			dom.playlist.className = dom.playlist.style.height = '';
-			resizePlaylist();
-			window.addEventListener('touchend', function(e) {
-				endDrag();
-			}, false);
-*/		}, { once: true });
-		window.addEventListener('touchmove', function(e) {
-			onPlaylist = dom.playlist.contains(e.targetTouches[0].target);
-		}, { passive: true });
-	}, { once: true, passive: true });
 
 	window.addEventListener('scroll', function() {
 		if (onScrollWait) return;
@@ -201,6 +189,7 @@ function touchUI() {
 	cls(dom.doc, 'touch', ADD);
 	if (mode) resizePlaylist();
 	else dom.show('trash');
+	log('Touch device detected', true);
 }
 
 function fixPlayer() {
