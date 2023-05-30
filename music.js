@@ -1361,13 +1361,11 @@ function menu(e) {
 }
 
 function clearPlaylist() {
-	if (cfg.locked || mode || !confirm(str.clearplaylist)) return;
-	if (cfg.playlist.length > 0) {
-		cfg.playlist.length = 0;
-		cfg.index = -1;
-		dom.playlist.innerHTML = '';
-		resizePlaylist();
-	}
+	if (cfg.locked || mode || cfg.playlist.length == 0 || !confirm(str.clearplaylist)) return;
+	cfg.playlist.length = 0;
+	cfg.index = -1;
+	dom.playlist.innerHTML = '';
+	resizePlaylist();
 	if (cfg.removesongs) dom.removesongs.click();
 }
 
