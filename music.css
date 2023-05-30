@@ -40,7 +40,11 @@
 	--text-li-parent: #4c4c4c;
 	--text-locked: #5a5a5a;
 
+	--button-factor: .95;
+	--button-size: 2.25em;
+	--button-size-rel: calc(var(--button-factor) * var(--button-size));
 	--radius: 4px;
+	--space: .5em;
 }
 
 ::selection {
@@ -131,7 +135,7 @@ body {
 
 body > div {
 	margin: .5em 2em;
-	padding: .25em;
+	padding: var(--space);
 	background: var(--bg);
 	border: 1px solid var(--border);
 	border-radius: var(--radius);
@@ -159,14 +163,20 @@ body:not(.locked) #library:hover .toolbar { visibility: visible }
 button {
 	display: inline-block;
 	padding: .5em .6em;
-	font-size: .95em;
+	font-size: calc(1em * var(--button-factor));
 	background: none;
 	border: none;
 	border-radius: var(--radius);
 	cursor: pointer;
 	transition: background .1s ease-in;
 }
-	button:before { font-size: 1.05em }
+	button:before { font-size: calc(1em / var(--button-factor)) }
+	button:empty {
+		width: var(--button-size);
+		height: var(--button-size);
+		padding: 0 !important;
+	}
+		button:empty:before { width: unset }
 	button:hover, .menu > button:focus { background: var(--bg-button-hv) }
 	button::-moz-focus-inner { border: none }
 
@@ -359,7 +369,11 @@ li#last:before { visibility: hidden }
 }
 
 #controls { margin-bottom: 1px }
-	#controls > button:before { margin: .25em }
+	#controls > button {
+		width: calc(.5em + var(--button-size));
+		height: calc(.5em + var(--button-size));
+		padding: 0;
+	}
 
 #toast {
 	position: fixed;
@@ -441,12 +455,10 @@ html:not(.dim) #player.fix {
 	box-shadow: -1px 1px 2px 1px var(--bg-trash);
 	z-index: 1;
 }
-	#trash:before {
-		padding: .4em;
-		font-size: 1.1em;
-	}
+	#trash:before { font-size: calc(1em / var(--button-factor)) }
 		#trash.over:before, #trash:hover:before { display: none }
-	#trash:not(:hover) button { display: none }
+		#trash:not(:hover):before { margin: auto }
+		#trash:not(:hover) button { display: none }
 	#trash:hover { background: var(--bg) }
 	#trash.drag {
 		height: 100%;
@@ -454,10 +466,14 @@ html:not(.dim) #player.fix {
 		border-left: 1px solid var(--border);
 		transition: background .4s, opacity .4s;
 	}
+	#trash:not(:hover) {
+		width: var(--button-size-rel);
+		height: var(--button-size-rel);
+	}
 	#trash.drop, #trash.on { color: var(--focus) }
 
 #playlist {
-	min-height: 2.137em;
+	min-height: var(--button-size-rel);
 	max-height: 10.25em;
 	overflow-y: auto;
 	list-style: none;
@@ -522,7 +538,7 @@ html:not(.dim) #player.fix {
 	#logdiv .toolbar { justify-content: flex-end }
 	#log {
 		width: 100%;
-		height: calc(100% - 3.25em);
+		margin-top: var(--space);
 		margin-top: .25em;
 		color: var(--text);
 		white-space: pre;
@@ -609,8 +625,13 @@ html:not(.dim) #player.fix {
 }
 
 @media (max-width: 480px) {
-	body > div { margin: .3em }
-	body > div:before { display: none }
+	body > div { margin: calc(.5 * var(--space)) }
+		body > div:before { display: none }
+
+	#player.fix #controls > button {
+		width: var(--button-size);
+		height: var(--button-size);
+	}
 }
 
 @media (max-width: 670px) {
@@ -649,6 +670,7 @@ html:not(.dim) #player.fix {
 
 #after:before { content: "\f182" }
 #crossfade:before { content: "\f1b2" }
+#debug:before { content: "\f156" }
 #enqueue:before, .add:before { content: "\f199" }
 #library:before { content: "\f17b" }
 	#library.unfold #unfold:before { content: '\f10d' }

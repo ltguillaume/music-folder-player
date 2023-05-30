@@ -70,7 +70,11 @@ html.light #toast.error { color: #fff }
 html.light #cover { opacity: 1 }
 
 /* Material Design 3(ish) rounded corners */
-:root.material { --radius: 2em }
+:root.material {
+	--radius: 2em;
+	--button-size: 2.75em;
+	--space: .75em;
+}
 
 html.material ::-webkit-scrollbar-thumb { border-radius: 4px }
 
