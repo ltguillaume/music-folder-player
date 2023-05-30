@@ -94,8 +94,8 @@ html.touch body {
 		-webkit-touch-callout: none;
 		-webkit-tap-highlight-color: transparent;
 	}
-	html.touch input, html.touch li { padding: .4em 0 }
 	html.touch input[type=range] { width: 18em }
+	html.touch li, html.touch #filter { padding: .4em 0 !important }
 	html.touch u { text-decoration: none }
 	html.touch #current { line-height: 1.25em }
 	html.touch #playlist {
@@ -164,7 +164,7 @@ button {
 	display: inline-block;
 	flex-shrink: 0;
 	height: var(--button-size);
-	padding: .5em .6em;
+	padding: 0 .75em;
 	font-size: calc(1em * var(--button-factor));
 	background: none;
 	border: none;
@@ -194,7 +194,7 @@ button b {
 }
 
 input, select {
-	width: 29.5em;
+	width: 25em;
 	padding: .1em;
 	background: var(--bg);
 	font-size: .8em;
@@ -205,8 +205,7 @@ input, select {
 input[type=range] {
 	width: 14em;
 	max-width: 90%;
-	height: 1em;
-	margin-top: 1px;
+	height: 12px;
 	background: transparent;
 	vertical-align: text-top;
 	opacity: .5;
@@ -223,6 +222,7 @@ input[type=range] {
 	}
 	input[type=range]::-webkit-slider-runnable-track {
 		height: 1px;
+		margin-top: 2px;
 		background: var(--text);
 	}
 	input[type=range]::-ms-track {
@@ -253,9 +253,8 @@ input[type=range] {
 	input[type=range]::-ms-tooltip { display: none }
 	input#volumeslider {
 		width: unset;
-		margin: calc(.3em + 1px) .3em .3em .3em;
+		margin: .3em;
 	}
-		input#volumeslider::-webkit-slider-runnable-track { margin-top: 0px }
 
 span { margin-left: .25em }
 
@@ -380,7 +379,6 @@ li#last:before { visibility: hidden }
 	position: fixed;
 	top: 1em;
 	right: 1em;
-	padding: 1em;
 	background: var(--bg-toast) !important;
 	box-shadow: 0 0 2px 2px var(--border);
 	cursor: default;
@@ -415,7 +413,7 @@ html:not(.dim) #player.fix {
 	}
 
 #options button:before, #trash button:before, #popup button:before,
-#toast:before, li:before { margin-right: .25em }
+#toast:before, li:before { margin-right: .35em }
 
 #playlistoptions, #shares {
 		max-height: 0;
@@ -484,8 +482,8 @@ html:not(.dim) #player.fix {
 	}
 
 #playlist li {
-	margin-left: 1.25em;
-	border-top: 1px solid var(--bg);
+	margin-left: 1.5em;
+	border-top: 1px solid transparent;
 	cursor: alias;
 }
 	#playlist li:before { margin-left: -1.25em }
@@ -661,6 +659,7 @@ html:not(.dim) #player.fix {
 			margin-bottom: .5em;
 			padding: .5em;
 		}
+		#player.fix #cover { margin: 0 }
 
 	#options .toolbar.wrapped { justify-content: center }
 }
