@@ -1214,10 +1214,10 @@ function toggle(e) {
 			cls(dom.cover, 'nofade', TOG);
 			return;
 		case 'volume':
-			if (cls(dom.volumeslider, 'hide', TOG))
-				dom.volumeslider.blur();
-			else
+			if (cls(dom.controls, 'volume', TOG))
 				setFocus(dom.volumeslider);
+			else
+				dom.volumeslider.blur();
 			return;
 		case 'playlistbtn':
 			if (cfg.locked) return;
