@@ -235,10 +235,10 @@ function ls() {
 		var ls = JSON.stringify(cfg);
 		localStorage.setItem(lsid, ls);
 		if (localStorage.getItem(lsid) == ls) return true;
-		log('LocalStorage issue');
+		log('LocalStorage issue', true);
 		return false;
 	} catch(e) {
-		log(e);
+		log(e, true);
 		cfg = def;
 		return false;
 	}
@@ -775,7 +775,7 @@ function previous() {
 	if (cfg.index > 0)
 		play(cfg.index - 1);
 	else
-		log('No previous item in playlist');
+		log('No previous item in playlist', true);
 }
 
 function skipArtist(e) {
@@ -832,7 +832,7 @@ function prepNext() {
 					if (cfg.after == 'randomfiltered')
 						playedFiltered.push(next);
 					played.push(next);
-					log('Artist of '+ songs[next].path +' is skipped.')
+					log('Artist of '+ songs[next].path +' is skipped.', true)
 					next = null;
 				}
 			} while (next == null);
@@ -850,7 +850,7 @@ function prepNext() {
 			if (next != -1 && next < songs.length)
 				load(songs[next].id, true);
 			else {
-				log('End of library. Starting at the top');
+				log('End of library. Starting at the top', true);
 				load(songs[0].id, true);
 			}
 		} else if (cfg.after == 'repeatplaylist' && cfg.playlist.length > 0)
@@ -876,7 +876,7 @@ function clearPlayed(action) {
 function artistSkipped(path) {
 	var artist = getSongInfo(path).artist;
 	if (cfg.debug && cfg.skip.indexOf() != -1)
-		log('Artist '+ artist +' skipped');
+		log('Artist '+ artist +' skipped', true);
 	return cfg.skip.indexOf(artist) != -1;
 }
 
@@ -901,7 +901,7 @@ function load(id, addtoplaylist = false) {
 
 	retry = setInterval(function() {
 		if (a.buffered.length == 0 || a.buffered.end(a.buffered.length - 1) < Math.min(5, a.duration)) {
-			a.log('No connection. Retrying');
+			a.log('No connection. Retrying', true);
 			a.load();
 		} else clearInterval(retry);
 	}, 8000);
@@ -1601,7 +1601,7 @@ function changeTheme() {
 	setTimeout(function() {
 		dom.doc.className = dom.doc.className.replace(prev, cfg.theme);
 		resizePlaylist();
-		log('Theme: '+ cfg.theme);
+		log('Theme: '+ cfg.theme, true);
 	}, 400);
 }
 
