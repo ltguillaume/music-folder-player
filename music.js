@@ -116,6 +116,7 @@ function prepUI() {
 	dom.doc.className = cfg.theme || def.theme;
 	dom.volumeslider.max = def.volume;
 	dom.volumeslider.value = cfg.volume;
+	if (cfg.debug) cls(dom.debug, 'on', ADD);
 	if (cfg.enqueue) cls(dom.enqueue, 'on', ADD);
 	if (cfg.random) cls(dom.random, 'on', ADD);
 	if (cfg.crossfade) cls(dom.crossfade, 'on', ADD);
@@ -128,7 +129,6 @@ function prepUI() {
 	if (!sharing) dom.hide('share');
 	if (cfg.after == 'randomfiltered') cfg.after = 'randomlibrary';
 	cfg.removesongs = false;
-	if (!cfg.debug) dom.hide('logbtn');
 
 	if (url.length > 1 && url[1].startsWith('pl:')) {
 		prepPlaylistMode();
@@ -146,21 +146,9 @@ function prepUI() {
 				audio[i].play();
 		});
 	}, { once: true, passive: true });
-	if ('maxTouchPoints' in navigator && navigator.maxTouchPoints > 0) touchUI();
-	else window.addEventListener('touchstart', function() {
+
+	if ('ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0)
 		touchUI();
-		window.addEventListener('touchend', function(e) {
-			e.preventDefault();
-/*			dom.playlist.className = dom.playlist.style.height = '';
-			resizePlaylist();
-			window.addEventListener('touchend', function(e) {
-				endDrag();
-			}, false);
-*/		}, { once: true });
-		window.addEventListener('touchmove', function(e) {
-			onPlaylist = dom.playlist.contains(e.targetTouches[0].target);
-		}, { passive: true });
-	}, { once: true, passive: true });
 
 	window.addEventListener('scroll', function() {
 		if (onScrollWait) return;
@@ -204,6 +192,7 @@ function touchUI() {
 	cls(dom.doc, 'touch', ADD);
 	if (mode) resizePlaylist();
 	else dom.show('trash');
+	log('Touch device detected', true);
 }
 
 function prepJingles() {
@@ -253,10 +242,10 @@ function ls() {
 		var ls = JSON.stringify(cfg);
 		localStorage.setItem(lsid, ls);
 		if (localStorage.getItem(lsid) == ls) return true;
-		log('LocalStorage issue');
+		log('LocalStorage issue', true);
 		return false;
 	} catch(e) {
-		log(e);
+		log(e, true);
 		cfg = def;
 		return false;
 	}
@@ -496,7 +485,7 @@ function setFocus (el) {
 	if (top < offset || bottom - top + offset > window.innerHeight - offset) {
 		window.scrollTo({
 			'top': window.scrollY + top - offset,
-			'behavior': 'smooth'
+			'behavior': !cls(dom.player, 'fix') && touch ? 'instant' : 'smooth'	// Instant scroll for mobile Chromium, otherwise fixed player will overlap and not adjust scrolling
 		});
 	} else if (bottom > window.innerHeight) {
 		window.scrollTo({
@@ -506,7 +495,7 @@ function setFocus (el) {
 	}
 	if (!offset) setTimeout(function() {
 		if (cls(dom.player, 'fix')) setFocus(el);
-	}, 500, el);
+	}, 500);
 }
 
 function setToast(el) {
@@ -793,7 +782,7 @@ function previous() {
 	if (cfg.index > 0)
 		play(cfg.index - 1);
 	else
-		log('No previous item in playlist');
+		log('No previous item in playlist', true);
 }
 
 function skipArtist(e) {
@@ -856,7 +845,7 @@ function prepNext() {
 					if (cfg.after == 'randomfiltered')
 						playedFiltered.push(next);
 					played.push(next);
-					log('Artist of '+ songs[next].path +' is skipped.')
+					log('Artist of '+ songs[next].path +' is skipped.', true)
 					next = null;
 				}
 			} while (next == null);
@@ -874,7 +863,7 @@ function prepNext() {
 			if (next != -1 && next < songs.length)
 				load(songs[next].id, true);
 			else {
-				log('End of library. Starting at the top');
+				log('End of library. Starting at the top', true);
 				load(songs[0].id, true);
 			}
 		} else if (cfg.after == 'repeatplaylist' && cfg.playlist.length > 0)
@@ -907,7 +896,7 @@ function clearPlayed(action) {
 function artistSkipped(path) {
 	var artist = getSongInfo(path).artist;
 	if (cfg.debug && cfg.skip.indexOf() != -1)
-		log('Artist '+ artist +' skipped');
+		log('Artist '+ artist +' skipped', true);
 	return cfg.skip.indexOf(artist) != -1;
 }
 
@@ -932,7 +921,7 @@ function load(id, addtoplaylist = false) {
 
 	retry = setInterval(function() {
 		if (a.buffered.length == 0 || a.buffered.end(a.buffered.length - 1) < Math.min(5, a.duration)) {
-			a.log('No connection. Retrying');
+			a.log('No connection. Retrying', true);
 			a.load();
 		} else clearInterval(retry);
 	}, 8000);
@@ -1289,7 +1278,6 @@ function toggle(e) {
 		case 'lock':
 			return Popup.lock();
 		case 'logbtn':
-			if (!cfg.debug) return;
 			cls(dom.doc, 'dim', cls(dom.logdiv, 'hide'));
 			if (cls(dom.logdiv, 'hide', TOG))
 				dom.log.blur();
@@ -1404,13 +1392,11 @@ function menu(e) {
 }
 
 function clearPlaylist() {
-	if (cfg.locked || mode || !confirm(str.clearplaylist)) return;
-	if (cfg.playlist.length > 0) {
-		cfg.playlist.length = 0;
-		cfg.index = -1;
-		dom.playlist.innerHTML = '';
-		resizePlaylist();
-	}
+	if (cfg.locked || mode || cfg.playlist.length == 0 || !confirm(str.clearplaylist)) return;
+	cfg.playlist.length = 0;
+	cfg.index = -1;
+	dom.playlist.innerHTML = '';
+	resizePlaylist();
 	if (cfg.removesongs) dom.removesongs.click();
 }
 
@@ -1633,7 +1619,7 @@ function changeTheme() {
 	setTimeout(function() {
 		dom.doc.className = dom.doc.className.replace(prev, cfg.theme);
 		resizePlaylist();
-		log('Theme: '+ cfg.theme);
+		log('Theme: '+ cfg.theme, true);
 	}, 400);
 }
 

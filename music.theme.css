@@ -46,7 +46,7 @@
 	--bg-body: #eaeef2;
 	--bg-button-hv: #e9f1f7;
 	--bg-dim: #eaeef2;
-	--bg-image: none;
+	--bg-image: url(music.theme.light.svg);
 	--bg-menu: #f2f6fa;
 	--bg-player-fix: #f2f6fa;
 	--bg-splash: #d0d7de;
@@ -70,44 +70,26 @@ html.light #toast.error { color: #fff }
 html.light #cover { opacity: 1 }
 
 /* Material Design 3(ish) rounded corners */
+:root.material {
+	--radius: 2em;
+	--button-size: 2.75em;
+	--space: .75em;
+}
+
 html.material ::-webkit-scrollbar-thumb { border-radius: 4px }
 
 html.material body { font-size: 1.1em }
-html.material body > div, html.material .menu {
-	padding: .5em;
-	border-radius: 2em;
-}
-html.material button {
-	min-width: 2.75em;
-	padding: .75em;
-	border-radius: 2em;
-}
-html.material li { padding: .2em 0 }
 
-html.material #player.fix { border-radius: 0 0 2em 2em }
-html.material #cover {
-	margin-left: .25em;
-	border-radius: 1em;
-}
-html.material #controls > button { min-width: 3.25em }
+html.material button { padding: 0 .95em }
 
-html.material #shares > .sharediv {
-	max-width: 33em;
-	margin-left: .25em;
-}
+html.material input[type=range] { height: 15px }
 
-html.material #playlist, html.material #tree {
-	min-height: 2.64em;
-	margin: 0 .25em;
-}
-	html.material #tree { margin-left: 1.5em }
+html.material li { padding: .1em 0 }
 
-html.material #trash { border-radius: 2em }
-	html.material #trash:before { padding: .6em }
+html.material #cover { border-radius: calc(.5 * var(--radius)) }
 
-html.material #logdiv { padding-bottom: 1.25em }
-
-html.material #popup { border-radius: 2em 2em 0 0 }
+html.material .menu { padding: .5em }
+	html.material .menu button { border-radius: var(--radius) }
 
 /* Display songs in tree horizontally
 #tree li.song {

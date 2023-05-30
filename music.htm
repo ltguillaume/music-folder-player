@@ -12,7 +12,7 @@
 </head>
 <body onload="init()">
 	<span id="splash"></span>
-	<div id="player">
+	<div id="player" class="toolbar">
 		<img id="cover" src="music.png" onclick="zoom()" accesskey="z"
 			oncontextmenu="toggle(event)" onload="this.style.opacity = ''" />
 		<div id="current">
@@ -21,38 +21,38 @@
 			<div id="time">00:00</div>
 			<input id="seek" type="range" min="0" max="1" value="0" step="any"
 				onchange="seek('c')" oninput="seek('i')" ontouchstart="onseek=true" ontouchend="onseek=false" disabled>
-			<div id="controls">
-				   <button id="volume"       onclick="toggle(event)" accesskey="u" oncontextmenu="mute(event)" contextkey="m"></button><!--
-				--><input  id="volumeslider" class="hide" type="range" min="0" step=".05" onchange="setVolume(event)" oninput="setVolume(event)"><!--
-				--><button id="stop"         onclick="stop()"></button><!--
-				--><button id="playpause"    onclick="playPause()"   accesskey=" "></button><!--
-				--><button id="previous"     onclick="previous()"    accesskey="["></button><!--
-				--><button id="next"         onclick="next()"        accesskey="]" oncontextmenu="skipArtist(event)" contextkey="k"></button>
+			<div id="controls" class="toolbar">
+				<button id="volume"       onclick="toggle(event)" accesskey="u" oncontextmenu="mute(event)" contextkey="m"></button>
+				<input  id="volumeslider" class="hide" type="range" min="0" step=".05" onchange="setVolume(event)" oninput="setVolume(event)">
+				<button id="stop"         onclick="stop()"></button>
+				<button id="playpause"    onclick="playPause()"   accesskey=" "></button>
+				<button id="previous"     onclick="previous()"    accesskey="["></button>
+				<button id="next"         onclick="next()"        accesskey="]" oncontextmenu="skipArtist(event)" contextkey="k"></button>
 			</div>
 		</div>
 		<button id="toast" class="hide"></button>
 	</div>
 	<div id="options">
-		<div onclick="toggle(event)">
-			   <button id="enqueue"     accesskey="e"></button><!--
-			--><button id="random"      accesskey="r"></button><!--
-			--><button id="crossfade"   accesskey="o"></button><!--
-			--><button id="playlistbtn" accesskey="p"></button><!--
-			--><button id="share"       accesskey="s"></button><!--
-			--><button id="lock"        accesskey="l"></button><!--
-			--><button id="logbtn"      accesskey="g"></button>
+		<div class="wrapped toolbar" onclick="toggle(event)">
+			<button id="enqueue"     accesskey="e"></button>
+			<button id="random"      accesskey="r"></button>
+			<button id="crossfade"   accesskey="o"></button>
+			<button id="playlistbtn" accesskey="p"></button>
+			<button id="share"       accesskey="s"></button>
+			<button id="lock"        accesskey="l"></button>
+			<button id="logbtn"      accesskey="g"></button>
 		</div>
-		<div id="playlistoptions">
+		<div id="playlistoptions" class="wrapped toolbar">
 			<div id="playlistsdiv">
 				<button id="playlistload" onclick="menu(event)" accesskey="d"></button>
 				<div id="playlists" class="menu hide" onclick="loadPlaylistBtn(event)"
 					oncontextmenu="removePlaylist(event)" onmouseleave="menu(event)">
 				</div>
-			</div><!--
-			--><button id="playlistsave"   onclick="prepPlaylists('save')" accesskey="v"></button><!--
-			--><button id="playlistimport" onclick="importPlaylist()"      accesskey="i"></button><!--
-			--><button id="playlistexport" onclick="exportPlaylist()"      accesskey="x"></button><!--
-			--><div id="afterdiv">
+			</div>
+				<button id="playlistsave"   onclick="prepPlaylists('save')" accesskey="v"></button>
+				<button id="playlistimport" onclick="importPlaylist()"      accesskey="i"></button>
+				<button id="playlistexport" onclick="exportPlaylist()"      accesskey="x"></button>
+				<div id="afterdiv">
 				<button id="after" onclick="menu(event)" accesskey="a"></button>
 				<div id="afteroptions" class="menu hide" onmouseleave="menu(event)" onclick="toggle(event)">
 					<button id="stopplayback"></button>
@@ -92,8 +92,8 @@
 			<div id="trash" class="hidden toolbar" onclick="toggle(event)"
 					ondragover="allowDrop(event)" ondrop="removeItem(event); cls(this, 'drop', REM)"
 					ondragenter="cls(this, 'drop', ADD)" ondragleave="cls(this, 'drop', REM)">
-				<button id="playlistclear" class="clear" accesskey="c"></button><!--
-				--><button id="removesongs"></button>
+				<button id="playlistclear" class="clear" accesskey="c"></button>
+				<button id="removesongs"></button>
 			</div>
 			<ul id="playlist" onclick="clickItem(event)" oncontextmenu="findItem(event)"
 				ondragstart="prepDrag(event)" ondragover="allowDrop(event)" ondragend="endDrag()" ondrop="dropItem(event)"
@@ -115,13 +115,15 @@
 		<ul id="tree" onclick="treeClick(event)" oncontextmenu="treeClick(event, true)"></ul>
 	</div>
 	<div id="logdiv" class="hide">
-		<div>
-			<div class="toolbar">
-				<button id="theme" onclick="changeTheme()" accesskey="T"></button>
-				&nbsp;
-				<button id="logclear"    class="clear"    onclick="dom.log.value = ''"></button>
-				<button id="logclip"     class="clip"     onclick="dom.log.select(); document.execCommand('copy')"></button>
+		<div class="column">
+			<div class="right toolbar">
 				<button id="logdownload" class="download" onclick="saveLog()"></button>
+				<button id="logclip"     class="clip"     onclick="dom.log.select(); document.execCommand('copy')"></button>
+				<button id="logclear"    class="clear"    onclick="dom.log.value = ''"></button>
+				&nbsp;&nbsp;
+				<button id="theme"                        onclick="changeTheme()" accesskey="T"></button>
+				<button id="debug"                        onclick="toggle(event)"></button>
+				&nbsp;&nbsp;
 				<button id="logmin"      class="min"      onclick="dom.logbtn.click()"></button>
 			</div>
 			<textarea id="log" spellcheck="false"></textarea>

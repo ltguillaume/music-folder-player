@@ -39,6 +39,12 @@
 	--text-dim: #696969;
 	--text-li-parent: #4c4c4c;
 	--text-locked: #5a5a5a;
+
+	--button-factor: .95;
+	--button-size: 2.25em;
+	--button-size-rel: calc(var(--button-factor) * var(--button-size));
+	--radius: 4px;
+	--space: .5em;
 }
 
 ::selection {
@@ -56,8 +62,11 @@
 	width: 8px;
 	height: 8px;
 }
-::-webkit-scrollbar-track { background: var(--bg-scroll); border-radius: 2px }
-::-webkit-scrollbar-thumb { background: var(--scroll); border-radius: 2px }
+::-webkit-scrollbar-track { background: var(--bg-scroll) }
+::-webkit-scrollbar-thumb {
+	background: var(--scroll);
+	border-radius: 2px;
+}
 ::-webkit-scrollbar-thumb:hover { background: var(--scroll-hv) }
 ::-webkit-scrollbar-corner { background: none }
 
@@ -85,8 +94,8 @@ html.touch body {
 		-webkit-touch-callout: none;
 		-webkit-tap-highlight-color: transparent;
 	}
-	html.touch input, html.touch li { padding: .4em 0 }
 	html.touch input[type=range] { width: 18em }
+	html.touch li, html.touch #filter { padding: .4em 0 !important }
 	html.touch u { text-decoration: none }
 	html.touch #current { line-height: 1.25em }
 	html.touch #playlist {
@@ -99,6 +108,12 @@ html.touch body {
 	}
 	html.touch #tree ul { margin-left: .5em }
 	html.touch .toolbar.hidden { visibility: visible }
+	html.touch #popup {
+		top: 0;
+		border-top: none;
+		border-radius: 0 0 var(--radius) var(--radius);
+		animation: .4s popup-top;
+	}
 
 html.hide > body > div,
 html.hide > body > div:before {
@@ -126,10 +141,10 @@ body {
 
 body > div {
 	margin: .5em 2em;
-	padding: .25em;
+	padding: var(--space);
 	background: var(--bg);
 	border: 1px solid var(--border);
-	border-radius: 4px;
+	border-radius: var(--radius);
 	cursor: default;
 }
 	body > div:before {
@@ -153,15 +168,23 @@ body:not(.locked) #library:hover .toolbar { visibility: visible }
 
 button {
 	display: inline-block;
-	padding: .5em .6em;
-	font-size: .95em;
+	flex-shrink: 0;
+	height: var(--button-size);
+	padding: 0 .75em;
+	font-size: calc(1em * var(--button-factor));
 	background: none;
 	border: none;
-	border-radius: 3px;
+	border-radius: var(--radius);
 	cursor: pointer;
 	transition: background .1s ease-in;
 }
-	button:before { font-size: 1.05em }
+	button:before { font-size: calc(1em / var(--button-factor)) }
+	button:empty {
+		width: var(--button-size);
+		height: var(--button-size);
+		padding: 0 !important;
+	}
+		button:empty:before { width: unset }
 	button:hover, .menu > button:focus { background: var(--bg-button-hv) }
 	button::-moz-focus-inner { border: none }
 
@@ -173,11 +196,11 @@ button b {
 	color: var(--text-dim);
 	vertical-align: top;
 	border: 1px solid var(--border);
-	border-radius: 3px;
+	border-radius: var(--radius);
 }
 
 input, select {
-	width: 29.5em;
+	width: 25em;
 	padding: .1em;
 	background: var(--bg);
 	font-size: .8em;
@@ -188,8 +211,7 @@ input, select {
 input[type=range] {
 	width: 14em;
 	max-width: 90%;
-	height: 1em;
-	margin-top: 1px;
+	height: 12px;
 	background: transparent;
 	vertical-align: text-top;
 	opacity: .5;
@@ -206,6 +228,7 @@ input[type=range] {
 	}
 	input[type=range]::-webkit-slider-runnable-track {
 		height: 1px;
+		margin-top: 2px;
 		background: var(--text);
 	}
 	input[type=range]::-ms-track {
@@ -236,9 +259,8 @@ input[type=range] {
 	input[type=range]::-ms-tooltip { display: none }
 	input#volumeslider {
 		width: unset;
-		margin: calc(.3em + 1px) .3em .3em .3em;
+		margin: .3em;
 	}
-		input#volumeslider::-webkit-slider-runnable-track { margin-top: 0px }
 
 span { margin-left: .25em }
 
@@ -304,9 +326,11 @@ li#last:before { visibility: hidden }
 	max-width: 7em;
 	min-height: 7em;
 	max-height: 7em;
+	flex-shrink: 0;
+	margin: .25em;
 	opacity: .7;
 	border: 1px solid var(--border-cover);
-	border-radius: 3px;
+	border-radius: var(--radius);
 	cursor: zoom-in;
 }
 	#cover:hover, #cover.nofade { opacity: 1 }
@@ -316,7 +340,6 @@ li#last:before { visibility: hidden }
 		max-width: 300px;
 		max-height: 300px;
 	}
-#player.big:not(.fix) #current { width: calc(100% - 300px) }
 #player.full:not(.fix) #cover, #player.full:not(.fix) #current, #player.full:not(.fix) #current > * {
 	display: block;
 	min-width: 0;
@@ -327,15 +350,13 @@ li#last:before { visibility: hidden }
 	text-align: center;
 }
 	#player.full #cover { cursor: zoom-out }
-	#player.full:not(.fix) #current {
-		width: unset;
-		margin-top: .25em;
-	}
-	#player.full #seek { margin-bottom: .25em }
+	#player.full:not(.fix) #current { width: unset }
+	#player.full:not(.fix) #seek { margin-bottom: .5em }
 
 #current {
-	width: calc(100% - 7em);
-	padding: .2em .25em;
+	min-width: 0;	/* https://css-tricks.com/flexbox-truncated-text */
+	flex-grow: 1;
+	margin-left: .5em;
 }
 	#current > div {
 		white-space: nowrap;
@@ -354,13 +375,16 @@ li#last:before { visibility: hidden }
 }
 
 #controls { margin-bottom: 1px }
-	#controls > button:before { margin: .25em }
+	#controls > button {
+		width: calc(.5em + var(--button-size));
+		height: calc(.5em + var(--button-size));
+		padding: 0;
+	}
 
 #toast {
 	position: fixed;
 	top: 1em;
 	right: 1em;
-	padding: 1em;
 	background: var(--bg-toast) !important;
 	box-shadow: 0 0 2px 2px var(--border);
 	cursor: default;
@@ -381,23 +405,21 @@ html:not(.dim) #player.fix {
 }
 	@keyframes fix { from { transform: translateY(-100%) }}
 	#player.fix #cover {
-		min-width: 5.25em;
-		max-width: 5.25em;
-		min-height: 5.25em;
-		max-height: 5.25em;
+		min-width: 5.75em;
+		max-width: 5.75em;
+		min-height: 5.75em;
+		max-height: 5.75em;
 		cursor: row-resize;
 		transition: opacity .4s;
 	}
-	#player.fix #current {
-		width: calc(100% - 5.5em);
-		padding: 0 0 0 .25em;
-	}
 	#player.fix:before, #player.fix #time, #player.fix #seek { display: none }
-	#player.fix { background: var(--bg-player-fix) }
+	#player.fix {
+		background: var(--bg-player-fix);
+		border-radius: 0 0 var(--radius) var(--radius);
+	}
 
-#options > div > button { padding-right: .75em }
 #options button:before, #trash button:before, #popup button:before,
-#toast:before, li:before { margin-right: .25em }
+#toast:before, li:before { margin-right: .35em }
 
 #playlistoptions, #shares {
 		max-height: 0;
@@ -414,7 +436,10 @@ html:not(.dim) #player.fix {
 
 #playlistsdiv, #afterdiv { display: inline-block }
 
-#shares > .sharediv { max-width: 33em }
+#shares > .sharediv {
+	max-width: 32em;
+	margin-left: .25em;
+}
 #shares	.uri { flex-grow: 1 }
 #shares button:before { margin-right: 0 }
 #shares input {
@@ -429,26 +454,29 @@ html:not(.dim) #player.fix {
 	top: 0;
 	right: 0;
 	background: var(--bg-trash);
+	border-radius: var(--radius);
 	box-shadow: -1px 1px 2px 1px var(--bg-trash);
 	z-index: 1;
 }
-	#trash:before {
-		padding: .4em;
-		font-size: 1.1em;
-	}
+	#trash:before { font-size: calc(1em / var(--button-factor)) }
 		#trash.over:before, #trash:hover:before { display: none }
-	#trash:not(:hover) button { display: none }
-	#trash:hover { background: var(--bg) }
+		#trash:not(:hover):before { margin: auto }
+		#trash:not(:hover) button { display: none }
 	#trash.drag {
 		height: 100%;
 		padding: .5em;
 		border-left: 1px solid var(--border);
 		transition: background .4s, opacity .4s;
 	}
+	#trash:hover { background: var(--bg) }
+	#trash:not(:hover) {
+		width: var(--button-size-rel);
+		height: var(--button-size-rel);
+	}
 	#trash.drop, #trash.on { color: var(--focus) }
 
 #playlist {
-	min-height: 2.137em;
+	min-height: var(--button-size-rel);
 	max-height: 10.25em;
 	overflow-y: auto;
 	list-style: none;
@@ -460,8 +488,8 @@ html:not(.dim) #player.fix {
 	}
 
 #playlist li {
-	margin-left: 1.25em;
-	border-top: 1px solid var(--bg);
+	margin-left: 1.5em;
+	border-top: 1px solid transparent;
 	cursor: alias;
 }
 	#playlist li:before { margin-left: -1.25em }
@@ -469,8 +497,9 @@ html:not(.dim) #player.fix {
 	#playlist li.over { border-top: 1px dotted var(--focus) }
 
 #filter {
-	margin: .1em;
-	padding-top: .75em;
+	min-width: 3em;
+	margin: .25em;
+	padding-top: .5em;
 }
 
 .spacer { flex-grow: 1 }
@@ -483,7 +512,7 @@ html:not(.dim) #player.fix {
 	#library.unfold #tree { display: block }
 
 #tree li { cursor: pointer }
-#tree li:before { margin-left: -1.25em }
+#tree li:before { margin-left: -1em }
 #tree li:focus { text-decoration: underline solid var(--focus) }
 #tree li:focus * { text-decoration: underline solid var(--bg) }
 #tree li.dim:focus, #tree li.parent:focus { text-decoration: underline solid var(--focus-dim) !important }
@@ -509,12 +538,10 @@ html:not(.dim) #player.fix {
 	opacity: 1;
 	z-index: 2;
 }
-	#logdiv > div { height: 100% }
-	#logdiv .toolbar { justify-content: flex-end }
 	#log {
+		flex-grow: 1;
 		width: 100%;
-		height: calc(100% - 3.25em);
-		margin-top: .25em;
+		margin-top: var(--space);
 		color: var(--text);
 		white-space: pre;
 		background: none;
@@ -537,7 +564,6 @@ html:not(.dim) #player.fix {
 }
 	#popup {
 		position: absolute;
-		bottom: 0;
 		left: 0;
 		right: 0;
 		width: 20em;
@@ -547,20 +573,23 @@ html:not(.dim) #player.fix {
 		background: var(--bg);
 		text-align: right;
 		border: 1px solid var(--border);
-		border-bottom: none;
-		border-radius: 4px 4px 0 0;
+		border-radius: var(--radius) var(--radius) 0 0;
 		box-shadow: 0 0 2px 1px var(--box-shadow);
 		animation: .4s popup;
 	}
-	@keyframes popup { from { transform: translateY(200%) }}
-	#popup button { margin: .1em }
-	#popup input {
-		max-width: calc(100% - 2em);
-		margin-bottom: .5em;
-	}
-	#popup > div { text-align: center }
-	#popupicon { margin-top: 1em }
-		#popupicon:before { font-size: 3em }
+		html:not(.touch) #popup {
+			bottom: 0;
+			border-bottom: none;
+		}
+		#popup input {
+			max-width: calc(100% - 2em);
+			margin-bottom: .5em;
+		}
+		#popup > div { text-align: center }
+		#popupicon { margin-top: 1em }
+			#popupicon:before { font-size: 3em }
+		@keyframes popup { from { transform: translateY(200%) }}
+		@keyframes popup-top { from { transform: translateY(-200%) }}
 
 :not(html).hide { display: none }
 
@@ -571,17 +600,25 @@ html:not(.dim) #player.fix {
 
 .artist, .dim { color: var(--text-dim) }
 
+.column {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
 .toolbar {
 	display: flex;
 	align-items: center;
 }
 	.toolbar.hidden { visibility: hidden }
+	.toolbar.right { justify-content: flex-end }
+	.toolbar.wrapped { flex-wrap: wrap }
 
 .menu {
 	position: absolute;
 	background: var(--bg-menu);
 	border: 1px solid var(--border);
-	border-radius: 3px;
+	border-radius: var(--radius);
 	box-shadow: 0 1px 2px 2px var(--box-shadow);
 	z-index: 2;
 }
@@ -595,50 +632,58 @@ html:not(.dim) #player.fix {
 	}
 	.menu p { padding: .5em }
 
-@media (min-width: 541px) {
-	body, #player.fix, #player.fix button:hover { background-image: var(--bg-image) }
+@media (min-width: 480px) {
+	body { background-image: var(--bg-image) }
 }
 
 @media (max-width: 480px) {
-	body > div { margin: .3em }
-	body > div:before { display: none }
+	body > div { margin: calc(.5 * var(--space)) }
+		body > div:before { display: none }
+
+	#player.fix #controls > button {
+		width: var(--button-size);
+		height: var(--button-size);
+	}
 }
 
-@media (max-width: 670px) {
+@media (max-width: 740px) {
 	body { font-family: BarlowSC, "Segoe UI", sans-serif }
 
-	#player:not(.fix) #cover, #player:not(.fix) #current, #player:not(.fix) #current > *:not(#seek) {
-		display: block;
-		min-width: 0;
-		min-height: 0;
-		max-width: 100%;
-		max-height: 100%;
-		width: unset !important;
-		height: unset;
-		margin: 0 auto;
-		padding: 0;
-		text-align: center;
-	}
+	#player:not(.fix) { flex-direction: column }
+		#player:not(.fix) #cover, #player:not(.fix) #current, #player:not(.fix) #current > *:not(#seek) {
+			display: block;
+			min-width: 0;
+			min-height: 0;
+			max-width: 100%;
+			max-height: 100%;
+			width: unset !important;
+			height: unset;
+			margin: 0 auto;
+			padding: 0;
+			text-align: center;
+		}
 		#player:not(.fix) #cover { max-height: 10em }
-		#current:not(.fix) { margin-top: .25em }
 		#player:not(.fix) #seek {
 			margin-bottom: .5em;
 			padding: .5em;
 		}
+		#player.fix #cover { margin: 0 }
 
-	#options { text-align: center }
+	#options .toolbar.wrapped { justify-content: center }
 }
 
 *:before {
 	display: inline-block;
-	width: 1em;
+	width: .8em;
 	flex-shrink: 0;
 	font-family: Foundation;
 	text-align: center;
+	letter-spacing: 0;
 }
 
 #after:before { content: "\f182" }
 #crossfade:before { content: "\f1b2" }
+#debug:before { content: "\f156" }
 #enqueue:before, .add:before { content: "\f199" }
 #library:before { content: "\f17b" }
 	#library.unfold #unfold:before { content: '\f10d' }
@@ -668,7 +713,7 @@ html:not(.dim) #player.fix {
 #removesongs:before { content: "\f204" }
 #repeatplaylist:not(.on):before { content: "\f1a5"; margin-left: 1px; margin-right: calc(.25em - 1px); transform: scale(-1, 1) }
 #share:before { content: "\f1ad" }
-#splash:before { content: "\f1ed" }
+#splash:before { content: "\f1ed"; width: 1em }
 #stop:before, #stopplayback:before { content: "\f1ef" }
 #theme:before { content: "\f134" }
 #toast:before { content: "\f217" }
