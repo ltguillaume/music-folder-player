@@ -462,13 +462,13 @@ html:not(.dim) #player.fix {
 		#trash.over:before, #trash:hover:before { display: none }
 		#trash:not(:hover):before { margin: auto }
 		#trash:not(:hover) button { display: none }
-	#trash:hover { background: var(--bg) }
 	#trash.drag {
 		height: 100%;
 		padding: .5em;
 		border-left: 1px solid var(--border);
 		transition: background .4s, opacity .4s;
 	}
+	#trash:hover { background: var(--bg) }
 	#trash:not(:hover) {
 		width: var(--button-size-rel);
 		height: var(--button-size-rel);
@@ -632,8 +632,8 @@ html:not(.dim) #player.fix {
 	}
 	.menu p { padding: .5em }
 
-@media (min-width: 541px) {
-	body, #player.fix, #player.fix button:hover { background-image: var(--bg-image) }
+@media (min-width: 480px) {
+	body { background-image: var(--bg-image) }
 }
 
 @media (max-width: 480px) {
@@ -646,23 +646,23 @@ html:not(.dim) #player.fix {
 	}
 }
 
-@media (max-width: 670px) {
+@media (max-width: 740px) {
 	body { font-family: BarlowSC, "Segoe UI", sans-serif }
 
-	#player:not(.fix) #cover, #player:not(.fix) #current, #player:not(.fix) #current > *:not(#seek) {
-		display: block;
-		min-width: 0;
-		min-height: 0;
-		max-width: 100%;
-		max-height: 100%;
-		width: unset !important;
-		height: unset;
-		margin: 0 auto;
-		padding: 0;
-		text-align: center;
-	}
+	#player:not(.fix) { flex-direction: column }
+		#player:not(.fix) #cover, #player:not(.fix) #current, #player:not(.fix) #current > *:not(#seek) {
+			display: block;
+			min-width: 0;
+			min-height: 0;
+			max-width: 100%;
+			max-height: 100%;
+			width: unset !important;
+			height: unset;
+			margin: 0 auto;
+			padding: 0;
+			text-align: center;
+		}
 		#player:not(.fix) #cover { max-height: 10em }
-		#current:not(.fix) { margin-top: .25em }
 		#player:not(.fix) #seek {
 			margin-bottom: .5em;
 			padding: .5em;
