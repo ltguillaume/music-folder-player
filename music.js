@@ -125,7 +125,6 @@ function prepUI() {
 	if (!sharing) dom.hide('share');
 	if (cfg.after == 'randomfiltered') cfg.after = 'randomlibrary';
 	cfg.removesongs = false;
-	if (!cfg.debug) dom.hide('logbtn');
 
 	if (url.length > 1 && url[1].startsWith('pl:')) {
 		prepPlaylistMode();
@@ -1258,7 +1257,6 @@ function toggle(e) {
 		case 'lock':
 			return Popup.lock();
 		case 'logbtn':
-			if (!cfg.debug) return;
 			cls(dom.doc, 'dim', cls(dom.logdiv, 'hide'));
 			if (cls(dom.logdiv, 'hide', TOG))
 				dom.log.blur();
