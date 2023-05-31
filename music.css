@@ -258,9 +258,11 @@ input[type=range] {
 	input[type=range]::-ms-thumb { margin: 0 }
 	input[type=range]::-ms-tooltip { display: none }
 	input#volumeslider {
+		display: none;
 		width: unset;
 		margin: .3em;
 	}
+		#controls.volume input#volumeslider { display: inline-block }
 
 span { margin-left: .25em }
 
@@ -380,6 +382,7 @@ li#last:before { visibility: hidden }
 		height: calc(.5em + var(--button-size));
 		padding: 0;
 	}
+	#controls:not(.volume) > button { flex-shrink: 1 }
 
 #toast {
 	position: fixed;
@@ -639,11 +642,6 @@ html:not(.dim) #player.fix {
 @media (max-width: 480px) {
 	body > div { margin: calc(.5 * var(--space)) }
 		body > div:before { display: none }
-
-	#player.fix #controls > button {
-		width: var(--button-size);
-		height: var(--button-size);
-	}
 }
 
 @media (max-width: 740px) {
