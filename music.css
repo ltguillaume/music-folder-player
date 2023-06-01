@@ -96,6 +96,7 @@ html.touch body {
 	}
 	html.touch input[type=range] { width: 18em }
 	html.touch li, html.touch #filter { padding: .4em 0 !important }
+		html.touch li.open { padding-bottom: 0 !important }
 	html.touch u { text-decoration: none }
 	html.touch #current { line-height: 1.25em }
 	html.touch #playlist {
