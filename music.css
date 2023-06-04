@@ -96,6 +96,7 @@ html.touch body {
 	}
 	html.touch input[type=range] { width: 18em }
 	html.touch li, html.touch #filter { padding: .4em 0 !important }
+		html.touch li.open { padding-bottom: 0 !important }
 	html.touch u { text-decoration: none }
 	html.touch #current { line-height: 1.25em }
 	html.touch #playlist {
@@ -649,8 +650,8 @@ html:not(.dim) #player.fix {
 	body { font-family: BarlowSC, "Segoe UI", sans-serif }
 
 	#player:not(.fix) { flex-direction: column }
+		#player:not(.fix) #cover, #player:not(.fix) #current, #player:not(.fix) #time { display: block }
 		#player:not(.fix) #cover, #player:not(.fix) #current, #player:not(.fix) #current > *:not(#seek) {
-			display: block;
 			min-width: 0;
 			min-height: 0;
 			max-width: 100%;
@@ -659,6 +660,7 @@ html:not(.dim) #player.fix {
 			height: unset;
 			margin: 0 auto;
 			padding: 0;
+			justify-content: center;
 			text-align: center;
 		}
 		#player:not(.fix) #cover { max-height: 10em }
