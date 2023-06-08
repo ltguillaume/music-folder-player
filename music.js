@@ -1237,12 +1237,11 @@ function toggle(e) {
 			cfg.after = button.id;
 			dom.hide('afteroptions');
 			menu('after');
-			if (!dom.randomfiltered.firstElementChild)
-				dom.randomfiltered.appendChild(document.createElement('b'));
 			if (button.id == 'randomfiltered') {
-				dom.randomfiltered.firstElementChild.textContent = dom.filter.value;
+				const tip = dom.randomfiltered.firstElementChild || dom.randomfiltered.appendChild(document.createElement('b'));
+				tip.textContent = dom.filter.value;
 				buildFilteredLibrary();
-			} else dom.randomfiltered.firstElementChild.textContent = '';
+			} else dom.randomfiltered.firstElementChild.remove();
 			return;
 		case 'lock':
 			return Popup.lock();
@@ -1348,7 +1347,7 @@ function menu(e) {
 				cls(dom.randomlibrary,  'on', cfg.after == 'randomlibrary'  ? ADD : REM);
 				cls(dom.randomfiltered, 'dim', dom.filter.value == '' ? ADD : REM);
 				dom.show(el.id);
-				setFocus(dom.afteroptions.firstElementChild);
+				setFocus(dom[cfg.after]);
 		}
 	} else switch (el) {
 			case dom.playlists:
