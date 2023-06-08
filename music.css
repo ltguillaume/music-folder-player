@@ -384,7 +384,7 @@ li#last:before { visibility: hidden }
 		height: calc(.5em + var(--button-size));
 		padding: 0;
 	}
-	#controls:not(.volume) > button { flex-shrink: 1 }
+	#controls > button { flex-shrink: 1 }
 
 #toast {
 	position: fixed;
