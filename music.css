@@ -466,16 +466,16 @@ html:not(.dim) #player.fix {
 		#trash.over:before, #trash:hover:before { display: none }
 		#trash:not(:hover):before { margin: auto }
 		#trash:not(:hover) button { display: none }
+	#trash:hover { background: var(--bg) }
+	#trash:not(:hover) {
+		width: var(--button-size-rel);
+		height: var(--button-size-rel);
+	}
 	#trash.drag {
 		height: 100%;
 		padding: .5em;
 		border-left: 1px solid var(--border);
 		transition: background .4s, opacity .4s;
-	}
-	#trash:hover { background: var(--bg) }
-	#trash:not(:hover) {
-		width: var(--button-size-rel);
-		height: var(--button-size-rel);
 	}
 	#trash.drop, #trash.on { color: var(--focus) }
 
