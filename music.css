@@ -173,6 +173,7 @@ button {
 	height: var(--button-size);
 	padding: 0 .75em;
 	font-size: calc(1em * var(--button-factor));
+	white-space: nowrap;
 	background: none;
 	border: none;
 	border-radius: var(--radius);
@@ -383,7 +384,7 @@ li#last:before { visibility: hidden }
 		height: calc(.5em + var(--button-size));
 		padding: 0;
 	}
-	#controls:not(.volume) > button { flex-shrink: 1 }
+	#controls > button { flex-shrink: 1 }
 
 #toast {
 	position: fixed;
@@ -466,16 +467,16 @@ html:not(.dim) #player.fix {
 		#trash.over:before, #trash:hover:before { display: none }
 		#trash:not(:hover):before { margin: auto }
 		#trash:not(:hover) button { display: none }
+	#trash:hover { background: var(--bg) }
+	#trash:not(:hover) {
+		width: var(--button-size-rel);
+		height: var(--button-size-rel);
+	}
 	#trash.drag {
 		height: 100%;
 		padding: .5em;
 		border-left: 1px solid var(--border);
 		transition: background .4s, opacity .4s;
-	}
-	#trash:hover { background: var(--bg) }
-	#trash:not(:hover) {
-		width: var(--button-size-rel);
-		height: var(--button-size-rel);
 	}
 	#trash.drop, #trash.on { color: var(--focus) }
 
@@ -712,7 +713,7 @@ html:not(.dim) #player.fix {
 #randomfiltered:before { content: "\f14b" }
 #reload:before { content: "\f18d" }
 #removesongs:before { content: "\f204" }
-#repeatplaylist:not(.on):before { content: "\f1a5"; margin-left: 1px; margin-right: calc(.25em - 1px); transform: scale(-1, 1) }
+#repeatplaylist:not(.on):before { content: "\f1a5"; transform: scale(-1, 1) }
 #share:before { content: "\f1ad" }
 #splash:before { content: "\f1ed"; width: 1em }
 #stop:before, #stopplayback:before { content: "\f1ef" }
