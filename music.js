@@ -303,8 +303,6 @@ function prepAudio(id) {
 
 	a.onended = function() {
 		a.log('Ended');
-//		if (audio[track].ended)	// For crossfade/"gapless"
-//			playNext();
 	};
 
 	a.ontimeupdate = function() {
@@ -1152,8 +1150,8 @@ function playNext() {
 	if (!cfg.crossfade) stop();
 
 	track ^= 1;
-	var a = audio[track];
-	cfg.index = a.index;
+	const a = audio[track],
+		index = cfg.index = a.index;
 	start(a);
 
 	var path = cfg.playlist[cfg.index].path,
@@ -1165,6 +1163,7 @@ function playNext() {
 		dom.cover.style.opacity = 0;
 		if (cls(dom.player, 'full')) dom.current.style.opacity = 0;
 		setTimeout(function() {
+			if (index != cfg.index) return;	// If song has changed since timeout
 			dom.album.innerHTML = getAlbumInfo(nfo);
 			dom.title.innerHTML = nfo.title;
 			dom.cover.src = cover;
