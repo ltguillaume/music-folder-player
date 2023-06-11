@@ -344,18 +344,20 @@ li#last:before { visibility: hidden }
 		max-width: 300px;
 		max-height: 300px;
 	}
-#player.full:not(.fix) #cover, #player.full:not(.fix) #current, #player.full:not(.fix) #current > * {
+#player.full:not(.fix) #cover, #player.full:not(.fix) #current, #player.full:not(.fix) #current > *:not(#controls) {
 	display: block;
 	min-width: 0;
 	min-height: 0;
 	max-width: 100%;
 	max-height: 100%;
-	margin: 0 auto;
+	margin-left: auto;
+	margin-right: auto;
 	text-align: center;
 }
 	#player.full #cover { cursor: zoom-out }
 	#player.full:not(.fix) #current { width: unset }
 	#player.full:not(.fix) #seek { margin-bottom: .5em }
+	#player.full:not(.fix) #controls { justify-content: center }
 
 #current {
 	min-width: 0;	/* https://css-tricks.com/flexbox-truncated-text */
@@ -659,7 +661,8 @@ html:not(.dim) #player.fix {
 			max-height: 100%;
 			width: unset !important;
 			height: unset;
-			margin: 0 auto;
+			margin-left: auto;
+			margin-right: auto;
 			padding: 0;
 			justify-content: center;
 			text-align: center;
