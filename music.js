@@ -124,6 +124,8 @@ function prepUI() {
 	lng(dom.lock, cfg.locked ? str.unlock : str.lock);
 	if (url.length > 1 || !onlinepls) dom.hide(['playlistsdiv', 'playlistsave', 'shareplaylist']);
 	if (!sharing) dom.hide('share');
+	else if (navigator.userAgent.match(/Mobile.*Firefox/))	// https://bugzilla.mozilla.org/show_bug.cgi?id=1535985
+		dom.hide('shareplaylist');
 	if (cfg.after == 'randomfiltered') cfg.after = 'randomlibrary';
 	cfg.removesongs = false;
 
