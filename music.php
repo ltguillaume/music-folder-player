@@ -85,9 +85,9 @@
 	}
 
 	if (!isset($_GET['reload'])) {
-		echo 'ext_images = '. json_encode($img) .';'. PHP_EOL;
+		echo 'const ext_images = '. json_encode($img) .';'. PHP_EOL;
 		foreach($ini['client'] as $key => $value)
-			echo (stristr($key, '.') ? '' : 'var ') . $key .'='. $value .';'. PHP_EOL;
+			echo (stristr($key, '.') ? '' : 'const ') . $key .'='. $value .';'. PHP_EOL;
 		foreach($lng['elements'] as $key => $value)
 			echo 'lng(dom.'. $key .',"'. $value .'");'. PHP_EOL;
 		foreach($lng['tooltips'] as $key => $value)
@@ -100,7 +100,7 @@
 	if (isset($_GET['play']) && !in_array('..', explode('/', $_GET['play']))) {
 		$dir = trim($_GET['play'], '/');
 		if (!file_exists($dir) || $dir == $cfg['root'])
-			die('var root="'. $cfg['root'] .'/";'. PHP_EOL .'var library={"'. $lng['strings']['notfound'] .'":""}');
+			die('const root="'. $cfg['root'] .'/";'. PHP_EOL .'var library={"'. $lng['strings']['notfound'] .'":""}');
 		if (!is_dir($dir)) {
 			$files = array();
 			$files[$dir] = '';	// Add file
@@ -112,7 +112,7 @@
 					break;
 				}
 			}
-			echo 'var root="";'. PHP_EOL .'var library={"\/":'. json_encode($files) .'};';
+			echo 'const root="";'. PHP_EOL .'var library={"\/":'. json_encode($files) .'};';
 			exit;
 		}
 	}
@@ -126,7 +126,7 @@
 		}
 	} else $lib = file_get_contents($lib_path);
 
-	echo 'var root="'. $dir .'/";'. PHP_EOL .'var library='. $lib;
+	echo 'const root="'. $dir .'/";'. PHP_EOL .'var library='. $lib;
 
 	function ini_merge($ini, $usr) {
 		foreach ($usr as $k => $v)

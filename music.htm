@@ -77,12 +77,10 @@
 				<button id="songshare"    class="share"    onclick="Popup.share('song')"></button>
 			</div>
 			<div id="shareplaylist" class="playlist sharediv toolbar">
-				<input  id="playlisturi"      class="uri"      onclick="this.select()"
-					onfocus="prepPlaylists('share')" list="playlistdata" placeholder="&#x25BE;">
+				<select id="playlisturi"      class="uri"></select>
 				<button id="playlistdownload" class="download" onclick="download('playlist')"></button>
 				<button id="playlistclip"     class="link"     onclick="clip('playlist')"></button>
 				<button id="playlistshare"    class="share"    onclick="Popup.share('playlist')"></button>
-				<datalist id="playlistdata"></datalist>
 			</div>
 			<a id="a" class="hide" href="#" rel="noreferrer" target="_blank" download></a>
 		</div>
