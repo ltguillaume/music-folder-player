@@ -82,7 +82,7 @@ html.material body { font-size: 1.1em }
 
 html.material button { padding: 0 .95em }
 
-html.material input[type=range] { height: 15px }
+html.material input[type=range] { height: 13px }
 
 html.material li { padding: .1em 0 }
 

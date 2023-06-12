@@ -213,9 +213,8 @@ input, select {
 input[type=range] {
 	width: 14em;
 	max-width: 90%;
-	height: 12px;
+	height: 11px;
 	background: transparent;
-	vertical-align: text-top;
 	opacity: .5;
 	border: none;
 	outline: none !important;
@@ -230,7 +229,6 @@ input[type=range] {
 	}
 	input[type=range]::-webkit-slider-runnable-track {
 		height: 1px;
-		margin-top: 2px;
 		background: var(--text);
 	}
 	input[type=range]::-ms-track {
@@ -239,8 +237,8 @@ input[type=range] {
 		border: none;
 	}
 	input[type=range]::-moz-range-thumb {
-		width: 12px;
-		height: 12px;
+		width: 11px;
+		height: 11px;
 		background: var(--bg-thumb);
 		border: 1px solid var(--text);
 		border-radius: 50%;
@@ -248,8 +246,8 @@ input[type=range] {
 	}
 		input[type=range]:hover::-moz-range-thumb { background: var(--bg-thumb-hv) }
 	input[type=range]::-webkit-slider-thumb {
-		width: 12px;
-		height: 12px;
+		width: 13px;
+		height: 13px;
 		margin-top: -6px;
 		background: var(--bg-thumb);
 		border: 1px solid var(--text);
@@ -262,7 +260,7 @@ input[type=range] {
 	input#volumeslider {
 		display: none;
 		width: unset;
-		margin: .3em;
+		margin-right: .25em;
 	}
 		#controls.volume input#volumeslider { display: inline-block }
 
@@ -378,9 +376,10 @@ li#last:before { visibility: hidden }
 #time {
 	display: inline-block;
 	color: var(--text-dim);
+	vertical-align: bottom;
 }
 
-#controls { margin-bottom: 1px }
+#controls { margin: .25em 0 1px 0 }
 	#controls > button {
 		width: calc(.5em + var(--button-size));
 		height: calc(.5em + var(--button-size));
@@ -406,16 +405,17 @@ html:not(.dim) #player.fix {
 	left: 0;
 	right: 0;
 	margin: 0;
+	padding: calc(.75 * var(--space));
 	box-shadow: 0 0 2px 1px var(--box-shadow);
 	animation: .4s fix;
 	z-index: 2;
 }
 	@keyframes fix { from { transform: translateY(-100%) }}
 	#player.fix #cover {
-		min-width: 5.75em;
-		max-width: 5.75em;
-		min-height: 5.75em;
-		max-height: 5.75em;
+		min-width: 6em;
+		max-width: 6em;
+		min-height: 6em;
+		max-height: 6em;
 		cursor: row-resize;
 		transition: opacity .4s;
 	}
