@@ -126,7 +126,7 @@ html.dim > body { background: var(--bg-dim) }
 	html.dim > body > div,
 	html.dim > body > div:before { opacity: .25 }
 
-body, button, input {
+body, button, input, select {
 	font-family: Barlow, "Segoe UI", sans-serif;
 	line-height: 1.25em;
 	word-spacing: .1em;
@@ -449,7 +449,7 @@ html:not(.dim) #player.fix {
 }
 #shares	.uri { flex-grow: 1 }
 #shares button:before { margin-right: 0 }
-#shares input {
+#shares input, #shares select {
 	margin: 0 .25em;
 	direction: rtl;
 }

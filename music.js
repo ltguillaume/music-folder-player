@@ -124,8 +124,6 @@ function prepUI() {
 	lng(dom.lock, cfg.locked ? str.unlock : str.lock);
 	if (url.length > 1 || !onlinepls) dom.hide(['playlistsdiv', 'playlistsave', 'shareplaylist']);
 	if (!sharing) dom.hide('share');
-	else if (navigator.userAgent.match(/Mobile.*Firefox/))	// https://bugzilla.mozilla.org/show_bug.cgi?id=1535985
-		dom.hide('shareplaylist');
 	if (cfg.after == 'randomfiltered') cfg.after = 'randomlibrary';
 	cfg.removesongs = false;
 
@@ -927,19 +925,24 @@ function download(type) {
 function clip(type) {
 	var share = dom[type +'uri'];
 	if (share.value || type == 'folder') {
-		var clearVal = share.value;
-		if (type == 'playlist')
-			share.value = base +'?play=pl:'+ esc(share.value);
-		else
-			share.value = base +'?play=c:'+ base64(root + share.value);
-		share.select();
-		document.execCommand('copy');
 		cls(share.nextElementSibling.nextElementSibling, 'clip', ADD);
+		const fullUri = type == 'playlist'
+			? base +'?play=pl:'+ esc(share.value)
+			: base +'?play=c:'+ base64(root + share.value);
+		toClipboard(fullUri);
 		share.blur();
-		share.value = clearVal;
 		setTimeout(function() {
 			cls(share.nextElementSibling.nextElementSibling, 'clip', REM);
 		}, 1500);
+	}
+}
+
+function toClipboard(value) {
+	var promise = navigator.clipboard.writeText(value);
+	if (typeof promise !== 'undefined') {
+		promise.catch(function(e) {
+				setToast({ 'className': 'error', 'textContent': e });
+		});
 	}
 }
 
@@ -974,7 +977,7 @@ function prepPlaylists(action) {
 		var playlistElements = '';
 		if (playlists.length != []) {
 			for (var p in playlists)
-				playlistElements += action == 'share' ? '<option value="'+ p +'">' : '<button class="add">'+ p +'</button>';
+				playlistElements += action == 'share' ? '<option value="'+ p +'">'+ p +'</option>' : '<button class="add">'+ p +'</button>';
 		} else playlistElements = '<p tabindex="1">'+ str.noplaylists +'</p>';
 		switch (action) {
 			case 'load':
@@ -986,7 +989,7 @@ function prepPlaylists(action) {
 				savePlaylist();
 				break;
 			case 'share':
-				dom.playlistdata.innerHTML = playlistElements;
+				dom.playlisturi.innerHTML = playlistElements;
 				break;
 			case 'playlist':
 				loadPlaylist(decodeURIComponent(url[1].substring(3)));
@@ -1227,7 +1230,8 @@ function toggle(e) {
 			if (!sharing && button.id == 'share') return;
 			cls(dom.options, button.id, TOG);
 			cls(button, 'on', TOG);
-			setFocus(dom.share);
+			if (cls(button, 'on')) prepPlaylists('share');
+			setFocus(dom[button.id]);
 			return;
 		case 'randomfiltered':
 			if (dom.filter.value == '') return;
