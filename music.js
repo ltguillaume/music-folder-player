@@ -2,16 +2,8 @@ var
 	audio,
 	base,
 	cfg = {},
-	def = { 'playlist': [], 'skip': [], 'index': -1 },
 	dom,
-	library,
 	ls,
-	pathexp,
-	shareapi = {},
-	songs = [],
-	str = {},
-	themes = [],
-	tree = [],
 	url,
 
 	currentFilter,
@@ -21,19 +13,26 @@ var
 	onPlaylist,
 	onSeek,
 	onScrollWait,
-	played = [],
-	playedFiltered = [],
 	playerheight,
 	playlistLoaded,
 	playlists,
 	retry,
-	songsFiltered = [],
 	toast,
 	touch,
 	track = 0,
 	tv;
 
 const
+	def = { 'playlist': [], 'skip': [], 'index': -1 },
+	shareapi = {},
+	str = {},
+
+	played = [],
+	playedFiltered = [],
+	songs = [],
+	songsFiltered = [],
+	tree = [],
+
 	ADD =  1,
 	TOG = .1,
 	REM =  0,
@@ -54,7 +53,7 @@ function init() {
 	};
 	document.querySelectorAll('[id]').forEach(function(el) { dom[el.id] = el });
 
-	var lib = document.createElement('script'),
+	const lib = document.createElement('script'),
 		lng = new URLSearchParams(window.location.search).get('lng') || false;
 	lib.src = 'music.php?'+ (lng ? 'lng='+ lng : '') + (url.length > 1 ? '&play='+ esc(url[1]) : '');
 	lib.onload = function() {
@@ -97,7 +96,7 @@ function lng(el, string, tooltip) {
 	} else {
 		if (!el.accessKey)
 			return el.innerHTML = string;
-		var index = string.toLowerCase().indexOf(el.accessKey);
+		const index = string.toLowerCase().indexOf(el.accessKey);
 		if (index == -1)
 			el.innerHTML = string +'<b>'+ el.accessKey +'</b>';
 		else
@@ -213,7 +212,7 @@ function ls() {
 	}
 
 	try {
-		var sav = localStorage.getItem(lsid);
+		const sav = localStorage.getItem(lsid);
 		if (sav != null) {
 			cfg = JSON.parse(sav) || {};
 			for (var c in def)
@@ -221,7 +220,7 @@ function ls() {
 			return true;
 		}
 		cfg = def;
-		var ls = JSON.stringify(cfg);
+		const ls = JSON.stringify(cfg);
 		localStorage.setItem(lsid, ls);
 		if (localStorage.getItem(lsid) == ls) return true;
 		log('LocalStorage issue', true);
@@ -236,7 +235,7 @@ function ls() {
 function log(s, force = false) {
 	if (cfg.debug || force) {
 		if (typeof s === 'string') {
-			var t = new Date();
+			const t = new Date();
 			s = s.replace(/data\:.*/, '(Autoplay Fix)');
 			s = String(t.getHours()).padStart(2, '0') +':'+ String(t.getMinutes()).padStart(2, '0') +':'+ String(t.getSeconds()).padStart(2, '0') +'  '+ s;
 			dom.log.value += s +'\n';
@@ -246,7 +245,7 @@ function log(s, force = false) {
 }
 
 function saveLog() {
-	var l = new Blob([dom.log.value], { type: 'text/plain', endings: 'native' });
+	const l = new Blob([dom.log.value], { type: 'text/plain', endings: 'native' });
 	dom.a.href = window.URL.createObjectURL(l);
 	dom.a.download = pagetitle +"_"+ Math.floor(new Date()/1000) +'.log';
 	dom.a.click();
@@ -260,7 +259,7 @@ function prepPlaylistMode() {
 }
 
 function prepAudio(id) {
-	var a = new Audio();
+	const a = new Audio();
 
 	a.log = function(msg) {
 		log(msg +' ['+ id +']: '+ decodeURI(a.src.replace(a.baseURI, '')));
@@ -373,7 +372,7 @@ function buildLibrary(root, folder, element) {
 			li.tabIndex = 1;
 			tree.push(li);
 			element.appendChild(li);
-			var ul = li.appendChild(document.createElement('ul'));
+			const ul = li.appendChild(document.createElement('ul'));
 			buildLibrary(root + i +'/', folder[i], ul);
 		} else {
 			for (f in folder[i]) {
@@ -404,7 +403,7 @@ function reloadLibrary() {
 	if (!confirm(str.reloadlibrary)) return;
 	dom.tree.innerHTML = '',
 		tree.length = songs.length = 0;
-	var lib = document.createElement('script');
+	const lib = document.createElement('script');
 	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ esc(url[1]) +'&' : '?') +'reload';
 	lib.onload = function() {
 		buildLibrary('', library, dom.tree);
@@ -434,7 +433,7 @@ function treeClick(e, context = false) {
 
 function openFolder(e) {
 	e.stopPropagation();
-	var li = e.target;
+	const li = e.target;
 	ffor(li.querySelectorAll(':scope > ul > *'), function(c) {
 		if (c.style.display != '') c.style.display = '';
 	});
@@ -451,7 +450,7 @@ function openFolder(e) {
 function addFolder(e) {
 	e.preventDefault();
 	e.stopPropagation();
-	var li = e.target;
+	const li = e.target;
 	if (confirm(li.path.substring(li.path.lastIndexOf('/') + 1) +'\n'+ str.addfolder)) {
 		cls(li, 'dim', ADD);
 		ffor(li.querySelectorAll('li.song'), function(s) { add(s.id) });
@@ -493,7 +492,7 @@ function setToast(el) {
 
 function addSong(e) {
 	e.stopPropagation();
-	var li = e.target;
+	const li = e.target;
 	if (cfg.enqueue || cfg.locked)
 		add(li.id);
 	else {
@@ -511,7 +510,7 @@ function addSong(e) {
 function addSongNext(e) {
 	e.preventDefault();
 	e.stopPropagation();
-	var li = e.target;
+	const li = e.target;
 	add(li.id, true);
 	if (audio[track].paused) fillShare(li.path);
 }
@@ -528,8 +527,8 @@ function buildPlaylist() {
 		dom.playlist.appendChild(li);
 		if (i == cfg.index) {
 			cls(li, 'playing', ADD);
-			var path = cfg.playlist[i].path;
-			var nfo = getSongInfo(path);
+			const path = cfg.playlist[i].path;
+			const nfo = getSongInfo(path);
 			dom.album.innerHTML = getAlbumInfo(nfo);
 			dom.title.innerHTML = nfo.title;
 		}
@@ -544,13 +543,13 @@ function buildPlaylist() {
 }
 
 function playlistItem(s) {
-	var li = document.createElement('li');
+	const li = document.createElement('li');
 	cls(li, 'song', ADD);
 	li.draggable = 'true';
 	if (s.id == 'last') {
 		li.id = 'last';
 	} else {
-		var nfo = getSongInfo(s.path);
+		const nfo = getSongInfo(s.path);
 		li.innerHTML = nfo.title +'<span class="artist">'+ (nfo.artist ? '('+ nfo.artist +')' : '') +'</span>';
 		li.title = getAlbumInfo(nfo) + (mode ? '' : '\n\n'+ str.playlistdesc);
 	}
@@ -558,7 +557,7 @@ function playlistItem(s) {
 }
 
 function clickItem(e) {
-	var item = cls(e.target, 'artist') ? e.target.parentNode : e.target;
+	const item = cls(e.target, 'artist') ? e.target.parentNode : e.target;
 	if (cfg.locked || e.target.id == 'playlist') return;
 	if (cfg.removesongs) {
 		drag = item;
@@ -604,12 +603,12 @@ function endDrag() {
 function dropItem(e) {
 	e.preventDefault();
 	e.stopPropagation();
-	var to = e.target;
+	const to = e.target;
 	if (to.tagName != 'LI') to = to.parentNode;
 	log('Drag ['+ drag.textContent +'] to place of ['+ to.textContent +']');
 	cls(to, 'over', REM);
-	var indexfrom = e.dataTransfer.getData('text');
-	var indexto = getIndex(to);
+	const indexfrom = e.dataTransfer.getData('text');
+	const indexto = getIndex(to);
 	if (indexto != indexfrom) moveItem(drag, to, indexfrom, indexto);
 	if (cfg.index != -1) cls(dom.playlist.childNodes[cfg.index], 'playing', ADD);
 	log('Drag from '+ indexfrom +' to '+ indexto);
@@ -633,8 +632,8 @@ function moveItem(drag, to, indexfrom, indexto) {
 function removeItem(e) {
 	e.preventDefault();
 	e.stopPropagation();
-	var index = getIndex(drag);
-	var playing = index == cfg.index;
+	const index = getIndex(drag);
+	const playing = index == cfg.index;
 	cfg.playlist.splice(index, 1);
 	dom.playlist.removeChild(dom.playlist.childNodes[index]);
 	if (cfg.index != -1 && index <= cfg.index)
@@ -692,7 +691,7 @@ function getSongInfo(path) {
 		} catch(e) {
 			if (nfo) log(e);
 			if (i < 1) {
-				var nfo, artalb = path.substring(path.lastIndexOf('/', path.lastIndexOf('/') - 1) + 1, path.lastIndexOf('/'));
+				const artalb = path.substring(path.lastIndexOf('/', path.lastIndexOf('/') - 1) + 1, path.lastIndexOf('/'));
 				if (artalb.indexOf(' -') == -1)
 					nfo = { 'artist': artalb }
 				else
@@ -709,7 +708,7 @@ function getSongInfo(path) {
 }
 
 function getAlbumInfo(nfo) {
-	var artist = nfo.artist ? nfo.artist : '';
+	const artist = nfo.artist ? nfo.artist : '';
 	var album = (nfo.year ? '('+ nfo.year +') ' : '') + (nfo.album || '');
 	album = artist + (album.length > 1 ? ' - '+ album : '');
 	log('getAlbumInfo: '+ album);
@@ -717,9 +716,9 @@ function getAlbumInfo(nfo) {
 }
 
 function timeTxt(t) {
-	var h = ~~(t / 3600);
-	var m = ~~(t % 3600 / 60);
-	var s = ~~(t % 60);
+	const h = ~~(t / 3600);
+	const m = ~~(t % 3600 / 60);
+	const s = ~~(t % 60);
 	return (h > 0 ? (h < 10 ? '0' : '') + h +':' : '')
 		+ (m < 10 ? '0' : '') + m +':'
 		+ (s < 10 ? '0' : '') + s;
@@ -789,8 +788,8 @@ function prepNext() {
 	if (cfg.playlist.length > cfg.index + 1) {
 		log('prepNext from playlist');
 		if (cfg.random && !cfg.playlist[cfg.index + 1].playNext) {
-			var next = cfg.index + ~~(Math.random() * (cfg.playlist.length - cfg.index));
-			var drag = dom.playlist.childNodes[next],
+			const next = cfg.index + ~~(Math.random() * (cfg.playlist.length - cfg.index));
+			const drag = dom.playlist.childNodes[next],
 				to = dom.playlist.childNodes[cfg.index + 1],
 				indexfrom = next,
 				indexto = cfg.index + 1;
@@ -802,7 +801,7 @@ function prepNext() {
 		if (cfg.after == 'randomfiltered' || cfg.after == 'randomlibrary') {
 			var next = null;
 			do {
-				var count = cfg.after == 'randomfiltered' ? songsFiltered.length : songs.length;
+				const count = cfg.after == 'randomfiltered' ? songsFiltered.length : songs.length;
 				if ((cfg.after == 'randomfiltered' ? playedFiltered.length : played.length) == count)
 					clearPlayed(cfg.after);
 
@@ -826,7 +825,7 @@ function prepNext() {
 			load(songs[next].id, true);
 		} else if (cfg.after == 'playlibrary')	{
 			if (cfg.index == -1) return load(songs[0].id, true);
-			var path = cfg.playlist[cfg.index].path;
+			const path = cfg.playlist[cfg.index].path;
 			var next = -1;
 			for (var i = 0; i < songs.length; i++) {
 				if (songs[i].path == path) {
@@ -846,7 +845,7 @@ function prepNext() {
 }
 
 function clearPlayed(action) {
-	let msg = 'Clearing played';
+	var msg = 'Clearing played';
 	if (action == 'randomfiltered') {
 		playedFiltered.length = 0;
 		msg += 'Filtered[]: all songs from the filtered library have been played.'
@@ -861,7 +860,7 @@ function clearPlayed(action) {
 }
 
 function artistSkipped(path) {
-	var artist = getSongInfo(path).artist;
+	const artist = getSongInfo(path).artist;
 	if (cfg.debug && cfg.skip.indexOf() != -1)
 		log('Artist '+ artist +' skipped', true);
 	return cfg.skip.indexOf(artist) != -1;
@@ -874,7 +873,7 @@ function load(id, addtoplaylist = false) {
 	if (addtoplaylist == 'next') add(id, true);
 	else if (addtoplaylist) add(id);
 
-	var a = audio[+!track];
+	const a = audio[+!track];
 	a.prepped = true;
 	a.index = addtoplaylist ? cfg.index + 1 : id;
 	log('a.index = '+ a.index);
@@ -914,16 +913,16 @@ function setVolume(input) {
 }
 
 function download(type) {
-	var share = dom[type +'uri'];
+	const share = dom[type +'uri'];
 	if (share.value || type == 'folder') {
-		var uri = (type != 'playlist' ? root : "") + share.value;
+		const uri = (type != 'playlist' ? root : "") + share.value;
 		dom.a.href = 'music.php?dl'+ (type == 'playlist' ? 'pl' : '') +'='+ esc(uri);
 		dom.a.click();
 	}
 }
 
 function clip(type) {
-	var share = dom[type +'uri'];
+	const share = dom[type +'uri'];
 	if (share.value || type == 'folder') {
 		cls(share.nextElementSibling.nextElementSibling, 'clip', ADD);
 		const fullUri = type == 'playlist'
@@ -938,7 +937,7 @@ function clip(type) {
 }
 
 function toClipboard(value) {
-	var promise = navigator.clipboard.writeText(value);
+	const promise = navigator.clipboard.writeText(value);
 	if (typeof promise !== 'undefined') {
 		promise.catch(function(e) {
 				setToast({ 'className': 'error', 'textContent': e });
@@ -948,7 +947,7 @@ function toClipboard(value) {
 
 function share(name) {
 log('Share() triggered');
-	var data = {
+	const data = {
 		text: dom.sharemsg.value +' '+ dom.sharenfo.value,
 		url: base +'?play='+ dom.popup.uri };
 	log(data);
@@ -958,7 +957,7 @@ log('Share() triggered');
 		dom.a.href = shareapi[name].replace('{text}', data.text).replace('{url}', data.url);
 		dom.a.click();
 	} else {
-		var promise = navigator.share(data);
+		const promise = navigator.share(data);
 		if (typeof promise !== 'undefined') {
 			promise.catch(function(e) {
 					setToast({ 'className': 'error', 'textContent': e });
@@ -970,7 +969,7 @@ log('Share() triggered');
 }
 
 function prepPlaylists(action) {
-	var xhttp = new XMLHttpRequest();
+	const xhttp = new XMLHttpRequest();
 	xhttp.onload = function() {
 		playlists = JSON.parse(this.responseText);
 		log(playlists);
@@ -1001,7 +1000,7 @@ function prepPlaylists(action) {
 }
 
 function loadPlaylist(name) {
-	var pl = JSON.parse(playlists[name]);
+	const pl = JSON.parse(playlists[name]);
 	fillPlaylist(pl);
 	playlistLoaded = name;
 }
@@ -1014,9 +1013,9 @@ function loadPlaylistBtn(e) {
 
 function removePlaylist(e) {
 	e.preventDefault();
-	var name = e.target.textContent;
+	const name = e.target.textContent;
 	if (e.target.tagName != 'BUTTON' || !confirm(str.removeplaylist +' '+ name +'?')) return true;
-	var xhttp = new XMLHttpRequest();
+	const xhttp = new XMLHttpRequest();
 	xhttp.onload = function() {
 		if (this.responseText != '')
 			alert(str.error +'\n\n'+ this.responseText);
@@ -1041,7 +1040,7 @@ function savePlaylist() {
 		name = name.replace(/[\\\/:*?"<>|]/g, ' ');
 		for (var pl in playlists)
 			if (pl == name && !confirm(str.overwrite)) return;
-		var xhttp = new XMLHttpRequest();
+		const xhttp = new XMLHttpRequest();
 		xhttp.onload = function() {
 			if (this.responseText != '')
 				alert(str.error +'\n\n'+ this.responseText);
@@ -1054,13 +1053,13 @@ function savePlaylist() {
 
 function importPlaylist() {
 	if (cfg.locked || mode == 'song') return;
-	var input = document.createElement('input');
+	const input = document.createElement('input');
 	input.setAttribute('type', 'file');
 	input.setAttribute('accept', '.mfp.json');
 	input.onchange = function(e) {
-		var reader = new FileReader();
+		const reader = new FileReader();
 		reader.onload = function(e) {
-			var pl = JSON.parse(e.target.result);
+			const pl = JSON.parse(e.target.result);
 			fillPlaylist(pl);
 		};
 		reader.readAsText(input.files[0], 'UTF-8');
@@ -1070,7 +1069,7 @@ function importPlaylist() {
 
 function exportPlaylist() {
 	if (cfg.locked || mode == 'song' || !cfg.playlist.length) return;
-	var filename = prompt(str.exportpl);
+	const filename = prompt(str.exportpl);
 	if (filename) {
 		dom.a.href = 'data:text/json;charset=utf-8,'+ esc(getPlaylistCopy());
 		dom.a.download = filename +'.mfp.json';
@@ -1089,15 +1088,15 @@ function fillPlaylist(pl) {
 }
 
 function getPlaylistCopy() {
-	var position = cfg.index > 0 && confirm(str.saveposition) ? cfg.index : 0;
-	var copy = JSON.parse(JSON.stringify(cfg.playlist));
+	const position = cfg.index > 0 && confirm(str.saveposition) ? cfg.index : 0;
+	const copy = JSON.parse(JSON.stringify(cfg.playlist));
 	ffor(copy, function(s) { delete s.playNext });
-	var pl = position ? { playlist: copy, index: position } : copy;
+	const pl = position ? { playlist: copy, index: position } : copy;
 	return JSON.stringify(pl);
 }
 
 function add(id, next = false) {
-	var s = {
+	const s = {
 		'path': songs[id].path,
 		'cover': songs[id].cover
 	};
@@ -1115,7 +1114,7 @@ function add(id, next = false) {
 		}
 	}
 
-	var li = playlistItem(s);
+	const li = playlistItem(s);
 	if (next) {
 		s.playNext = 1;
 		cfg.playlist.splice(i, 0, s);
@@ -1138,7 +1137,7 @@ function add(id, next = false) {
 
 function playNext() {
 	if (cfg.index != -1) {
-		var li = dom.playlist.childNodes[cfg.index];
+		const li = dom.playlist.childNodes[cfg.index];
 		cls(li, 'playing', REM);
 		delete li.playNext;
 	}
@@ -1159,10 +1158,10 @@ function playNext() {
 		index = cfg.index = a.index;
 	start(a);
 
-	var path = cfg.playlist[cfg.index].path,
+	const path = cfg.playlist[cfg.index].path,
 		nfo = getSongInfo(path),
-		cover = cfg.playlist[cfg.index].cover,
 		prevcover = dom.cover.src || def.cover;
+	var cover = cfg.playlist[cfg.index].cover;
 	cover = cover ? esc(root + path.substring(0, path.lastIndexOf('/') + 1) + cover) : def.cover;
 	if (prevcover.indexOf(cover) == -1) {
 		dom.cover.style.opacity = 0;
@@ -1197,7 +1196,7 @@ function start(a) {
 			start(a);
 			log('Playback was delayed: no "canplaythrough" yet');
 		}, 1000);*/
-	var promise = a.play();
+	const promise = a.play();
 	if (typeof promise !== 'undefined')
 		promise.catch(function(e) {
 			log(e, true);
@@ -1210,7 +1209,7 @@ function start(a) {
 }
 
 function toggle(e) {
-	var button = e.target.tagName == 'U' ? e.target.parentNode : e.target;
+	const button = e.target.tagName == 'U' ? e.target.parentNode : e.target;
 
 	switch (button.id) {
 		case 'cover':
@@ -1278,7 +1277,7 @@ function toggle(e) {
 }
 
 function buildFilteredLibrary(terms = dom.filter.value.trim()) {
-	var termsArray = terms.toLowerCase().split(' ');
+	const termsArray = terms.toLowerCase().split(' ');
 	playedFiltered.length = songsFiltered.length = 0;
 
 	for (var s in songs)
@@ -1291,14 +1290,14 @@ function toggleLock() {
 	if (!cfg.locked && cls(dom.options, 'playlistbtn'))
 		dom.playlistbtn.click();
 	cfg.locked ^= true;
-	var act = cfg.locked ? ADD : REM;
+	const act = cfg.locked ? ADD : REM;
 	cls(document.body, 'locked', act);
 	cls(dom.lock, 'on', act);
 	lng(dom.lock, cfg.locked ? str.unlock : str.lock);
 }
 
 function password() {
-	var p = dom.password.value;
+	const p = dom.password.value;
 
 	if (!cfg.locked && p == str.enterpass) return true;
 	if (cfg.locked && !cfg.password) return true;
@@ -1387,15 +1386,15 @@ function resizePlaylist() {
 }
 
 function setTrashPos() {
-	var scrollBars = dom.playlist.offsetWidth - dom.playlist.clientWidth;
+	const scrollBars = dom.playlist.offsetWidth - dom.playlist.clientWidth;
 	dom.trash.style.right = scrollBars == 0 ? '' : scrollBars + (cls(dom.doc, 'material') ? 8 : 4) +'px';
 }
 
 function filter(instant = false) {	// Gets event from oninput
-	var terms = dom.filter.value.trim(),
+	const terms = dom.filter.value.trim(),
 		length = terms.length,
-		display = length ? 'none' : '',
-		results = false;
+		display = length ? 'none' : '';
+	var results = false;
 	if (instant && (length < cfg.instantfilter || terms == currentFilter)) return;
 
 	log('Filtering for: "'+ terms +'"');
@@ -1406,10 +1405,10 @@ function filter(instant = false) {	// Gets event from oninput
 	});
 
 	if (length) {
-		var termsArray = terms.toLowerCase().split(' ');
+		const termsArray = terms.toLowerCase().split(' ');
 
 		ffor(tree, function(f) {
-			var path = f.path.toLowerCase();
+			const path = f.path.toLowerCase();
 
 			if (matchTerms(path, termsArray)) {
 				if (cls(f, 'song') && !matchTerms(path.substring(path.lastIndexOf('/') + 1), termsArray)
@@ -1458,7 +1457,7 @@ function matchTerms(path, termsArray) {
 }
 
 function cls(el, name, act = null) {
-	var found = el.classList.contains(name);
+	const found = el.classList.contains(name);
 	if (act == null)
 		return found;
 	if (act == SET)
@@ -1473,7 +1472,7 @@ function cls(el, name, act = null) {
 }
 
 function ffor(items, callback) {
-	var length = items.length;
+	const length = items.length;
 	for (var i = 0; i < length; i++) {
 		if (callback(items[i]))	// If returns true, break the loop
 			break;
@@ -1585,8 +1584,8 @@ function keyNav(el, direction) {
 
 function changeTheme() {
 	if (!themes.length) return;
-	var prev = cfg.theme;
-	themes = themes.filter(t => t !== prev);
+	const prev = cfg.theme;
+	themes.splice(themes.indexOf(prev), 1);
 	themes.push(prev);
 	cfg.theme = themes[0];
 	setTimeout(function() {
@@ -1596,10 +1595,10 @@ function changeTheme() {
 	}, 400);
 }
 
-var Popup = {
+const Popup = {
 
 	addButton: function(title, action) {
-		var btn = document.createElement('button');
+		const btn = document.createElement('button');
 		btn.className = title.toLowerCase();
 		btn.textContent = title;
 		btn.setAttribute('onclick', action);
@@ -1607,7 +1606,7 @@ var Popup = {
 	},
 
 	addInput: function(value, type = false) {
-		var input = document.createElement('input');
+		const input = document.createElement('input');
 		input.value = value;
 		if (type) input.type = type;
 		dom.popupcontent.appendChild(input);
@@ -1615,7 +1614,7 @@ var Popup = {
 	},
 
 	addTitle: function(value) {
-		var title = document.createElement('p');
+		const title = document.createElement('p');
 		title.textContent = value;
 		dom.popupcontent.appendChild(title);
 		return title;
@@ -1629,8 +1628,8 @@ var Popup = {
 	},
 
 	share: function(type) {
-		var nfo,
-			share = dom[type +'uri'];
+		const share = dom[type +'uri'];
+		var nfo;
 		if (!share.value && type != 'folder') return;
 		var uri = 'c:'+ base64(root + share.value);
 		if (type == 'playlist') {
@@ -1702,7 +1701,7 @@ function prepHotkeys() {
 	}, false);
 
 	document.addEventListener('keydown', function(e) {
-		var el = document.activeElement;
+		const el = document.activeElement;
 		if (e.altKey || e.ctrlKey) return;
 
 		if (el.tagName == 'INPUT') {
@@ -1742,7 +1741,7 @@ function prepHotkeys() {
 
 		if (el.tagName == 'TEXTAREA') return;
 
-		var keyEl = dom.keys[e.key];
+		const keyEl = dom.keys[e.key];
 
 		if (keyEl) {
 			e.preventDefault();
