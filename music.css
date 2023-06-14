@@ -278,6 +278,7 @@ ul {
 	}
 
 li.dim { color: var(--text-dim) !important }
+	li.dim > ul { color: var(--text) }
 
 li.dim:hover, li.dim:hover:before,
 li.dim:focus, li.dim:focus:before,

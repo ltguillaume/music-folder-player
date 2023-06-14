@@ -515,20 +515,34 @@ function addSongNext(e) {
 	if (audio[track].paused) fillShare(li.path);
 }
 
+function dimSong(path, act = ADD) {
+	ffor(songs, function(s) {
+		if (s.path == path) {
+			cls(s, 'dim', act);
+			if (act == REM)	// Undim folder
+				cls(s.parentNode.parentNode, 'dim', REM);
+			return true;
+		}
+	});
+}
+
+function undimSong(path) {
+	return dimSong(path, REM);
+}
+
 function buildPlaylist() {
 	if (cfg.playlist.length == 0 || (url.length > 1 && !mode)) return;	// Only use saved playlist in library mode
 	cfg.index = Math.min(cfg.index, cfg.playlist.length - 1);
 	dom.playlist.innerHTML = '';
 
-	var i, li;
-	for (i in cfg.playlist) {
-		li = playlistItem(cfg.playlist[i]);
-		cls(li, 'song', ADD);
+	for (var i in cfg.playlist) {
+		const s = cfg.playlist[i];
+		const li = playlistItem(s);
 		dom.playlist.appendChild(li);
+		dimSong(s.path);
 		if (i == cfg.index) {
 			cls(li, 'playing', ADD);
-			const path = cfg.playlist[i].path;
-			const nfo = getSongInfo(path);
+			const nfo = getSongInfo(cfg.playlist[i].path);
 			dom.album.innerHTML = getAlbumInfo(nfo);
 			dom.title.innerHTML = nfo.title;
 		}
@@ -634,7 +648,7 @@ function removeItem(e) {
 	e.stopPropagation();
 	const index = getIndex(drag);
 	const playing = index == cfg.index;
-	cfg.playlist.splice(index, 1);
+	const [removed] = cfg.playlist.splice(index, 1);
 	dom.playlist.removeChild(dom.playlist.childNodes[index]);
 	if (cfg.index != -1 && index <= cfg.index)
 		cfg.index--;
@@ -642,6 +656,7 @@ function removeItem(e) {
 		cls(dom.playlist.childNodes[cfg.index], 'playing', ADD);
 	endDrag();
 	resizePlaylist();
+	undimSong(removed.path);
 }
 
 function getIndex(li) {
@@ -1370,6 +1385,9 @@ function clearPlaylist() {
 	dom.playlist.innerHTML = '';
 	resizePlaylist();
 	if (cfg.removesongs) dom.removesongs.click();
+	ffor(tree, function(f) {
+		cls(f, 'dim', REM);
+	});
 }
 
 function resizePlaylist() {
