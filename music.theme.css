@@ -110,7 +110,7 @@ html.colorbtn button { transition: background .2s, color .2s ease-out, text-deco
 
 /* Indicate enabled options by colored borders instead of checkmarks */
 html.colortoggle button {
-	margin: 0 1px;
+	margin: 1px;
 	border: 1.5px solid transparent;
 }
 	html.colortoggle button.on { border-color: var(--focus) }

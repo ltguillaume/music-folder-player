@@ -649,6 +649,8 @@ html:not(.dim) #player.fix {
 @media (max-width: 480px) {
 	body > div { margin: calc(.5 * var(--space)) }
 		body > div:before { display: none }
+
+	#controls.volume button:not(#volume) { display: none }
 }
 
 @media (max-width: 740px) {
@@ -670,6 +672,7 @@ html:not(.dim) #player.fix {
 			text-align: center;
 		}
 		#player:not(.fix) #cover { max-height: 10em }
+		#player:not(.fix) #current { width: 100% !important }
 		#player:not(.fix) #seek {
 			margin-bottom: .5em;
 			padding: .5em;

@@ -1248,7 +1248,8 @@ function toggle(e) {
 			return;
 		case 'volume':
 			if (cls(dom.controls, 'volume', TOG))
-				setFocus(dom.volumeslider);
+				if (cls(dom.player, 'fix')) dom.volumeslider.focus();
+				else setFocus(dom.volumeslider);
 			else
 				dom.volumeslider.blur();
 			return;
