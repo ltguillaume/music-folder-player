@@ -111,8 +111,10 @@ html.colorbtn button { transition: background .2s, color .2s ease-out, text-deco
 /* Indicate enabled options by colored borders instead of checkmarks */
 html.colortoggle button {
 	margin: 1px;
+	padding: 0 calc(.75em - 1.5px);
 	border: 1.5px solid transparent;
 }
+	html.material.colortoggle button { padding: 0 calc(.95em - 2.5px) }
 	html.colortoggle button.on { border-color: var(--focus) }
 
 /* Material Design 3(ish) rounded corners, use in music.ini as themes = ['material blue', ...] */
