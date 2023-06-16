@@ -209,6 +209,7 @@ input, select {
 	border: none;
 	border-bottom: 1px solid var(--text);
 }
+	select option:checked { background: none }
 
 input[type=range] {
 	width: 14em;
