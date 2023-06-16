@@ -13,7 +13,7 @@
 	--focus: #eb6600;
 	--focus-dim: #b35000;
 	--scroll: #30353c;
-	--scroll-hv: #5a6367;
+	--scroll-hv: #3f434a;
 }
 
 /* Blue + hue rotation -60, orange focus */
@@ -28,16 +28,23 @@
 	--bg-trash: #0e1713aa;
 	--border: #17261e;
 	--border-cover: #21362b;
-	--focus: #ef6c00;
+	--focus: #eb6600;
 	--focus-dim: #b35000;
 	--scroll: #313d38;
 	--scroll-hv: #59665d;
 }
 
-/* Green focus, use in music.ini as themes = ['blue focusgreen', ...] */
-:root.focusgreen {
-	--focus: #00bd35;
-	--focus-dim: #00800f;
+/* Loosely based on XDA emails */
+:root.gray {
+	--bg: #2d3036;
+	--bg-body: #23272c;
+	--bg-image: none;
+	--bg-menu: #393d43;
+	--bg-player-fix: #393d43;
+	--bg-trash: #2d3036aa;
+	--border: #474c54;
+	--scroll: #474c54;
+	--scroll-hv: #5a5f68;
 }
 
 /* Light theme */
@@ -69,7 +76,46 @@
 html.light #toast.error { color: #fff }
 html.light #cover { opacity: 1 }
 
-/* Material Design 3(ish) rounded corners */
+/* Focus colors, use in music.ini as themes = ['blue focusgreen', ...] */
+:root.focusblue {
+	--focus: #1d91f0;
+	--focus-dim: #1a6eac;
+}
+
+:root.focusgreen {
+	--focus: #00bd35;
+	--focus-dim: #00800f;
+}
+
+:root.focusorange {
+	--focus: #eb6600;
+	--focus-dim: #b35000;
+}
+
+:root.focuspink {
+	--focus: #e0006f;
+	--focus-dim: #b30050;
+}
+
+/* Colorize hovered buttons */
+:root.gray,
+:root.colorbtn { --bg-button-hv: var(--focus-dim) }
+
+html.gray     button,
+html.colorbtn button { transition: background .2s, color .2s ease-out, text-decoration .1s }
+	html.gray     button:focus u, html.gray     button:hover u,
+	html.colorbtn button:focus u, html.colorbtn button:hover u { text-decoration-color: transparent }
+	html.gray     button:hover, html.gray     .menu button:focus,
+	html.colorbtn button:hover, html.colorbtn .menu button:focus { color: #fff }
+
+/* Indicate enabled options by colored borders instead of checkmarks */
+html.colortoggle button {
+	margin: 0 1px;
+	border: 1.5px solid transparent;
+}
+	html.colortoggle button.on { border-color: var(--focus) }
+
+/* Material Design 3(ish) rounded corners, use in music.ini as themes = ['material blue', ...] */
 :root.material {
 	--radius: 2em;
 	--button-size: 2.75em;
@@ -77,20 +123,13 @@ html.light #cover { opacity: 1 }
 }
 
 html.material ::-webkit-scrollbar-thumb { border-radius: 4px }
-
 html.material body { font-size: 1.1em }
-
 html.material button { padding: 0 .95em }
-
 html.material input[type=range] { height: 13px }
-
 html.material li { padding: .1em 0 }
-
 html.material #cover { border-radius: calc(.5 * var(--radius)) }
-
 html.material .menu { padding: .5em }
 	html.material .menu button { border-radius: var(--radius) }
-
 html.material #playlist:not(.resize) { max-height: 11em }
 
 /* Display songs in tree horizontally

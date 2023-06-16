@@ -91,8 +91,9 @@ function lng(el, string, tooltip) {
 	if (tooltip) {
 		string = string.split('\n');
 		el.title = string[0]
-			+ ((el.accessKey && el.accessKey != ' ') ? ' ('+ el.accessKey +')' : '')
-			+ (string.length > 1 ? '\n'+ string[1] : '');
+			+ (el.accessKey && el.accessKey != ' ' ? ' ('+ el.accessKey +')' : '')
+			+ (string.length > 1 ? '\n'+ string[1] : '')
+			+ (el.getAttribute('contextkey') ? ' ('+ el.getAttribute('contextkey') +')' : '');
 	} else {
 		if (!el.accessKey)
 			return el.innerHTML = string;
@@ -927,6 +928,20 @@ function setVolume(input) {
 	if (audio[track].muted) mute();
 }
 
+function shuffle(e) {
+	e.preventDefault();
+	if (cfg.locked) return;
+	var nextIndex = cfg.index + 1;
+	while (cfg.playlist[nextIndex] && cfg.playlist[nextIndex].playNext) nextIndex++;
+	if (!cfg.playlist[nextIndex]) return;
+	const range = cfg.playlist.length - nextIndex;
+	for (var i = cfg.playlist.length - 1; i >= nextIndex; i--) {
+		var j = nextIndex + Math.floor(Math.random() * range);
+		[cfg.playlist[i], cfg.playlist[j]] = [cfg.playlist[j], cfg.playlist[i]];
+	}
+	buildPlaylist();
+}
+
 function download(type) {
 	const share = dom[type +'uri'];
 	if (share.value || type == 'folder') {
@@ -1285,7 +1300,7 @@ function toggle(e) {
 			cfg[button.id] ^= true;
 			cls(button, 'on', cfg[button.id] ? ADD : REM);
 			setToast(button);
-			log('Toggle '+ button.id +' = '+ (cfg[button.id] == 1));
+			log('Set '+ button.id +' = '+ (cfg[button.id] == 1));
 		}
 		if (button.id == 'removesongs')
 			cls(dom.trash, 'on', cfg.removesongs ? ADD : REM);
