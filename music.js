@@ -1131,7 +1131,7 @@ function add(id, next = false) {
 		'cover': songs[id].cover
 	};
 
-	var i = (nodupes || cfg.index == -1) ? 0 : cfg.index;
+	var i = nodupes ? -1 : cfg.index;
 	if (cfg.playlist.length > 0) {
 		if (next && cfg.index > -1) {
 			if (s.path == cfg.playlist[i].path) return cfg.index--;	// Currently playing
