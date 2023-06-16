@@ -377,11 +377,14 @@ function buildLibrary(root, folder, element) {
 			buildLibrary(root + i +'/', folder[i], ul);
 		} else {
 			for (f in folder[i]) {
-				if (f.toLowerCase().endsWith('.jpg') || f.toLowerCase().endsWith('.png')) {
-					if (!cover || f.toLowerCase().startsWith('cover'))
-						cover = f;
-					delete(folder[i][f]);
-				}
+				ffor(ext_images, function(ext) {
+					if (f.toLowerCase().endsWith('.'+ ext)) {
+						if (!cover || f.toLowerCase().startsWith('cover'))
+							cover = f;
+						delete(folder[i][f]);
+						return true;
+					}
+				});
 			}
 			for (f in folder[i]) {
 				li = document.createElement('li');
