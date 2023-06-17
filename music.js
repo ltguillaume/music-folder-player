@@ -78,7 +78,7 @@ function init() {
 		buildPlaylist();
 		prepJingles();
 		dom.hide('splash');
-		dom.show('doc');
+		dom.show('body');
 		log(sourceurl, true);
 		log('Song count: '+ songs.length, true);
 		log('PHP request = '+ lib.src.replace(/:\/\/.*?:.*?@/, '://'));
@@ -94,8 +94,10 @@ function lng(el, string, tooltip) {
 	if (tooltip) {
 		string = string.split('\n');
 		el.title = string[0]
-			+ ((el.accessKey && el.accessKey != ' ') ? ' ('+ el.accessKey +')' : '')
-			+ (string.length > 1 ? '\n'+ string[1] : '');
+			+ (el.accessKey && el.accessKey != ' ' ? ' ('+ el.accessKey +')' : '')
+			+ (string[1] ? '\n'+ string[1] : '')
+			+ (el.getAttribute('contextkey') ? ' ('+ el.getAttribute('contextkey') +')' : '')
+			+ (string[2] ? '\n'+ string[2] : '');
 	} else {
 		if (!el.accessKey)
 			return el.innerHTML = string;
@@ -188,7 +190,7 @@ function prepUI() {
 
 function touchUI() {
 	touch = true;
-	cls(dom.doc, 'touch', ADD);
+	cls(dom.body, 'touch', ADD);
 	if (mode) resizePlaylist();
 	else dom.show('trash');
 	log('Touch device detected', true);
@@ -210,7 +212,7 @@ function prepJingles() {
 }
 
 function fixPlayer() {
-	if (!cls(dom.player, 'fix') && !cls(dom.doc, 'dim')
+	if (!cls(dom.player, 'fix') && !cls(dom.body, 'dim')
 		&& window.pageYOffset > 1.5 * dom.player.offsetHeight
 		&& dom.doc.offsetHeight - dom.player.offsetHeight > window.innerHeight) {
 		playerheight = dom.player.offsetHeight + parseInt(window.getComputedStyle(dom.player).getPropertyValue('margin-top'));
@@ -394,11 +396,14 @@ function buildLibrary(root, folder, element) {
 			buildLibrary(root + i +'/', folder[i], ul);
 		} else {
 			for (f in folder[i]) {
-				if (f.toLowerCase().endsWith('.jpg') || f.toLowerCase().endsWith('.png')) {
-					if (!cover || f.toLowerCase().startsWith('cover'))
-						cover = f;
-					delete(folder[i][f]);
-				}
+				ffor(ext_images, function(ext) {
+					if (f.toLowerCase().endsWith('.'+ ext)) {
+						if (!cover || f.toLowerCase().startsWith('cover'))
+							cover = f;
+						delete(folder[i][f]);
+						return true;
+					}
+				});
 			}
 			for (f in folder[i]) {
 				li = document.createElement('li');
@@ -533,20 +538,34 @@ function addSongNext(e) {
 	if (audio[track].paused) fillShare(li.path);
 }
 
+function dimSong(path, act = ADD) {
+	ffor(songs, function(s) {
+		if (s.path == path) {
+			cls(s, 'dim', act);
+			if (act == REM)	// Undim folder
+				cls(s.parentNode.parentNode, 'dim', REM);
+			return true;
+		}
+	});
+}
+
+function undimSong(path) {
+	return dimSong(path, REM);
+}
+
 function buildPlaylist() {
 	if (cfg.playlist.length == 0 || (url.length > 1 && !mode)) return;	// Only use saved playlist in library mode
 	cfg.index = Math.min(cfg.index, cfg.playlist.length - 1);
 	dom.playlist.innerHTML = '';
 
-	var i, li;
-	for (i in cfg.playlist) {
-		li = playlistItem(cfg.playlist[i]);
-		cls(li, 'song', ADD);
+	for (var i in cfg.playlist) {
+		const s = cfg.playlist[i];
+		const li = playlistItem(s);
 		dom.playlist.appendChild(li);
+		dimSong(s.path);
 		if (i == cfg.index) {
 			cls(li, 'playing', ADD);
-			const path = cfg.playlist[i].path;
-			const nfo = getSongInfo(path);
+			const nfo = getSongInfo(cfg.playlist[i].path);
 			dom.album.innerHTML = getAlbumInfo(nfo);
 			dom.title.innerHTML = nfo.title;
 		}
@@ -652,7 +671,7 @@ function removeItem(e) {
 	e.stopPropagation();
 	const index = getIndex(drag);
 	const playing = index == cfg.index;
-	cfg.playlist.splice(index, 1);
+	const [removed] = cfg.playlist.splice(index, 1);
 	dom.playlist.removeChild(dom.playlist.childNodes[index]);
 	if (cfg.index != -1 && index <= cfg.index)
 		cfg.index--;
@@ -660,6 +679,7 @@ function removeItem(e) {
 		cls(dom.playlist.childNodes[cfg.index], 'playing', ADD);
 	endDrag();
 	resizePlaylist();
+	undimSong(removed.path);
 }
 
 function getIndex(li) {
@@ -943,6 +963,20 @@ function setVolume(input) {
 	if (audio[track].muted) mute();
 }
 
+function shuffle(e) {
+	e.preventDefault();
+	if (cfg.locked) return;
+	var nextIndex = cfg.index + 1;
+	while (cfg.playlist[nextIndex] && cfg.playlist[nextIndex].playNext) nextIndex++;
+	if (!cfg.playlist[nextIndex]) return;
+	const range = cfg.playlist.length - nextIndex;
+	for (var i = cfg.playlist.length - 1; i >= nextIndex; i--) {
+		var j = nextIndex + Math.floor(Math.random() * range);
+		[cfg.playlist[i], cfg.playlist[j]] = [cfg.playlist[j], cfg.playlist[i]];
+	}
+	buildPlaylist();
+}
+
 function download(type) {
 	const share = dom[type +'uri'];
 	if (share.value || type == 'folder') {
@@ -1132,7 +1166,7 @@ function add(id, next = false) {
 		'cover': songs[id].cover
 	};
 
-	var i = (nodupes || cfg.index == -1) ? 0 : cfg.index;
+	var i = nodupes ? -1 : cfg.index;
 	if (cfg.playlist.length > 0) {
 		if (next && cfg.index > -1) {
 			if (s.path == cfg.playlist[i].path) return cfg.index--;	// Currently playing
@@ -1249,7 +1283,8 @@ function toggle(e) {
 			return;
 		case 'volume':
 			if (cls(dom.controls, 'volume', TOG))
-				setFocus(dom.volumeslider);
+				if (cls(dom.player, 'fix')) dom.volumeslider.focus();
+				else setFocus(dom.volumeslider);
 			else
 				dom.volumeslider.blur();
 			return;
@@ -1281,10 +1316,10 @@ function toggle(e) {
 		case 'lock':
 			return Popup.lock();
 		case 'logbtn':
-			cls(dom.doc, 'dim', cls(dom.logdiv, 'hide'));
+			cls(dom.body, 'dim', cls(dom.logdiv, 'hide'));
 			if (cls(dom.logdiv, 'hide', TOG))
 				dom.log.blur();
-			else if (!cls(dom.doc, 'touch'))
+			else if (!cls(dom.body, 'touch'))
 				dom.log.focus();
 			return;
 		case 'trash':
@@ -1301,7 +1336,7 @@ function toggle(e) {
 			cfg[button.id] ^= true;
 			cls(button, 'on', cfg[button.id] ? ADD : REM);
 			setToast(button);
-			log('Toggle '+ button.id +' = '+ (cfg[button.id] == 1));
+			log('Set '+ button.id +' = '+ (cfg[button.id] == 1));
 		}
 		if (button.id == 'removesongs')
 			cls(dom.trash, 'on', cfg.removesongs ? ADD : REM);
@@ -1401,6 +1436,9 @@ function clearPlaylist() {
 	dom.playlist.innerHTML = '';
 	resizePlaylist();
 	if (cfg.removesongs) dom.removesongs.click();
+	ffor(tree, function(f) {
+		cls(f, 'dim', REM);
+	});
 }
 
 function resizePlaylist() {
@@ -1613,17 +1651,60 @@ function keyNav(el, direction) {
 	}
 }
 
-function changeTheme() {
-	if (!themes.length) return;
-	const prev = cfg.theme;
-	themes.splice(themes.indexOf(prev), 1);
-	themes.push(prev);
-	cfg.theme = themes[0];
-	setTimeout(function() {
-		dom.doc.className = dom.doc.className.replace(prev, cfg.theme);
-		resizePlaylist();
-		log('Theme: '+ cfg.theme, true);
-	}, 400);
+function changeTheme(e) {
+	e.preventDefault();
+	var change = 'theme';
+	switch(e.target.id) {
+		case 'theme':
+			if (e.type == 'contextmenu')
+				change = 'material';
+			break;
+		case 'color':
+			if (e.type == 'contextmenu')
+				change = 'colorbtn';
+			else if (e.ctrlKey)
+				change = 'colortoggle';
+			else
+				change = 'focuscolor';
+	}
+
+	switch(change) {
+		case 'material':
+		case 'colorbtn':
+		case 'colortoggle':
+			cls(dom.doc, change, TOG);
+			cfg.theme = dom.doc.className;
+			break;
+		case 'focuscolor':
+			if (!focuscolors.length) return;
+			for (var i = 0; i < focuscolors.length; i++) {
+				const c = focuscolors[i];
+				if (cls(dom.doc, c)) {
+					const cnext = focuscolors[(i + 1) % focuscolors.length];
+					cls(dom.doc, c, REM);
+					cls(dom.doc, cnext, ADD);
+					return;
+				}
+			}
+			cls(dom.doc, focuscolors[0], ADD);
+			cfg.theme = dom.doc.className;
+			break;
+		case 'theme':
+			if (!themes.length) return;
+			const prev = cfg.theme;
+			if (themes.indexOf(prev) > -1)
+				themes.splice(themes.indexOf(prev), 1);
+			themes.push(prev);
+			cfg.theme = themes[0];
+			setTimeout(function() {
+				cls(dom.playlist, 'resize', REM);
+				dom.playlist.style.height = '';
+				dom.doc.className = cfg.theme;
+				resizePlaylist();
+			}, 400);
+	}
+
+	log('Theme: '+ cfg.theme, true);
 }
 
 const Popup = {
@@ -1686,7 +1767,7 @@ const Popup = {
 	},
 
 	open: function() {
-		cls(dom.doc, 'dim', ADD);
+		cls(dom.body, 'dim', ADD);
 		dom.show('popupdiv');
 		dom.popup.style.height = (9 + dom.popup.lastElementChild.getBoundingClientRect().bottom - dom.popup.getBoundingClientRect().top) +'px';
 		dom.focus.select();
@@ -1699,7 +1780,7 @@ const Popup = {
 				toggleLock();
 				break;
 		}
-		cls(dom.doc, 'dim', REM);
+		cls(dom.body, 'dim', REM);
 		dom.focus = false;
 		dom.hide('popupdiv');
 		dom.popup.className = dom.popup.uri = dom.popupcontent.innerHTML = dom.password = '';
@@ -1853,7 +1934,7 @@ function prepHotkeys() {
 
 			case tv ? 9 : '':
 			case 'b':
-				cls(dom.doc, 'dim', TOG);
+				cls(dom.body, 'dim', TOG);
 				break;
 		}
 	}, false);

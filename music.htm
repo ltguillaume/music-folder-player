@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html id="doc" class="hide">
+<html id="doc">
 <head>
 	<meta charset="UTF-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,7 +10,7 @@
 	<script src="music.js"></script>
 	<title id="pagetitle">♫</title>
 </head>
-<body onload="init()">
+<body id="body" class="hide" onload="init()">
 	<span id="splash"></span>
 	<div id="player" class="toolbar">
 		<img id="cover" src="music.png" onclick="zoom()" accesskey="z"
@@ -35,7 +35,7 @@
 	<div id="options">
 		<div class="wrapped toolbar" onclick="toggle(event)">
 			<button id="enqueue"     accesskey="e"></button>
-			<button id="random"      accesskey="r"></button>
+			<button id="random"      accesskey="r" oncontextmenu="shuffle(event)" contextkey="h"></button>
 			<button id="crossfade"   accesskey="o"></button>
 			<button id="playlistbtn" accesskey="p"></button>
 			<button id="share"       accesskey="s"></button>
@@ -119,7 +119,8 @@
 				<button id="logclip"     class="clip"     onclick="dom.log.select(); document.execCommand('copy')"></button>
 				<button id="logclear"    class="clear"    onclick="dom.log.value = ''"></button>
 				&nbsp;&nbsp;
-				<button id="theme"                        onclick="changeTheme()" accesskey="T"></button>
+				<button id="theme"                        onclick="changeTheme(event)" accesskey="T" oncontextmenu="changeTheme(event)"></button>
+				<button id="color"                        onclick="changeTheme(event)" accesskey="C" oncontextmenu="changeTheme(event)"></button>
 				<button id="debug"                        onclick="toggle(event)"></button>
 				&nbsp;&nbsp;
 				<button id="logmin"      class="min"      onclick="dom.logbtn.click()"></button>

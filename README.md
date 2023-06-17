@@ -8,40 +8,44 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 ## Overview
 
 #### Player
-- Rebuilds the tree of a specified folder, showing only files with supported extensions
 - Click on cover image to zoom (300x300px, again for full size)
 - Click on current song or folder name to find it in the library
+- Right-click Volume to mute
+- Right-click Next to skip current artist
+
+#### Options
+- Random: pick the next song randomly from the upcoming songs (songs added using "Play next" take precedence)
+	- Right-click Random to shuffle upcoming songs (songs added using "Play next" will stay in place)
+- Crossfade: start playing the next song 10s before ending the current and fade out the current song
+- Password lock the playlist and playlist controls (allowing only Enqueue, Play/pause and Share)
+	- Tip: use [OpenKiosk](http://openkiosk.mozdevgroup.com) and disable _Set Inactive Terminal_
+- Do not add previously played songs to playlist (optional)
 
 #### Playlist
 
 <img src="SCREENSHOT_AFTERPL.png" align="right" width="200">
 
-- Drag and drop to change the playlist order or drag to bin to remove
-- Random playback will prevent choosing already played songs (unless "Play next" is used)
 - Click on a song to play directly
-- Right-click (long-press) a song to find it in the library
+- Drag and drop to change the order, drag to bin to remove
+- Right-click a song to find it in the library
 - Choose how to continue when the playlist is exhausted:
 	- Stop playback
 	- Repeat the playlist
 	- Continue from the last played song's position in the library
 	- Randomly select unplayed songs from the (filtered) library
 - Playlist and configuration will be saved to the browser's Local Storage if possible
-- Load/save online playlists (optional)
+- Load/save online playlists (can be disabled)
 - Import/export playlists from/to a local file
 
 #### Library
-- Sports a library filter to quickly find songs
-- Click a song to play (or enqueue when "Enqueue" mode is enabled)
-- Clicking on a song will always keep the playlist intact
-- Right-click (long-press) a song to play it next
-- Right-click (long-press) a folder to add all its songs to the playlist
+- Rebuilds the tree of a specified folder, showing only files with supported extensions
 - Use arrow keys to traverse the library tree, Enter to play/enqueue, or Shift-Enter to play next/add folder
-
-#### Parties
-- Password lock the playlist and playlist controls (allowing only Enqueue, Play next, Play/pause and Share)
-- Tip: use [OpenKiosk](http://openkiosk.mozdevgroup.com) and disable _Set Inactive Terminal_
-- Prevents adding a song if it's already queued up
-- Do not add previously played songs to playlist (optional)
+- Click a song to play (or enqueue when "Enqueue" mode is enabled)
+- Clicking on a song will never clear the playlist (looking at you, ol' Winamp)
+- Play next: right-click (long-press) a song to play it next ("Play next" songs will play in "FIFO" order)
+- Right-click a folder to add all its songs to the playlist
+- Prevents adding a song if it's already queued up (unless "Play next" is used)
+- Sports a library (instant) filter to quickly find songs
 
 #### Sharing
 
@@ -50,6 +54,15 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 - Download a song or zipped folder
 - Share a song, folder or playlist link (library features/options will be disabled)
 - Share links directly to email, social media or use your device's native share options (optional)
+
+#### Themes
+- Define your own subset of the available themes and variants in `music.ini`
+- Black, blue, green, gray and light color themes
+- Can be mixed with variants (see `music.theme.css`):
+	- Material-like rounded UI
+	- Colorize hovered buttons
+	- Blue, green, orange and pink focus colors
+	- Indicate enabled options by colored borders instead of checkmarks
 
 #### Translations
 - Currently includes English, Dutch, Portuguese and Spanish
