@@ -1626,6 +1626,8 @@ function changeTheme() {
 	themes.push(prev);
 	cfg.theme = themes[0];
 	setTimeout(function() {
+		cls(dom.playlist, 'resize', REM);
+		dom.playlist.style.height = '';
 		dom.doc.className = dom.doc.className.replace(prev, cfg.theme);
 		resizePlaylist();
 		log('Theme: '+ cfg.theme, true);

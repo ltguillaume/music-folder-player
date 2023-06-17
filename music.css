@@ -486,7 +486,7 @@ html:not(.dim) #player.fix {
 
 #playlist {
 	min-height: var(--button-size-rel);
-	max-height: 9.75em;
+	max-height: 9.25em;
 	overflow-y: auto;
 	list-style: none;
 }
