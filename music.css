@@ -81,51 +81,6 @@
 }
 	*:active, *:focus, *:hover { outline: none }
 
-html.touch body {
-	font-family: BarlowSC, "Segoe UI", sans-serif;
-	font-size: 1.1em;
-	word-spacing: 1px;
-}
-	html.touch button, html.touch input, html.touch li {
-		user-select: none;
-		-moz-user-select: none;
-		-ms-user-select: none;
-		-webkit-user-select: none;
-		-webkit-touch-callout: none;
-		-webkit-tap-highlight-color: transparent;
-	}
-	html.touch input[type=range] { width: 18em }
-	html.touch li, html.touch #filter { padding: .4em 0 !important }
-		html.touch li.open { padding-bottom: 0 !important }
-	html.touch u { text-decoration: none }
-	html.touch #current { line-height: 1.25em }
-	html.touch #playlist {
-		overflow-x: auto;
-		white-space: nowrap;
-	}
-	html.touch *::-webkit-scrollbar {
-		width: 4px !important;
-		height: 4px !important;
-	}
-	html.touch #tree ul { margin-left: .5em }
-	html.touch .toolbar.hidden { visibility: visible }
-	html.touch #popup {
-		top: 0;
-		border-top: none;
-		border-radius: 0 0 var(--radius) var(--radius);
-		animation: .4s popup-top;
-	}
-
-html.hide > body > div,
-html.hide > body > div:before {
-	opacity: 0;
-	pointer-events: none;
-}
-
-html.dim > body { background: var(--bg-dim) }
-	html.dim > body > div,
-	html.dim > body > div:before { opacity: .25 }
-
 body, button, input, select {
 	font-family: Barlow, "Segoe UI", sans-serif;
 	line-height: 1.25em;
@@ -155,6 +110,50 @@ body > div {
 	}
 	body > div, body > div * { transition: background .4s, border-color .4s, opacity .4s }
 		body > div li { transition: background .4s, opacity .4s }
+
+body.dim { background: var(--bg-dim) }
+	body.dim > div, body.dim > div:before { opacity: .25 }
+
+body.hide > div, body.hide > div:before {
+	opacity: 0;
+	pointer-events: none;
+}
+
+body.touch {
+	font-family: BarlowSC, "Segoe UI", sans-serif;
+	font-size: 1.1em;
+	word-spacing: 1px;
+}
+	body.touch button, body.touch input, body.touch li {
+		user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		-webkit-user-select: none;
+		-webkit-touch-callout: none;
+		-webkit-tap-highlight-color: transparent;
+	}
+	body.touch input[type=range] { width: 18em }
+	body.touch li, body.touch #filter { padding: .4em 0 !important }
+		body.touch li.open { padding-bottom: 0 !important }
+	body.touch u { text-decoration: none }
+	body.touch #current { line-height: 1.25em }
+	body.touch #playlist {
+		overflow-x: auto;
+		white-space: nowrap;
+	}
+	/* DOES THIS WORK???? */
+	body.touch *::-webkit-scrollbar {
+		width: 4px !important;
+		height: 4px !important;
+	}
+	body.touch #tree ul { margin-left: .5em }
+	body.touch .toolbar.hidden { visibility: visible }
+	body.touch #popup {
+		top: 0;
+		border-top: none;
+		border-radius: 0 0 var(--radius) var(--radius);
+		animation: .4s popup-top;
+	}
 
 body.locked #stop, body.locked #previous, body.locked #next,
 body.locked #enqueue, body.locked #random, body.locked #crossfade, body.locked #playlistbtn {
@@ -602,7 +601,7 @@ html:not(.dim) #player.fix {
 		@keyframes popup { from { transform: translateY(200%) }}
 		@keyframes popup-top { from { transform: translateY(-200%) }}
 
-:not(html).hide { display: none }
+:not(body).hide { display: none }
 
 .title {
 	height: 1.25em;
@@ -693,6 +692,7 @@ html:not(.dim) #player.fix {
 }
 
 #after:before { content: "\f182" }
+#color:before { content: "\f18f" }
 #crossfade:before { content: "\f1b2" }
 #debug:before { content: "\f156" }
 #enqueue:before, .add:before { content: "\f199" }

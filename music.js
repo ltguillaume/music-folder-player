@@ -75,7 +75,7 @@ function init() {
 		buildLibrary('', library, dom.tree);
 		buildPlaylist();
 		dom.hide('splash');
-		dom.show('doc');
+		dom.show('body');
 		log(sourceurl, true);
 		log('Song count: '+ songs.length, true);
 		log('PHP request = '+ lib.src.replace(/:\/\/.*?:.*?@/, '://'));
@@ -92,8 +92,9 @@ function lng(el, string, tooltip) {
 		string = string.split('\n');
 		el.title = string[0]
 			+ (el.accessKey && el.accessKey != ' ' ? ' ('+ el.accessKey +')' : '')
-			+ (string.length > 1 ? '\n'+ string[1] : '')
-			+ (el.getAttribute('contextkey') ? ' ('+ el.getAttribute('contextkey') +')' : '');
+			+ (string[1] ? '\n'+ string[1] : '')
+			+ (el.getAttribute('contextkey') ? ' ('+ el.getAttribute('contextkey') +')' : '')
+			+ (string[2] ? '\n'+ string[2] : '');
 	} else {
 		if (!el.accessKey)
 			return el.innerHTML = string;
@@ -186,14 +187,14 @@ function prepUI() {
 
 function touchUI() {
 	touch = true;
-	cls(dom.doc, 'touch', ADD);
+	cls(dom.body, 'touch', ADD);
 	if (mode) resizePlaylist();
 	else dom.show('trash');
 	log('Touch device detected', true);
 }
 
 function fixPlayer() {
-	if (!cls(dom.player, 'fix') && !cls(dom.doc, 'dim')
+	if (!cls(dom.player, 'fix') && !cls(dom.body, 'dim')
 		&& window.pageYOffset > 1.5 * dom.player.offsetHeight
 		&& dom.doc.offsetHeight - dom.player.offsetHeight > window.innerHeight) {
 		playerheight = dom.player.offsetHeight + parseInt(window.getComputedStyle(dom.player).getPropertyValue('margin-top'));
@@ -1284,10 +1285,10 @@ function toggle(e) {
 		case 'lock':
 			return Popup.lock();
 		case 'logbtn':
-			cls(dom.doc, 'dim', cls(dom.logdiv, 'hide'));
+			cls(dom.body, 'dim', cls(dom.logdiv, 'hide'));
 			if (cls(dom.logdiv, 'hide', TOG))
 				dom.log.blur();
-			else if (!cls(dom.doc, 'touch'))
+			else if (!cls(dom.body, 'touch'))
 				dom.log.focus();
 			return;
 		case 'trash':
@@ -1619,19 +1620,60 @@ function keyNav(el, direction) {
 	}
 }
 
-function changeTheme() {
-	if (!themes.length) return;
-	const prev = cfg.theme;
-	themes.splice(themes.indexOf(prev), 1);
-	themes.push(prev);
-	cfg.theme = themes[0];
-	setTimeout(function() {
-		cls(dom.playlist, 'resize', REM);
-		dom.playlist.style.height = '';
-		dom.doc.className = dom.doc.className.replace(prev, cfg.theme);
-		resizePlaylist();
-		log('Theme: '+ cfg.theme, true);
-	}, 400);
+function changeTheme(e) {
+	e.preventDefault();
+	var change = 'theme';
+	switch(e.target.id) {
+		case 'theme':
+			if (e.type == 'contextmenu')
+				change = 'material';
+			break;
+		case 'color':
+			if (e.type == 'contextmenu')
+				change = 'colorbtn';
+			else if (e.ctrlKey)
+				change = 'colortoggle';
+			else
+				change = 'focuscolor';
+	}
+
+	switch(change) {
+		case 'material':
+		case 'colorbtn':
+		case 'colortoggle':
+			cls(dom.doc, change, TOG);
+			cfg.theme = dom.doc.className;
+			break;
+		case 'focuscolor':
+			if (!focuscolors.length) return;
+			for (var i = 0; i < focuscolors.length; i++) {
+				const c = focuscolors[i];
+				if (cls(dom.doc, c)) {
+					const cnext = focuscolors[(i + 1) % focuscolors.length];
+					cls(dom.doc, c, REM);
+					cls(dom.doc, cnext, ADD);
+					return;
+				}
+			}
+			cls(dom.doc, focuscolors[0], ADD);
+			cfg.theme = dom.doc.className;
+			break;
+		case 'theme':
+			if (!themes.length) return;
+			const prev = cfg.theme;
+			if (themes.indexOf(prev) > -1)
+				themes.splice(themes.indexOf(prev), 1);
+			themes.push(prev);
+			cfg.theme = themes[0];
+			setTimeout(function() {
+				cls(dom.playlist, 'resize', REM);
+				dom.playlist.style.height = '';
+				dom.doc.className = cfg.theme;
+				resizePlaylist();
+			}, 400);
+	}
+
+	log('Theme: '+ cfg.theme, true);
 }
 
 const Popup = {
@@ -1694,7 +1736,7 @@ const Popup = {
 	},
 
 	open: function() {
-		cls(dom.doc, 'dim', ADD);
+		cls(dom.body, 'dim', ADD);
 		dom.show('popupdiv');
 		dom.popup.style.height = (9 + dom.popup.lastElementChild.getBoundingClientRect().bottom - dom.popup.getBoundingClientRect().top) +'px';
 		dom.focus.select();
@@ -1707,7 +1749,7 @@ const Popup = {
 				toggleLock();
 				break;
 		}
-		cls(dom.doc, 'dim', REM);
+		cls(dom.body, 'dim', REM);
 		dom.focus = false;
 		dom.hide('popupdiv');
 		dom.popup.className = dom.popup.uri = dom.popupcontent.innerHTML = dom.password = '';
@@ -1861,7 +1903,7 @@ function prepHotkeys() {
 
 			case tv ? 9 : '':
 			case 'b':
-				cls(dom.doc, 'dim', TOG);
+				cls(dom.body, 'dim', TOG);
 				break;
 		}
 	}, false);

@@ -101,7 +101,11 @@ html.light #cover { opacity: 1 }
 /* Colorize hovered buttons */
 :root.colorbtn { --bg-button-hv: var(--focus-dim) }
 
-html.colorbtn button { transition: background .2s, border .2s, color .2s ease-out, text-decoration .1s }
+html.colorbtn button, html.colorbtn button b { transition: background .2s, border .2s, color .2s ease-out, text-decoration .1s }
+	html.colorbtn button:focus b, html.colorbtn button:hover b {
+		color: var(--text);
+		border-color: var(--focus);
+	}
 	html.colorbtn button:focus u, html.colorbtn button:hover u { text-decoration-color: transparent }
 	html.colorbtn button:hover, html.colorbtn .menu button:focus { color: #fff }
 
