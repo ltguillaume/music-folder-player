@@ -176,6 +176,7 @@ button {
 	white-space: nowrap;
 	background: none;
 	border: none;
+	border-color: transparent;
 	border-radius: var(--radius);
 	cursor: pointer;
 	transition: background .1s ease-in;

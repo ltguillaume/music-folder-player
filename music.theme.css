@@ -38,6 +38,7 @@
 :root.gray {
 	--bg: #2d3036;
 	--bg-body: #23272c;
+	--bg-button-hv: #474c54;
 	--bg-image: none;
 	--bg-menu: #393d43;
 	--bg-player-fix: #393d43;
@@ -98,24 +99,22 @@ html.light #cover { opacity: 1 }
 }
 
 /* Colorize hovered buttons */
-:root.gray,
 :root.colorbtn { --bg-button-hv: var(--focus-dim) }
 
-html.gray     button,
-html.colorbtn button { transition: background .2s, color .2s ease-out, text-decoration .1s }
-	html.gray     button:focus u, html.gray     button:hover u,
+html.colorbtn button { transition: background .2s, border .2s, color .2s ease-out, text-decoration .1s }
 	html.colorbtn button:focus u, html.colorbtn button:hover u { text-decoration-color: transparent }
-	html.gray     button:hover, html.gray     .menu button:focus,
 	html.colorbtn button:hover, html.colorbtn .menu button:focus { color: #fff }
 
 /* Indicate enabled options by colored borders instead of checkmarks */
-html.colortoggle button {
+html.colortoggle button[onclick^=toggle],
+html.colortoggle div[onclick^=toggle] button {
 	margin: 1px;
 	padding: 0 calc(.75em - 1.5px);
 	border: 1.5px solid transparent;
 }
-	html.material.colortoggle button { padding: 0 calc(.95em - 2.5px) }
-	html.colortoggle button.on { border-color: var(--focus) }
+	html.colortoggle.material div[onclick^=toggle] button { padding: 0 calc(.95em - 2.5px) }
+	html.colortoggle button[onclick^=toggle].on,
+	html.colortoggle div[onclick^=toggle] button.on { border-color: var(--focus) }
 
 /* Material Design 3(ish) rounded corners, use in music.ini as themes = ['material blue', ...] */
 :root.material {
