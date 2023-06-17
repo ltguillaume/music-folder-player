@@ -126,7 +126,7 @@
 		}
 	} else $lib = file_get_contents($lib_path);
 
-	echo 'const root="'. $dir .'/";'. PHP_EOL .'var library='. $lib;
+	echo (isset($_GET['reload']) ? '' : 'const root="'. $dir .'/";'). PHP_EOL .'var library='. $lib;
 
 	function ini_merge($ini, $usr) {
 		foreach ($usr as $k => $v)
