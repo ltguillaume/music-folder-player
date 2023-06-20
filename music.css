@@ -581,6 +581,7 @@ html:not(.dim) #player.fix {
 		margin: auto;
 		padding: .5em;
 		background: var(--bg);
+		color: var(--text);
 		text-align: right;
 		border: 1px solid var(--border);
 		border-radius: var(--radius) var(--radius) 0 0;
