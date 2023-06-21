@@ -267,7 +267,7 @@ function log(s, force = false) {
 function saveLog() {
 	const l = new Blob([dom.log.value], { type: 'text/plain', endings: 'native' });
 	dom.a.href = window.URL.createObjectURL(l);
-	dom.a.download = pagetitle +"_"+ Math.floor(new Date()/1000) +'.log';
+	dom.a.download = pagetitle +"_"+ ~~(new Date()/1000) +'.log';
 	dom.a.click();
 }
 
@@ -971,7 +971,7 @@ function shuffle(e) {
 	if (!cfg.playlist[nextIndex]) return;
 	const range = cfg.playlist.length - nextIndex;
 	for (var i = cfg.playlist.length - 1; i >= nextIndex; i--) {
-		var j = nextIndex + Math.floor(Math.random() * range);
+		var j = nextIndex + ~~(Math.random() * range);
 		[cfg.playlist[i], cfg.playlist[j]] = [cfg.playlist[j], cfg.playlist[i]];
 	}
 	buildPlaylist();
@@ -1683,10 +1683,10 @@ function changeTheme(e) {
 					const cnext = focuscolors[(i + 1) % focuscolors.length];
 					cls(dom.doc, c, REM);
 					cls(dom.doc, cnext, ADD);
-					return;
-				}
+					break;
+				} else if (i == focuscolors.length - 1)
+					cls(dom.doc, focuscolors[0], ADD);
 			}
-			cls(dom.doc, focuscolors[0], ADD);
 			cfg.theme = dom.doc.className;
 			break;
 		case 'theme':
@@ -1703,7 +1703,6 @@ function changeTheme(e) {
 				resizePlaylist();
 			}, 400);
 	}
-
 	log('Theme: '+ cfg.theme, true);
 }
 
