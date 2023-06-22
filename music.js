@@ -825,7 +825,9 @@ function next() {
 
 function prepNext() {
 	if (jingles) {
-		if (!played.length || jinglesCountdown == 0)
+		if (played.length == 0)
+			return load(jingles[0].id, 'next');
+		if (jinglesCountdown == 0)
 			return prepNextJingle();
 		else
 			jinglesCountdown--;
