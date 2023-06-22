@@ -425,11 +425,12 @@ function reloadLibrary() {
 	if (cfg.locked) return;
 	if (!confirm(str.reloadlibrary)) return;
 	dom.tree.innerHTML = '',
-		tree.length = songs.length = 0;
+		jingles.length = tree.length = songs.length = 0;
 	const lib = document.createElement('script');
 	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ esc(url[1]) +'&' : '?') +'reload';
 	lib.onload = function() {
 		buildLibrary('', library, dom.tree);
+		prepJingles();
 		clearPlayed('reload');
 		library = null;
 		if (dom.filter.value.length)
@@ -824,7 +825,7 @@ function next() {
 
 function prepNext() {
 	if (jingles) {
-		if (jinglesCountdown == 0)
+		if (!played.length || jinglesCountdown == 0)
 			return prepNextJingle();
 		else
 			jinglesCountdown--;
@@ -853,9 +854,9 @@ function prepNext() {
 
 				if (cfg.after == 'randomfiltered') {
 					next = songsFiltered[next];	// songsFiltered is an array of id's from songs
-					if (playedFiltered.indexOf(next.toString()) != -1)
+					if (playedFiltered.indexOf(next.toString()) != -1 || jingles.indexOf(songs[next]) != -1)
 						next = null;
-				} else if (played.indexOf(next.toString()) != -1)
+				} else if (played.indexOf(next.toString()) != -1 || jingles.indexOf(songs[next]) != -1)
 					next = null;
 
 				if (next != null && artistSkipped(songs[next].path)) {
