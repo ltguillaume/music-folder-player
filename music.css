@@ -114,7 +114,7 @@ body > div {
 body.dim { background: var(--bg-dim) }
 	body.dim > div, body.dim > div:before { opacity: .25 }
 
-body.hide > div, body.hide > div:before {
+body.hide > div, body.hide > div:before, body.hide > footer {
 	opacity: 0;
 	pointer-events: none;
 }
