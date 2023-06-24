@@ -9,8 +9,8 @@ var
 	currentFilter,
 	drag,
 	errorCount = 0,
-	jingles,
-	jinglesCountdown,
+	favoredCountdown = {},
+	favoredSongs = {},
 	mode,
 	onPlaylist,
 	onSeek,
@@ -29,6 +29,7 @@ const
 	shareapi = {},
 	str = {},
 
+	favored = {},
 	played = [],
 	playedFiltered = [],
 	songs = [],
@@ -76,7 +77,7 @@ function init() {
 		prepUI();
 		buildLibrary('', library, dom.tree);
 		buildPlaylist();
-		prepJingles();
+		prepFavored();
 		dom.hide('splash');
 		dom.show('body');
 		log(sourceurl, true);
@@ -196,18 +197,18 @@ function touchUI() {
 	log('Touch device detected', true);
 }
 
-function prepJingles() {
-	if (jinglesinterval && url.length == 1) {
-		jinglesCountdown = jinglesinterval;
-		jingles = [];
+function prepFavored() {
+	if (url.length > 1) return;
+	for (var f in favored) {
+		const interval = favored[f];
+		const folder = f.toLowerCase();
+		favoredCountdown[f] = interval;
+		favoredSongs[f] = [];
 		for (var s in songs)
-			if (songs[s].path.toLowerCase().startsWith("!jingles/"))
-				jingles.push(songs[s]);
-
-		if (jingles.length == 0)
-			jingles = false;
-		else
-			log('Playing jingle between every '+ jinglesinterval +' songs');
+			if (songs[s].path.toLowerCase().startsWith("!favored/"+ folder))
+				favoredSongs[f].push(songs[s]);
+		if (favoredSongs[f].length > 0)
+			log('Playing a song from !Favored/'+ f +' after every '+ interval +' songs');
 	}
 }
 
@@ -425,12 +426,13 @@ function reloadLibrary() {
 	if (cfg.locked) return;
 	if (!confirm(str.reloadlibrary)) return;
 	dom.tree.innerHTML = '',
-		jingles.length = tree.length = songs.length = 0;
+	tree.length = songs.length = 0;
+	favoredSongs.length = {};	
 	const lib = document.createElement('script');
 	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ esc(url[1]) +'&' : '?') +'reload';
 	lib.onload = function() {
 		buildLibrary('', library, dom.tree);
-		prepJingles();
+		prepFavored();
 		clearPlayed('reload');
 		library = null;
 		if (dom.filter.value.length)
@@ -824,13 +826,13 @@ function next() {
 }
 
 function prepNext() {
-	if (jingles) {
+	for (var f in favoredCountdown) {
 		if (played.length == 0)
-			return load(jingles[0].id, 'next');
-		if (jinglesCountdown == 0)
-			return prepNextJingle();
+			return load(favoredSongs[f][0].id, 'next');
+		if (favoredCountdown[f] == 0)
+			return prepNextFavored(f);
 		else
-			jinglesCountdown--;
+			favoredCountdown[f]--;
 	}
 	if (cfg.playlist.length > cfg.index + 1) {
 		log('prepNext from playlist');
@@ -856,9 +858,9 @@ function prepNext() {
 
 				if (cfg.after == 'randomfiltered') {
 					next = songsFiltered[next];	// songsFiltered is an array of id's from songs
-					if (playedFiltered.indexOf(next.toString()) != -1 || jingles.indexOf(songs[next]) != -1)
+					if (playedFiltered.indexOf(next.toString()) != -1)
 						next = null;
-				} else if (played.indexOf(next.toString()) != -1 || jingles.indexOf(songs[next]) != -1)
+				} else if (played.indexOf(next.toString()) != -1)
 					next = null;
 
 				if (next != null && artistSkipped(songs[next].path)) {
@@ -891,11 +893,12 @@ function prepNext() {
 	}
 }
 
-function prepNextJingle() {
-	jinglesCountdown = jinglesinterval;
-	var next = ~~((Math.random() * jingles.length));
-	load(jingles[next].id, 'next');
-	log('Playing jingle');
+function prepNextFavored(f) {
+	const interval = favored[f];
+	favoredCountdown[f] = interval;
+	var next = ~~((Math.random() * favoredSongs[f].length));
+	load(favoredSongs[f][next].id, 'next');
+	log('Playing song from !Favored/'+ f);
 }
 
 function clearPlayed(action) {
