@@ -292,6 +292,7 @@ li:focus, li:focus:before,
 li.match:hover, li.match:hover:before,
 li.match:focus, li.match:focus:before { color: var(--focus) !important }
 
+a,
 li:hover, li:hover:before,
 li span.artist, li span.artist:hover,
 li.parent:hover, li.parent:hover:before { transition: color .05s ease-in }
