@@ -200,15 +200,17 @@ function touchUI() {
 function prepFavored() {
 	if (url.length > 1) return;
 	for (var f in favored) {
-		const interval = favored[f];
-		const folder = f.toLowerCase();
-		favoredCountdown[f] = interval;
+		const folder = favored[f][0];
+		const interval = favored[f][1];
+		favoredCountdown[f] = interval || 0;
 		favoredSongs[f] = [];
 		for (var s in songs)
-			if (songs[s].path.toLowerCase().startsWith("!favored/"+ folder))
+			if (songs[s].path.toLowerCase().startsWith(folder.toLowerCase()))
 				favoredSongs[f].push(songs[s]);
 		if (favoredSongs[f].length > 0)
-			log('Playing a song from !Favored/'+ f +' after every '+ interval +' songs');
+			log('Playing a favored song from "'+ folder +'" every '+ interval +' songs');
+		else
+			delete favoredCountdown[f];
 	}
 }
 
@@ -827,8 +829,6 @@ function next() {
 
 function prepNext() {
 	for (var f in favoredCountdown) {
-		if (played.length == 0)
-			return load(favoredSongs[f][0].id, 'next');
 		if (favoredCountdown[f] == 0)
 			return prepNextFavored(f);
 		else
@@ -894,11 +894,16 @@ function prepNext() {
 }
 
 function prepNextFavored(f) {
-	const interval = favored[f];
+	const folder = favored[f][0];
+	const interval = favored[f][1];
 	favoredCountdown[f] = interval;
 	var next = ~~((Math.random() * favoredSongs[f].length));
 	load(favoredSongs[f][next].id, 'next');
-	log('Playing song from !Favored/'+ f);
+	if (f == 'intro') {
+		delete (favoredCountdown.intro);
+		log('Playing an intro song from "'+ folder +'"');
+	} else
+		log('Playing a favored song from "'+ folder +'"');
 }
 
 function clearPlayed(action) {
