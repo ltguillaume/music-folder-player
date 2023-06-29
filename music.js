@@ -786,16 +786,16 @@ function previous() {
 
 function skipArtist(e) {
 	e.preventDefault();
-	if (!cfg.locked) {
-		var artist = dom.album.textContent;
-		artist = artist.indexOf(' -') > 0 ? artist.substring(0, artist.indexOf(' -')) : false;
-		if (artist) {
-			if (cfg.skip.indexOf(artist) != -1 && confirm(artist +'\n'+ str.unskipartist))
-				cfg.skip = cfg.skip.filter(t => t !== artist);
-			else if (confirm(artist +'\n'+ str.skipartist)) {
-				cfg.skip.push(artist);
-				next();
-			}
+	if (cfg.locked) return;
+	var artist = cfg.playlist[cfg.index] ? getSongInfo(cfg.playlist[cfg.index].path).artist : "";
+	const unskip = e.ctrlKey || cfg.skip.indexOf(artist.toLowerCase()) != -1;
+	const msg = unskip ? str.unskipartist : str.skipartist;
+	if (artist = prompt(msg, artist)) {
+		if (unskip)
+			cfg.skip = cfg.skip.filter(t => t !== artist.toLowerCase());
+		else {
+			if (cfg.skip.indexOf(artist.toLowerCase()) == -1) cfg.skip.push(artist.toLowerCase());
+			next();
 		}
 	}
 }
@@ -880,9 +880,9 @@ function clearPlayed(action) {
 }
 
 function artistSkipped(path) {
-	const artist = getSongInfo(path).artist;
-	if (cfg.debug && cfg.skip.indexOf() != -1)
-		log('Artist '+ artist +' skipped', true);
+	const artist = getSongInfo(path).artist.toLowerCase();
+	if (cfg.skip.indexOf(artist) != -1)
+		log('Skipped artist "'+ artist +'"');
 	return cfg.skip.indexOf(artist) != -1;
 }
 
