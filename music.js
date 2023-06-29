@@ -90,10 +90,8 @@ function lng(el, string, tooltip) {
 	if (!el) return log('Element '+ el.id +' not found for string: '+ string);
 	if (tooltip) {
 		string = string.split('\n');
-		el.title = string[0]
-			+ (el.accessKey && el.accessKey != ' ' ? ' ('+ el.accessKey +')' : '')
-			+ (string[1] ? '\n'+ string[1] : '')
-			+ (el.getAttribute('contextkey') ? ' ('+ el.getAttribute('contextkey') +')' : '')
+		el.title = string[0] + keyString(el.accessKey)
+			+ (string[1] ? '\n'+ string[1] + keyString(el.getAttribute('contextkey')) : '')
 			+ (string[2] ? '\n'+ string[2] : '');
 	} else {
 		if (!el.accessKey)
@@ -104,6 +102,12 @@ function lng(el, string, tooltip) {
 		else
 			el.innerHTML = string.substring(0, Math.max(index, 0)) +'<u>'+ string.substring(index, index + 1) +'</u>'+ string.substring(index + 1);
 	}
+}
+
+function keyString(key) {
+	if (!key || key == ' ') return '';
+	key = (key != key.toLowerCase() ? 'Shift+' : '') + key.toUpperCase();
+	return ' (' + key + ')';
 }
 
 function prepUI() {
@@ -786,17 +790,15 @@ function previous() {
 
 function skipArtist(e) {
 	e.preventDefault();
-	if (!cfg.locked) {
-		var artist = dom.album.textContent;
-		artist = artist.indexOf(' -') > 0 ? artist.substring(0, artist.indexOf(' -')) : false;
-		if (artist) {
-			if (cfg.skip.indexOf(artist) != -1 && confirm(artist +'\n'+ str.unskipartist))
-				cfg.skip = cfg.skip.filter(t => t !== artist);
-			else if (confirm(artist +'\n'+ str.skipartist)) {
-				cfg.skip.push(artist);
-				next();
-			}
-		}
+	if (cfg.locked) return;
+	const unskip = e.shiftKey || e.target.id == 'previous';
+	const msg = unskip ? str.unskipartist : str.skipartist;
+	var artist = cfg.playlist[cfg.index] ? getSongInfo(cfg.playlist[cfg.index].path).artist : "";
+	if (artist = prompt(msg, artist)) {
+		if (unskip)
+			cfg.skip = cfg.skip.filter(t => t !== artist.toLowerCase());
+		else
+			if (cfg.skip.indexOf(artist.toLowerCase()) == -1) cfg.skip.push(artist.toLowerCase());
 	}
 }
 
@@ -880,9 +882,9 @@ function clearPlayed(action) {
 }
 
 function artistSkipped(path) {
-	const artist = getSongInfo(path).artist;
-	if (cfg.debug && cfg.skip.indexOf() != -1)
-		log('Artist '+ artist +' skipped', true);
+	const artist = getSongInfo(path).artist.toLowerCase();
+	if (cfg.skip.indexOf(artist) != -1)
+		log('Skipped artist "'+ artist +'"');
 	return cfg.skip.indexOf(artist) != -1;
 }
 
