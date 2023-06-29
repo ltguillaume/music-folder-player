@@ -94,10 +94,8 @@ function lng(el, string, tooltip) {
 	if (!el) return log('Element '+ el.id +' not found for string: '+ string);
 	if (tooltip) {
 		string = string.split('\n');
-		el.title = string[0]
-			+ (el.accessKey && el.accessKey != ' ' ? ' ('+ el.accessKey +')' : '')
-			+ (string[1] ? '\n'+ string[1] : '')
-			+ (el.getAttribute('contextkey') ? ' ('+ el.getAttribute('contextkey') +')' : '')
+		el.title = string[0] + keyString(el.accessKey)
+			+ (string[1] ? '\n'+ string[1] + keyString(el.getAttribute('contextkey')) : '')
 			+ (string[2] ? '\n'+ string[2] : '');
 	} else {
 		if (!el.accessKey)
@@ -108,6 +106,12 @@ function lng(el, string, tooltip) {
 		else
 			el.innerHTML = string.substring(0, Math.max(index, 0)) +'<u>'+ string.substring(index, index + 1) +'</u>'+ string.substring(index + 1);
 	}
+}
+
+function keyString(key) {
+	if (!key || key == ' ') return '';
+	key = (key != key.toLowerCase() ? 'Shift+' : '') + key.toUpperCase();
+	return ' (' + key + ')';
 }
 
 function prepUI() {
@@ -810,16 +814,14 @@ function previous() {
 function skipArtist(e) {
 	e.preventDefault();
 	if (cfg.locked) return;
-	var artist = cfg.playlist[cfg.index] ? getSongInfo(cfg.playlist[cfg.index].path).artist : "";
-	const unskip = e.ctrlKey || cfg.skip.indexOf(artist.toLowerCase()) != -1;
+	const unskip = e.shiftKey || e.target.id == 'previous';
 	const msg = unskip ? str.unskipartist : str.skipartist;
+	var artist = cfg.playlist[cfg.index] ? getSongInfo(cfg.playlist[cfg.index].path).artist : "";
 	if (artist = prompt(msg, artist)) {
 		if (unskip)
 			cfg.skip = cfg.skip.filter(t => t !== artist.toLowerCase());
-		else {
+		else
 			if (cfg.skip.indexOf(artist.toLowerCase()) == -1) cfg.skip.push(artist.toLowerCase());
-			next();
-		}
 	}
 }
 
