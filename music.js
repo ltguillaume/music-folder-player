@@ -280,7 +280,7 @@ function saveLog() {
 
 function prepPlaylistMode() {
 	cfg.after = 'stopplayback';
-	dom.hide(['enqueue', 'playlistsave', 'playlibrary', 'randomlibrary', 'randomfiltered', 'trash', 'library']);
+	dom.hide(['enqueue', 'playlistload', 'playlistsave', 'playlibrary', 'randomlibrary', 'randomfiltered', 'sharefolder', 'library']);
 	dom.playlist.style.minHeight = dom.playlist.style.maxHeight = 'unset';
 	mode = 'playlist';
 }
@@ -433,7 +433,7 @@ function reloadLibrary() {
 	if (!confirm(str.reloadlibrary)) return;
 	dom.tree.innerHTML = '',
 	tree.length = songs.length = 0;
-	favoredSongs.length = {};	
+	favoredSongs = {};	
 	const lib = document.createElement('script');
 	lib.src = 'music.php'+ (url.length > 1 ? '?play='+ esc(url[1]) +'&' : '?') +'reload';
 	lib.onload = function() {
@@ -563,7 +563,7 @@ function undimSong(path) {
 }
 
 function buildPlaylist() {
-	if (cfg.playlist.length == 0 || (url.length > 1 && !mode)) return;	// Only use saved playlist in library mode
+	if (cfg.playlist.length == 0) return;
 	cfg.index = Math.min(cfg.index, cfg.playlist.length - 1);
 	dom.playlist.innerHTML = '';
 
@@ -992,7 +992,8 @@ function shuffle(e) {
 
 function download(type) {
 	const share = dom[type +'uri'];
-	if (share.value || type == 'folder') {
+	const shareRoot = type == 'folder' && url.length > 1;
+	if (share.value || shareRoot) {
 		const uri = (type != 'playlist' ? root : "") + share.value;
 		dom.a.href = 'music.php?dl'+ (type == 'playlist' ? 'pl' : '') +'='+ esc(uri);
 		dom.a.click();
@@ -1001,7 +1002,8 @@ function download(type) {
 
 function clip(type) {
 	const share = dom[type +'uri'];
-	if (share.value || type == 'folder') {
+	const shareRoot = type == 'folder' && url.length > 1;
+	if (share.value || shareRoot) {
 		cls(share.nextElementSibling.nextElementSibling, 'clip', ADD);
 		const fullUri = type == 'playlist'
 			? base +'?play=pl:'+ esc(share.value)
@@ -1324,7 +1326,8 @@ function toggle(e) {
 				const tip = dom.randomfiltered.firstElementChild || dom.randomfiltered.appendChild(document.createElement('b'));
 				tip.textContent = dom.filter.value;
 				buildFilteredLibrary();
-			} else dom.randomfiltered.firstElementChild.remove();
+			} else if (dom.randomfiltered.firstElementChild)
+				dom.randomfiltered.firstElementChild.remove();
 			return;
 		case 'lock':
 			return Popup.lock();
@@ -1753,8 +1756,9 @@ const Popup = {
 
 	share: function(type) {
 		const share = dom[type +'uri'];
+		const shareRoot = type == 'folder' && url.length > 1;
 		var nfo;
-		if (!share.value && type != 'folder') return;
+		if (!share.value && !shareRoot) return;
 		var uri = 'c:'+ base64(root + share.value);
 		if (type == 'playlist') {
 			nfo = share.value;
