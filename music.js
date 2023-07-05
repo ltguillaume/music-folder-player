@@ -540,7 +540,7 @@ function undimSong(path) {
 }
 
 function buildPlaylist() {
-	if (cfg.playlist.length == 0 || (url.length > 1 && !mode)) return;	// Only use saved playlist in library mode
+	if (cfg.playlist.length == 0) return;
 	cfg.index = Math.min(cfg.index, cfg.playlist.length - 1);
 	dom.playlist.innerHTML = '';
 
