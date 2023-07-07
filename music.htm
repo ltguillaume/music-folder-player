@@ -23,7 +23,7 @@
 				onchange="seek('c')" oninput="seek('i')" ontouchstart="onseek=true" ontouchend="onseek=false" disabled>
 			<div id="controls" class="toolbar">
 				<button id="volume"       onclick="toggle(event)" accesskey="u" oncontextmenu="mute(event)" contextkey="m"></button>
-				<input  id="volumeslider" class="hide" type="range" min="0" step=".05" onchange="setVolume(event)" oninput="setVolume(event)">
+				<input  id="volumeslider" type="range" min="0" step=".05" onchange="setVolume(event)" oninput="setVolume(event)">
 				<button id="stop"         onclick="stop()"></button>
 				<button id="playpause"    onclick="playPause()"   accesskey=" "></button>
 				<button id="previous"     onclick="previous()"    accesskey="[" oncontextmenu="skipArtist(event)" contextkey="K"></button>
