@@ -263,7 +263,7 @@ input[type=range] {
 		width: unset;
 		margin-right: .25em;
 	}
-		#controls.volume input#volumeslider { display: inline-block !important }
+		#controls.volume input#volumeslider { display: inline-block }
 
 span { margin-left: .25em }
 
