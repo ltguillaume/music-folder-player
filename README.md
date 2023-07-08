@@ -57,11 +57,11 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 
 #### Themes
 - Define your own subset of the available themes and variants in `music.ini`
-- Black, blue, green, gray and light color themes
+- <span style="background-color:#1a1a1a;color:#b4b4b4">&nbsp;Black&nbsp;</span>, <span style="background-color:#141a21;color:#b4b4b4">&nbsp;blue&nbsp;</span>, <span style="background-color:#14221a;color:#b4b4b4">&nbsp;green&nbsp;</span>, <span style="background-color:#23272c;color:#b4b4b4">&nbsp;gray&nbsp;</span> and <span style="background-color:#eaeef2;color:#444">&nbsp;light&nbsp;</span> color themes
 - Can be mixed with variants (see `music.theme.css`):
 	- Material-like rounded UI
-	- Colorize hovered buttons
-	- Blue, green, orange and pink focus colors
+	- Colorize <span style="background-color:#1a6eac;color:#fff">&nbsp;hovered buttons&nbsp;</span>
+	- <span style="color:#1d91f0">Blue</span>, <span style="color:#00bd35">green</span>, <span style="color:#eb6600">orange</span> and <span style="color:#e0006f">pink</span> focus colors
 	- Indicate enabled options by colored borders instead of checkmarks
 
 #### Translations
