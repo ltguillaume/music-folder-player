@@ -97,16 +97,16 @@ html.light #cover { opacity: 1 }
 }
 
 /* Colorize hovered buttons */
-:root.colorbtn { --bg-button-hv: var(--focus-dim) }
+:root.colorbutton { --bg-button-hv: var(--focus-dim) }
 
-html.colorbtn button, html.colorbtn button b { transition: background .2s, border .2s, color .2s ease-out, text-decoration .1s }
-	html.colorbtn button:focus b, html.colorbtn button:hover b {
+html.colorbutton button, html.colorbutton button b { transition: background .2s, border .2s, color .2s ease-out, text-decoration .1s }
+	html.colorbutton button:focus b, html.colorbutton button:hover b {
 		color: var(--text);
 		border-color: var(--focus);
 	}
-	html.colorbtn button:focus u, html.colorbtn button:hover u { text-decoration-color: transparent }
-	html.colorbtn button:hover, html.colorbtn .menu button:focus { color: #fff }
-		html.colorbtn.light .menu > button:hover:not(:focus) { color: #000 }
+	html.colorbutton button:focus u, html.colorbutton button:hover u { text-decoration-color: transparent }
+	html.colorbutton button:hover, html.colorbutton .menu button:focus { color: #fff }
+		html.colorbutton.light .menu > button:hover:not(:focus) { color: #000 }
 
 /* Indicate enabled options by colored borders instead of checkmarks */
 html.colortoggle button[onclick^=toggle],

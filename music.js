@@ -1635,7 +1635,7 @@ function changeTheme(e) {
 			break;
 		case 'color':
 			if (e.type == 'contextmenu')
-				change = 'colorbtn';
+				change = 'colorbutton';
 			else if (e.ctrlKey)
 				change = 'colortoggle';
 			else
@@ -1644,7 +1644,7 @@ function changeTheme(e) {
 
 	switch(change) {
 		case 'material':
-		case 'colorbtn':
+		case 'colorbutton':
 		case 'colortoggle':
 			cls(dom.doc, change, TOG);
 			cfg.theme = dom.doc.className;
@@ -1769,7 +1769,7 @@ function prepHotkeys() {
 		'MediaStop': dom.stop,
 		'MediaTrackNext': dom.next,
 		'MediaTrackPrevious': dom.previous,
-		...(tv) && {
+		...tv && {
 			1: dom.enqueue,
 			3: dom.cover,
 			7: dom.playlistload,
