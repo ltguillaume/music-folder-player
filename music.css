@@ -402,7 +402,7 @@ li#last:before { visibility: hidden }
 	#toast.error { background: var(--bg-toast-error) !important }
 	#toast.hide { display: none }
 
-html:not(.dim) #player.fix {
+body:not(.dim) #player.fix {
 	position: fixed;
 	top: -1px;
 	left: 0;
@@ -589,7 +589,7 @@ html:not(.dim) #player.fix {
 		box-shadow: 0 0 2px 1px var(--box-shadow);
 		animation: .4s popup;
 	}
-		html:not(.touch) #popup {
+		body:not(.touch) #popup {
 			bottom: 0;
 			border-bottom: none;
 		}
