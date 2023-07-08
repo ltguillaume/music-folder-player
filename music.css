@@ -20,7 +20,7 @@
 	--bg-dim: var(--bg);
 	--bg-image: url(music.theme.svg);
 	--bg-menu: #121211;
-	--bg-player-fix: #121211;
+	--bg-popup: #121211;
 	--bg-scroll: transparent;
 	--bg-splash: #212121;
 	--bg-thumb: #eee;
@@ -421,7 +421,7 @@ body:not(.dim) #player.fix {
 	}
 	#player.fix:before, #player.fix #time, #player.fix #seek { display: none }
 	#player.fix {
-		background: var(--bg-player-fix);
+		background: var(--bg-popup);
 		border-radius: 0 0 var(--radius) var(--radius);
 	}
 
@@ -558,7 +558,7 @@ body:not(.dim) #player.fix {
 	bottom: 0;
 	left: 0;
 	right: 0;
-	background: var(--bg-menu);
+	background: var(--bg-popup);
 	opacity: 1;
 	z-index: 2;
 }
@@ -594,7 +594,7 @@ body:not(.dim) #player.fix {
 		max-width: 90%;
 		margin: auto;
 		padding: .5em;
-		background: var(--bg-menu);
+		background: var(--bg-popup);
 		color: var(--text);
 		text-align: right;
 		border: 1px solid var(--border);
@@ -609,7 +609,7 @@ body:not(.dim) #player.fix {
 		#popup input {
 			max-width: calc(100% - 2em);
 			margin-bottom: .5em;
-			background: var(--bg-menu);
+			background: var(--bg-popup);
 		}
 		#popup > div { text-align: center }
 		#popupicon { margin-top: 1em }

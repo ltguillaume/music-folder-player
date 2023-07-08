@@ -4,7 +4,7 @@
 	--bg-body: #141a21;
 	--bg-button-hv: #192028;
 	--bg-menu: #141a21;
-	--bg-player-fix: #11161c;
+	--bg-popup: #11171c;
 	--bg-splash: #30353c;
 	--bg-toast: var(--bg);
 	--bg-trash: #0e1317aa;
@@ -22,7 +22,7 @@
 	--bg-body: #14221a;
 	--bg-button-hv: #1a2922;
 	--bg-menu: #131f19;
-	--bg-player-fix: #111c17;
+	--bg-popup: #111c17;
 	--bg-splash: #313d38;
 	--bg-toast: var(--bg);
 	--bg-trash: #0e1713aa;
@@ -42,7 +42,7 @@
 	--bg-dim: var(--bg-body);
 	--bg-image: none;
 	--bg-menu: #393d43;
-	--bg-player-fix: #393d43;
+	--bg-popup: #393d43;
 	--bg-trash: #2d3036aa;
 	--border: #474c54;
 	--scroll: #474c54;
@@ -57,7 +57,7 @@
 	--bg-dim: var(--bg-body);
 	--bg-image: url(music.theme.light.svg);
 	--bg-menu: #f2f6fa;
-	--bg-player-fix: #f2f6fa;
+	--bg-popup: #f2f6fa;
 	--bg-splash: #d0d7de;
 	--bg-toast: var(--bg-button-hv);
 	--bg-toast-error: #911d1d;
