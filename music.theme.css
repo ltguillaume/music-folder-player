@@ -39,6 +39,7 @@
 	--bg: #2d3036;
 	--bg-body: #23272c;
 	--bg-button-hv: #474c54;
+	--bg-dim: var(--bg-body);
 	--bg-image: none;
 	--bg-menu: #393d43;
 	--bg-player-fix: #393d43;
@@ -53,7 +54,7 @@
 	--bg: #f6f8fa;
 	--bg-body: #eaeef2;
 	--bg-button-hv: #e9f1f7;
-	--bg-dim: #eaeef2;
+	--bg-dim: var(--bg-body);
 	--bg-image: url(music.theme.light.svg);
 	--bg-menu: #f2f6fa;
 	--bg-player-fix: #f2f6fa;
