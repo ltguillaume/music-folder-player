@@ -110,7 +110,7 @@ function lng(el, string, tooltip) {
 
 function keyString(key) {
 	if (!key || key == ' ') return '';
-	key = (key != key.toLowerCase() ? 'Shift+' : '') + key.toUpperCase();
+	key = (key != key.toLowerCase() && !key.match(/F\d/) ? 'Shift+' : '') + key.toUpperCase();
 	return ' (' + key + ')';
 }
 
