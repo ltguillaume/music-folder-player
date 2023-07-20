@@ -105,6 +105,7 @@ body > div {
 }
 	body > div:before {
 		position: absolute;
+		align-self: flex-start;
 		left: .75em;
 		margin-top: -.25em;
 	}
@@ -756,7 +757,7 @@ body:not(.dim) #player.fix {
 .playlist:before { content: "\f18e" }
 .song:not(.playing):before { content: "\f17b"; color: var(--text-dim) }
 button#cancel:before, button.clear:before, .close:before { content: "\f217" }
-button#ok:before, html:not(.colortoggle) button.on:before { content: "\f126" !important }
+button#ok:before, html:not(.colortoggle) button.on:before, #playlists button.on:before { content: "\f126" !important }
 button.clip:before { content: "\f129" !important }
 button.download:before { content: "\f143" }
 button.filter:before { content: "\f14b" }
