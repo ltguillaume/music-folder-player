@@ -12,7 +12,7 @@ services:
         target: /app/cfg
         type: volume
     build:
-      context: https://github.com/ltGuillaume/MusicFolderPlayer.git#docker
+      context: https://codeberg.org/ltguillaume/music-folder-player.git#docker
     container_name: mfp
     image: mfp
     network_mode: bridge

@@ -1,6 +1,6 @@
 apk -U upgrade --no-cache
 cd /app/srv
-wget https://github.com/ltGuillaume/MusicFolderPlayer/archive/refs/heads/master.zip
-unzip -jo master.zip */music.* -x *.md
+wget https://codeberg.org/ltguillaume/music-folder-player/archive/main.zip
+unzip -jo main.zip */music.*
 mv music.htm index.html
-rm master.zip
+rm main.zip
