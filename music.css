@@ -178,7 +178,10 @@ button {
 	cursor: pointer;
 	transition: background .1s ease-in;
 }
-	button:before { font-size: calc(1em / var(--button-factor)) }
+	button:before {
+		font-size: calc(1em / var(--button-factor));
+		transition: none;
+	}
 	button:empty {
 		width: var(--button-size);
 		height: var(--button-size);
@@ -393,7 +396,7 @@ li#last:before { visibility: hidden }
 	top: 1em;
 	right: 1em;
 	background: var(--bg-toast) !important;
-	box-shadow: 0 0 2px 2px var(--border);
+	box-shadow: 0 0 1px 1px var(--border);
 	cursor: default;
 	z-index: 3;
 }
