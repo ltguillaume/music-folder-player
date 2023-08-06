@@ -161,8 +161,8 @@ function prepUI() {
 		}, 400);
 	}, { passive: true });
 
-	window.onpagehide = function() {
-		if (ls) {
+	document.onvisibilitychange = function() {
+		if (ls && document.visibilityState == 'hidden') {
 			localStorage.setItem(lsid, JSON.stringify(cfg));
 			log('Session saved');
 		}
