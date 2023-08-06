@@ -138,7 +138,7 @@ function prepUI() {
 	}
 
 	ffor(['TV', 'Andr0id', ' OMI/', 'Viera'], function(s) {
-		if (navigator.userAgent.indexOf(s) > -1)
+		if (navigator.userAgent.includes(s))
 			return (tv = true);
 	});
 
@@ -703,7 +703,7 @@ function deBase64(s) {
 
 function getSongInfo(path) {
 	log('getSongInfo: '+ path);
-	if (path.indexOf('/') == -1 && url.length > 1)
+	if (!path.includes('/') && url.length > 1)
 		path = root + path;	// For shared songs/folders
 
 	for(var i = pathexp.length - 1; i > -1; i--) {
@@ -716,7 +716,7 @@ function getSongInfo(path) {
 			if (nfo) log(e);
 			if (i < 1) {
 				const artalb = path.substring(path.lastIndexOf('/', path.lastIndexOf('/') - 1) + 1, path.lastIndexOf('/'));
-				if (artalb.indexOf(' -') == -1)
+				if (!artalb.includes(' -'))
 					nfo = { 'artist': artalb }
 				else
 					nfo = {
@@ -798,7 +798,7 @@ function skipArtist(e) {
 		if (unskip)
 			cfg.skip = cfg.skip.filter(t => t !== artist.toLowerCase());
 		else
-			if (cfg.skip.indexOf(artist.toLowerCase()) == -1) cfg.skip.push(artist.toLowerCase());
+			if (!cfg.skip.includes(artist.toLowerCase())) cfg.skip.push(artist.toLowerCase());
 	}
 }
 
@@ -831,9 +831,9 @@ function prepNext() {
 
 				if (cfg.after == 'randomfiltered') {
 					next = songsFiltered[next];	// songsFiltered is an array of id's from songs
-					if (playedFiltered.indexOf(next.toString()) != -1)
+					if (playedFiltered.includes(next.toString()))
 						next = null;
-				} else if (played.indexOf(next.toString()) != -1)
+				} else if (played.includes(next.toString()))
 					next = null;
 
 				if (next != null && artistSkipped(songs[next].path)) {
@@ -883,9 +883,10 @@ function clearPlayed(action) {
 
 function artistSkipped(path) {
 	const artist = getSongInfo(path).artist.toLowerCase();
-	if (cfg.skip.indexOf(artist) != -1)
+	const skip = cfg.skip.includes(artist);
+	if (skip)
 		log('Skipped artist "'+ artist +'"');
-	return cfg.skip.indexOf(artist) != -1;
+	return skip;
 }
 
 function load(id, addtoplaylist = false) {
@@ -1491,7 +1492,7 @@ function filter(instant = false) {	// Gets event from oninput
 function matchTerms(path, termsArray) {
 	var match = true;
 	ffor(termsArray, function(t) {
-		if (path.indexOf(t) == -1) {
+		if (!path.includes(t)) {
 			match = false;
 			return true;
 		}
@@ -1666,7 +1667,7 @@ function changeTheme(e) {
 		case 'theme':
 			if (!themes.length) return;
 			const prev = cfg.theme;
-			if (themes.indexOf(prev) > -1)
+			if (themes.includes(prev))
 				themes.splice(themes.indexOf(prev), 1);
 			themes.push(prev);
 			cfg.theme = themes[0];
