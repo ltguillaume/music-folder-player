@@ -628,7 +628,7 @@ body:not(.dim) #player.fix {
 	cursor: alias;
 }
 
-.artist, .dim { color: var(--text-dim) }
+.artist, .dim, button[disabled] { color: var(--text-dim) }
 
 .column {
 	display: flex;

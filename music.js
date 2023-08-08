@@ -1390,7 +1390,7 @@ function menu(e) {
 				cls(dom.playlibrary,    'on', cfg.after == 'playlibrary'    ? ADD : REM);
 				cls(dom.randomfiltered, 'on', cfg.after == 'randomfiltered' ? ADD : REM);
 				cls(dom.randomlibrary,  'on', cfg.after == 'randomlibrary'  ? ADD : REM);
-				cls(dom.randomfiltered, 'dim', dom.filter.value == '' ? ADD : REM);
+				dom.randomfiltered.disabled = dom.filter.value == '';
 				dom.show(el.id);
 				setFocus(dom[cfg.after]);
 		}
