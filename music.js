@@ -536,6 +536,12 @@ function dimSong(path, act = ADD) {
 }
 
 function undimSong(path) {
+	var i = cfg.index > 0 ? cfg.index : 0;
+	while (i < cfg.playlist.length) {
+		if (cfg.playlist[i].path == path)
+			return;
+		i++;
+	}
 	return dimSong(path, REM);
 }
 
