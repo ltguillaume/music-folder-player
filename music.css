@@ -109,8 +109,7 @@ body > div {
 		left: .75em;
 		margin-top: -.25em;
 	}
-	body > div, body > div * { transition: background .4s, border-color .4s, opacity .4s }
-		body > div li { transition: background .4s, opacity .4s }
+	body > div { transition: background .4s, border-color .4s, opacity .4s }
 
 body.hide > div, body.hide > div:before, body.hide > footer {
 	opacity: 0;
@@ -176,7 +175,7 @@ button {
 	border-color: transparent;
 	border-radius: var(--radius);
 	cursor: pointer;
-	transition: background .1s ease-in;
+	transition: background .2s, border-color .4s, opacity .4s;
 }
 	button:before {
 		font-size: calc(1em / var(--button-factor));
@@ -209,6 +208,7 @@ input, select {
 	font-size: .8em;
 	border: none;
 	border-bottom: 1px solid var(--text);
+	transition: background .4s;
 }
 	select option:checked { background: none }
 
@@ -295,8 +295,8 @@ li.match:focus, li.match:focus:before { color: var(--focus) !important }
 
 a,
 li:hover, li:hover:before,
-li span.artist, li span.artist:hover,
-li.parent:hover, li.parent:hover:before { transition: color .05s ease-in }
+li:hover span.artist,
+li.parent:hover, li.parent:hover:before { transition: color .05s ease-in, background .4s, opacity .4s }
 
 li#last:before { visibility: hidden }
 
