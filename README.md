@@ -14,6 +14,7 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 - Right-click Next to skip current artist
 
 #### Options
+- Enqueue: Click on songs in the library to add songs to the end of the playlist, instead of playing them (next). Right-click to suggest a random song to enqueue.
 - Random: pick the next song randomly from the upcoming songs (songs added using "Play next" take precedence)
 	- Right-click Random to shuffle upcoming songs (songs added using "Play next" will stay in place)
 - Crossfade: start playing the next song 10s before ending the current and fade out the current song

@@ -827,30 +827,7 @@ function prepNext() {
 	} else if (cfg.after != 'stopplayback') {
 		log('prepNext from library');
 		if (cfg.after == 'randomfiltered' || cfg.after == 'randomlibrary') {
-			var next = null;
-			do {
-				const count = cfg.after == 'randomfiltered' ? songsFiltered.length : songs.length;
-				if ((cfg.after == 'randomfiltered' ? playedFiltered.length : played.length) == count)
-					clearPlayed(cfg.after);
-
-				next = ~~((Math.random() * count));
-
-				if (cfg.after == 'randomfiltered') {
-					next = songsFiltered[next];	// songsFiltered is an array of id's from songs
-					if (playedFiltered.includes(next.toString()))
-						next = null;
-				} else if (played.includes(next.toString()))
-					next = null;
-
-				if (next != null && artistSkipped(songs[next].path)) {
-					if (cfg.after == 'randomfiltered')
-						playedFiltered.push(next);
-					played.push(next);
-					log('Artist of '+ songs[next].path +' is skipped.', true)
-					next = null;
-				}
-			} while (next == null);
-			load(songs[next].id, true);
+			load(getRandom(), true);
 		} else if (cfg.after == 'playlibrary')	{
 			if (cfg.index == -1) return load(songs[0].id, true);
 			const path = cfg.playlist[cfg.index].path;
@@ -870,6 +847,37 @@ function prepNext() {
 		} else if (cfg.after == 'repeatplaylist' && cfg.playlist.length > 0)
 			return load(0);
 	}
+}
+
+function getRandom(queue = false) {
+	var next = null;
+	do {
+		const count = cfg.after == 'randomfiltered' ? songsFiltered.length : songs.length;
+		if ((cfg.after == 'randomfiltered' ? playedFiltered.length : played.length) == count)
+			clearPlayed(cfg.after);
+
+		next = ~~((Math.random() * count));
+
+		if (cfg.after == 'randomfiltered') {
+			next = songsFiltered[next];	// songsFiltered is an array of id's from songs
+			if (playedFiltered.includes(next.toString()))
+				next = null;
+		} else if (played.includes(next.toString()))
+			next = null;
+
+		if (next != null && artistSkipped(songs[next].path)) {
+			if (cfg.after == 'randomfiltered')
+				playedFiltered.push(next);
+			played.push(next);
+			log('Artist of '+ songs[next].path +' is skipped.', true)
+			next = null;
+		}
+	} while (next == null);
+	if (queue) {
+		const nfo = getSongInfo(songs[next].path);
+		if (confirm(getAlbumInfo(nfo) +'\n'+ nfo.title +'\n\n'+ dom.enqueue.textContent +'?'))
+			add(songs[next].id, true);
+	} else return songs[next].id;
 }
 
 function clearPlayed(action) {
