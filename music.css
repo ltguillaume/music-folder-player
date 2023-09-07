@@ -177,6 +177,7 @@ button {
 	cursor: pointer;
 	transition: background .2s, border-color .4s, opacity .4s;
 }
+	button[disabled] { color: var(--text-dim) !important }
 	button:before {
 		font-size: calc(1em / var(--button-factor));
 		transition: none;
@@ -628,7 +629,7 @@ body:not(.dim) #player.fix {
 	cursor: alias;
 }
 
-.artist, .dim, button[disabled] { color: var(--text-dim) }
+.artist, .dim { color: var(--text-dim) }
 
 .column {
 	display: flex;
@@ -743,7 +744,7 @@ body:not(.dim) #player.fix {
 #reload:before { content: "\f18d" }
 #removesongs:before { content: "\f204" }
 #repeatplaylist:before { content: "\f1a5"; transform: scale(-1, 1) }
-	html:not(.colortoggle) #repeatplaylist:before { transform: none }
+	html:not(.colortoggle) #repeatplaylist.on:before { transform: none }	/* Don't mirror checkmark */
 #share:before { content: "\f1ad" }
 #splash:before { content: "\f1ed"; width: 1em }
 #stop:before, #stopplayback:before { content: "\f1ef" }
