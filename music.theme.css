@@ -47,6 +47,8 @@
 	--scroll-hv: #5a5f68;
 }
 
+html.gray #cover:not(.nofade):not(:hover) { opacity: .8 }
+
 /* Light theme */
 :root.light {
 	--bg: #f6f8fa;
