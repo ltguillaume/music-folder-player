@@ -167,12 +167,11 @@ button {
 	display: inline-block;
 	flex-shrink: 0;
 	height: var(--button-size);
-	padding: 0 .75em;
+	padding: 0 calc(1.25 * var(--space));
 	font-size: calc(1em * var(--button-factor));
 	white-space: nowrap;
 	background: none;
-	border: none;
-	border-color: transparent;
+	border: 1.5px solid transparent;
 	border-radius: var(--radius);
 	cursor: pointer;
 	transition: background .2s, border-color .4s, opacity .4s;
