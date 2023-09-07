@@ -14,6 +14,7 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 - Right-click Next to skip current artist
 
 #### Options
+- Enqueue: Click on songs in the library to add songs to the end of the playlist, instead of playing them (next). Right-click to suggest a random song to enqueue.
 - Random: pick the next song randomly from the upcoming songs (songs added using "Play next" take precedence)
 	- Right-click Random to shuffle upcoming songs (songs added using "Play next" will stay in place)
 - Crossfade: start playing the next song 10s before ending the current and fade out the current song
@@ -59,10 +60,11 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 - Define your own subset of the available themes and variants in `music.ini`
 - <span style="background-color:#1a1a1a;color:#b4b4b4">&nbsp;Black&nbsp;</span>, <span style="background-color:#141a21;color:#b4b4b4">&nbsp;blue&nbsp;</span>, <span style="background-color:#14221a;color:#b4b4b4">&nbsp;green&nbsp;</span>, <span style="background-color:#23272c;color:#b4b4b4">&nbsp;gray&nbsp;</span> and <span style="background-color:#eaeef2;color:#444">&nbsp;light&nbsp;</span> color themes
 - Can be mixed with variants (see `music.theme.css`):
-	- Material-like rounded UI
+	- Material-like rounded UI and compact retro UI
 	- Colorize <span style="background-color:#1a6eac;color:#fff">&nbsp;hovered buttons&nbsp;</span>
 	- <span style="color:#1d91f0">Blue</span>, <span style="color:#00bd35">green</span>, <span style="color:#eb6600">orange</span> and <span style="color:#e0006f">pink</span> focus colors
 	- Indicate enabled options by colored borders instead of checkmarks
+	- Decorative top border for main elements and bottom border for hovered buttons
 
 #### Translations
 - Currently includes English, Dutch, Portuguese and Spanish

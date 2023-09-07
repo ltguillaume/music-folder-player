@@ -105,11 +105,11 @@ body > div {
 }
 	body > div:before {
 		position: absolute;
+		align-self: flex-start;
 		left: .75em;
 		margin-top: -.25em;
 	}
-	body > div, body > div * { transition: background .4s, border-color .4s, opacity .4s }
-		body > div li { transition: background .4s, opacity .4s }
+	body > div { transition: background .4s, border-color .4s, opacity .4s }
 
 body.hide > div, body.hide > div:before, body.hide > footer {
 	opacity: 0;
@@ -167,17 +167,20 @@ button {
 	display: inline-block;
 	flex-shrink: 0;
 	height: var(--button-size);
-	padding: 0 .75em;
+	padding: 0 calc(1.25 * var(--space) - 1px);
 	font-size: calc(1em * var(--button-factor));
 	white-space: nowrap;
 	background: none;
-	border: none;
-	border-color: transparent;
+	border: 1.5px solid transparent;
 	border-radius: var(--radius);
 	cursor: pointer;
-	transition: background .1s ease-in;
+	transition: background .2s, border-color .4s, opacity .4s;
 }
-	button:before { font-size: calc(1em / var(--button-factor)) }
+	button[disabled] { color: var(--text-dim) !important }
+	button:before {
+		font-size: calc(1em / var(--button-factor));
+		transition: none;
+	}
 	button:empty {
 		width: var(--button-size);
 		height: var(--button-size);
@@ -205,6 +208,7 @@ input, select {
 	font-size: .8em;
 	border: none;
 	border-bottom: 1px solid var(--text);
+	transition: background .4s;
 }
 	select option:checked { background: none }
 
@@ -291,8 +295,8 @@ li.match:focus, li.match:focus:before { color: var(--focus) !important }
 
 a,
 li:hover, li:hover:before,
-li span.artist, li span.artist:hover,
-li.parent:hover, li.parent:hover:before { transition: color .05s ease-in }
+li:hover span.artist,
+li.parent:hover, li.parent:hover:before { transition: color .05s ease-in, background .4s, opacity .4s }
 
 li#last:before { visibility: hidden }
 
@@ -392,7 +396,7 @@ li#last:before { visibility: hidden }
 	top: 1em;
 	right: 1em;
 	background: var(--bg-toast) !important;
-	box-shadow: 0 0 2px 2px var(--border);
+	box-shadow: 0 0 1px 1px var(--border);
 	cursor: default;
 	z-index: 3;
 }
@@ -739,7 +743,7 @@ body:not(.dim) #player.fix {
 #reload:before { content: "\f18d" }
 #removesongs:before { content: "\f204" }
 #repeatplaylist:before { content: "\f1a5"; transform: scale(-1, 1) }
-	html:not(.colortoggle) #repeatplaylist:before { transform: none }
+	html:not(.colortoggle) #repeatplaylist.on:before { transform: none }	/* Don't mirror checkmark */
 #share:before { content: "\f1ad" }
 #splash:before { content: "\f1ed"; width: 1em }
 #stop:before, #stopplayback:before { content: "\f1ef" }
@@ -756,7 +760,7 @@ body:not(.dim) #player.fix {
 .playlist:before { content: "\f18e" }
 .song:not(.playing):before { content: "\f17b"; color: var(--text-dim) }
 button#cancel:before, button.clear:before, .close:before { content: "\f217" }
-button#ok:before, html:not(.colortoggle) button.on:before { content: "\f126" !important }
+button#ok:before, html:not(.colortoggle) button.on:before, #playlists button.on:before { content: "\f126" !important }
 button.clip:before { content: "\f129" !important }
 button.download:before { content: "\f143" }
 button.filter:before { content: "\f14b" }

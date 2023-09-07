@@ -65,7 +65,7 @@ function init() {
 		if (pathexp.constructor !== Array) pathexp = [pathexp];
 		for(var i = 0; i < pathexp.length; i++) {
 			pathexp[i] = pathexp[i].replace(/[\/^$*+?.()|[\]{}]/g, '\\$&')
-				.replace(/ /g,'[\\s\\.\\-()]*')
+				.replace(/ /g,'[\\s\\.\\-_]*')
 				.replace(/dummy/g,'.+')
 				.replace('artist', '(?<artist>.*\\b)')
 				.replace('year','(?<year>\\d*)')
@@ -142,7 +142,7 @@ function prepUI() {
 	}
 
 	ffor(['TV', 'Andr0id', ' OMI/', 'Viera'], function(s) {
-		if (navigator.userAgent.indexOf(s) > -1)
+		if (navigator.userAgent.includes(s))
 			return (tv = true);
 	});
 
@@ -165,8 +165,8 @@ function prepUI() {
 		}, 400);
 	}, { passive: true });
 
-	window.onpagehide = function() {
-		if (ls) {
+	document.onvisibilitychange = function() {
+		if (ls && document.visibilityState == 'hidden') {
 			localStorage.setItem(lsid, JSON.stringify(cfg));
 			log('Session saved');
 		}
@@ -559,6 +559,12 @@ function dimSong(path, act = ADD) {
 }
 
 function undimSong(path) {
+	var i = cfg.index > 0 ? cfg.index : 0;
+	while (i < cfg.playlist.length) {
+		if (cfg.playlist[i].path == path)
+			return;
+		i++;
+	}
 	return dimSong(path, REM);
 }
 
@@ -726,7 +732,7 @@ function deBase64(s) {
 
 function getSongInfo(path) {
 	log('getSongInfo: '+ path);
-	if (path.indexOf('/') == -1 && url.length > 1)
+	if (!path.includes('/') && url.length > 1)
 		path = root + path;	// For shared songs/folders
 
 	for(var i = pathexp.length - 1; i > -1; i--) {
@@ -739,7 +745,7 @@ function getSongInfo(path) {
 			if (nfo) log(e);
 			if (i < 1) {
 				const artalb = path.substring(path.lastIndexOf('/', path.lastIndexOf('/') - 1) + 1, path.lastIndexOf('/'));
-				if (artalb.indexOf(' -') == -1)
+				if (!artalb.includes(' -'))
 					nfo = { 'artist': artalb }
 				else
 					nfo = {
@@ -821,7 +827,7 @@ function skipArtist(e) {
 		if (unskip)
 			cfg.skip = cfg.skip.filter(t => t !== artist.toLowerCase());
 		else
-			if (cfg.skip.indexOf(artist.toLowerCase()) == -1) cfg.skip.push(artist.toLowerCase());
+			if (!cfg.skip.includes(artist.toLowerCase())) cfg.skip.push(artist.toLowerCase());
 	}
 }
 
@@ -850,30 +856,7 @@ function prepNext() {
 	} else if (cfg.after != 'stopplayback') {
 		log('prepNext from library');
 		if (cfg.after == 'randomfiltered' || cfg.after == 'randomlibrary') {
-			var next = null;
-			do {
-				const count = cfg.after == 'randomfiltered' ? songsFiltered.length : songs.length;
-				if ((cfg.after == 'randomfiltered' ? playedFiltered.length : played.length) == count)
-					clearPlayed(cfg.after);
-
-				next = ~~((Math.random() * count));
-
-				if (cfg.after == 'randomfiltered') {
-					next = songsFiltered[next];	// songsFiltered is an array of id's from songs
-					if (playedFiltered.indexOf(next.toString()) != -1)
-						next = null;
-				} else if (played.indexOf(next.toString()) != -1)
-					next = null;
-
-				if (next != null && artistSkipped(songs[next].path)) {
-					if (cfg.after == 'randomfiltered')
-						playedFiltered.push(next);
-					played.push(next);
-					log('Artist of '+ songs[next].path +' is skipped.', true)
-					next = null;
-				}
-			} while (next == null);
-			load(songs[next].id, true);
+			load(getRandom(), true);
 		} else if (cfg.after == 'playlibrary')	{
 			if (cfg.index == -1) return load(songs[0].id, true);
 			const path = cfg.playlist[cfg.index].path;
@@ -908,6 +891,37 @@ function prepNextFavored(f) {
 		log('Playing a favored song from "'+ folder +'"');
 }
 
+function getRandom(queue = false) {
+	var next = null;
+	do {
+		const count = cfg.after == 'randomfiltered' ? songsFiltered.length : songs.length;
+		if ((cfg.after == 'randomfiltered' ? playedFiltered.length : played.length) == count)
+			clearPlayed(cfg.after);
+
+		next = ~~((Math.random() * count));
+
+		if (cfg.after == 'randomfiltered') {
+			next = songsFiltered[next];	// songsFiltered is an array of id's from songs
+			if (playedFiltered.includes(next.toString()))
+				next = null;
+		} else if (played.includes(next.toString()))
+			next = null;
+
+		if (next != null && artistSkipped(songs[next].path)) {
+			if (cfg.after == 'randomfiltered')
+				playedFiltered.push(next);
+			played.push(next);
+			log('Artist of '+ songs[next].path +' is skipped.', true)
+			next = null;
+		}
+	} while (next == null);
+	if (queue) {
+		const nfo = getSongInfo(songs[next].path);
+		if (confirm(getAlbumInfo(nfo) +'\n'+ nfo.title +'\n\n'+ dom.enqueue.textContent +'?'))
+			add(songs[next].id, true);
+	} else return songs[next].id;
+}
+
 function clearPlayed(action) {
 	var msg = 'Clearing played';
 	if (action == 'randomfiltered') {
@@ -925,9 +939,10 @@ function clearPlayed(action) {
 
 function artistSkipped(path) {
 	const artist = getSongInfo(path).artist.toLowerCase();
-	if (cfg.skip.indexOf(artist) != -1)
+	const skip = cfg.skip.includes(artist);
+	if (skip)
 		log('Skipped artist "'+ artist +'"');
-	return cfg.skip.indexOf(artist) != -1;
+	return skip;
 }
 
 function load(id, addtoplaylist = false) {
@@ -1218,8 +1233,10 @@ function add(id, next = false) {
 function playNext() {
 	if (cfg.index != -1) {
 		const li = dom.playlist.childNodes[cfg.index];
-		cls(li, 'playing', REM);
-		delete li.playNext;
+		if (li) {
+			cls(li, 'playing', REM);
+			delete li.playNext;
+		}
 	}
 	if (cfg.index + 1 == cfg.playlist.length && !audio[+!track].prepped && cfg.after == 'stopplayback') return;
 	if (!audio[+!track].prepped) {
@@ -1431,7 +1448,7 @@ function menu(e) {
 				cls(dom.playlibrary,    'on', cfg.after == 'playlibrary'    ? ADD : REM);
 				cls(dom.randomfiltered, 'on', cfg.after == 'randomfiltered' ? ADD : REM);
 				cls(dom.randomlibrary,  'on', cfg.after == 'randomlibrary'  ? ADD : REM);
-				cls(dom.randomfiltered, 'dim', dom.filter.value == '' ? ADD : REM);
+				dom.randomfiltered.disabled = dom.filter.value == '';
 				dom.show(el.id);
 				setFocus(dom[cfg.after]);
 		}
@@ -1533,7 +1550,7 @@ function filter(instant = false) {	// Gets event from oninput
 function matchTerms(path, termsArray) {
 	var match = true;
 	ffor(termsArray, function(t) {
-		if (path.indexOf(t) == -1) {
+		if (!path.includes(t)) {
 			match = false;
 			return true;
 		}
@@ -1542,6 +1559,8 @@ function matchTerms(path, termsArray) {
 }
 
 function cls(el, name, act = null) {
+	if (typeof el === 'undefined')
+		return null;
 	const found = el.classList.contains(name);
 	if (act == null)
 		return found;
@@ -1677,7 +1696,7 @@ function changeTheme(e) {
 			break;
 		case 'color':
 			if (e.type == 'contextmenu')
-				change = 'colorbtn';
+				change = 'colorbutton';
 			else if (e.ctrlKey)
 				change = 'colortoggle';
 			else
@@ -1686,7 +1705,7 @@ function changeTheme(e) {
 
 	switch(change) {
 		case 'material':
-		case 'colorbtn':
+		case 'colorbutton':
 		case 'colortoggle':
 			cls(dom.doc, change, TOG);
 			cfg.theme = dom.doc.className;
@@ -1708,7 +1727,7 @@ function changeTheme(e) {
 		case 'theme':
 			if (!themes.length) return;
 			const prev = cfg.theme;
-			if (themes.indexOf(prev) > -1)
+			if (themes.includes(prev))
 				themes.splice(themes.indexOf(prev), 1);
 			themes.push(prev);
 			cfg.theme = themes[0];
@@ -1811,7 +1830,7 @@ function prepHotkeys() {
 		'MediaStop': dom.stop,
 		'MediaTrackNext': dom.next,
 		'MediaTrackPrevious': dom.previous,
-		...(tv) && {
+		...tv && {
 			1: dom.enqueue,
 			3: dom.cover,
 			7: dom.playlistload,
