@@ -1183,8 +1183,10 @@ function add(id, next = false) {
 function playNext() {
 	if (cfg.index != -1) {
 		const li = dom.playlist.childNodes[cfg.index];
-		cls(li, 'playing', REM);
-		delete li.playNext;
+		if (li) {
+			cls(li, 'playing', REM);
+			delete li.playNext;
+		}
 	}
 	if (cfg.index + 1 == cfg.playlist.length && !audio[+!track].prepped && cfg.after == 'stopplayback') return;
 	if (!audio[+!track].prepped) {
@@ -1507,6 +1509,8 @@ function matchTerms(path, termsArray) {
 }
 
 function cls(el, name, act = null) {
+	if (typeof el === 'undefined')
+		return null;
 	const found = el.classList.contains(name);
 	if (act == null)
 		return found;
