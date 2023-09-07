@@ -98,10 +98,18 @@ html.light #cover { opacity: 1 }
 	--focus-dim: #b30050;
 }
 
+/* Add decorative top border to main elements */
+html.colorborder body > div, html.colorborder #popup { border-top: 2px solid var(--focus-dim) }
+	html.colorborder.material body > div, html.colorborder.material #popup, html.colorborder.touch #popup { border-top: 3px solid var(--focus-dim) }
+
+/* Add decorative bottom border to hovered buttons */
+html.colorborder:not(.colorbutton) :not(.menu) > button:hover, html.colorborder:not(.colorbutton) .menu > button:focus { border-bottom-color: var(--focus-dim) !important }
+	html.colorborder.colortoggle button.on:hover {  border-bottom-color: var(--focus) !important }
+
 /* Colorize hovered buttons */
 :root.colorbutton { --bg-button-hv: var(--focus-dim) }
 
-html.colorbutton button, html.colorbutton button b { transition: background .2s, border .2s, color .2s ease-out, text-decoration .1s }
+html.colorbutton button, html.colorbutton button b { transition: background .2s, color .2s ease-out, text-decoration .1s, border .2s }
 	html.colorbutton button:focus b, html.colorbutton button:hover b {
 		color: #ddd;
 		border-color: var(--focus);
@@ -111,32 +119,25 @@ html.colorbutton button, html.colorbutton button b { transition: background .2s,
 		html.colorbutton.light .menu > button:hover:not(:focus) { color: #000 }
 
 /* Indicate enabled options by colored borders instead of checkmarks */
-html.colortoggle button[onclick^=toggle],
-html.colortoggle div[onclick^=toggle] button,
-html.colortoggle #toast {
+html.colortoggle button[onclick^=toggle]:not(#volume), html.colortoggle div[onclick^=toggle] button, html.colortoggle #toast {
+	height: calc(var(--button-size) - 2px);
+	padding: 0 calc(1.25 * var(--space) - 2px);
 	margin: 1px;
-	padding: 0 calc(.75em - 1.5px);
-	border: 1.5px solid transparent;
 }
-	html.colortoggle.material div[onclick^=toggle] button { padding: 0 calc(.95em - 2.5px) }
 	html.colortoggle button[onclick^=toggle].on, html.colortoggle div[onclick^=toggle] button.on, html.colortoggle #toast.on { border-color: var(--focus-dim) }
-		html.colortoggle button[onclick^=toggle].on:focus, html.colortoggle div[onclick^=toggle] button.on:focus,
 		html.colortoggle button[onclick^=toggle].on:hover, html.colortoggle div[onclick^=toggle] button.on:hover { border-color: var(--focus) }
-	html.colortoggle div[onclick^=toggle].menu button {
-		margin: 0;
-		border-radius: var(--radius);
-	}
+	html.colortoggle div[onclick^=toggle].menu button { margin: 0 }
+		html.colortoggle:not(.colorbutton) div[onclick^=toggle].menu button { margin: 1px 0 }
 
 /* Material Design 3(ish) rounded corners, use in music.ini as themes = ['material blue', ...] */
 :root.material {
-	--radius: 2em;
+	--radius: calc(2em + 2px);
 	--button-size: 2.75em;
 	--space: .75em;
 }
 
 html.material ::-webkit-scrollbar-thumb { border-radius: 4px }
 html.material body { font-size: 1.1em }
-html.material button { padding: 0 .95em }
 html.material input[type=range] { height: 13px }
 html.material li { padding: .1em 0 }
 html.material #cover { border-radius: calc(.5 * var(--radius)) }
