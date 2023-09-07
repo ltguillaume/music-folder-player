@@ -62,7 +62,7 @@ function init() {
 		if (pathexp.constructor !== Array) pathexp = [pathexp];
 		for(var i = 0; i < pathexp.length; i++) {
 			pathexp[i] = pathexp[i].replace(/[\/^$*+?.()|[\]{}]/g, '\\$&')
-				.replace(/ /g,'[\\s\\.\\-()]*')
+				.replace(/ /g,'[\\s\\.\\-_]*')
 				.replace(/dummy/g,'.+')
 				.replace('artist', '(?<artist>.*\\b)')
 				.replace('year','(?<year>\\d*)')
