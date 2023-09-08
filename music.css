@@ -293,6 +293,7 @@ li:focus, li:focus:before,
 li.match:hover, li.match:hover:before,
 li.match:focus, li.match:focus:before { color: var(--focus) !important }
 
+/* li, li:before, li span.artist would cause flickering when moving mouse between song and folder */
 a,
 li:hover, li:hover:before,
 li:hover span.artist,
@@ -707,10 +708,7 @@ body:not(.dim) #player.fix {
 		}
 		#player:not(.fix) #cover { max-height: 10em }
 		#player:not(.fix) #current { width: 100% !important }
-		#player:not(.fix) #seek {
-			margin-bottom: .5em;
-			padding: .5em;
-		}
+		#player:not(.fix) #seek { padding: .5em }
 		#player.fix #cover { margin: 0 }
 
 	#options .toolbar.wrapped { justify-content: center }
