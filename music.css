@@ -146,7 +146,7 @@ body.touch {
 	body.touch #tree ul { margin-left: .5em }
 	body.touch .toolbar.hidden { visibility: visible }
 	body.touch #popup {
-		top: 0;
+		top: -1px;
 		border-top: none;
 		border-radius: 0 0 var(--radius) var(--radius);
 		animation: .4s popup-top;
