@@ -141,7 +141,11 @@ html.material ::-webkit-scrollbar-thumb { border-radius: 4px }
 html.material body { font-size: 1.1em }
 html.material input[type=range] { height: 13px }
 html.material li { padding: .1em 0 }
-html.material #cover { border-radius: calc(.5 * var(--radius)) }
+html.material #cover {
+	min-width: 7.5em;
+	min-height: 7.5em;
+	border-radius: calc(.5 * var(--radius));
+}
 html.material .menu { padding: .5em }
 	html.material .menu button { border-radius: var(--radius) }
 html.material #playlist:not(.resize) { max-height: 11em }
