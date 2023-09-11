@@ -21,7 +21,7 @@ RUN mkdir cfg cfg/playlists;\
  chmod 777 cfg/music.ini;\
  ln -s /app/cfg/music.ini /app/srv/music.ini
 
-EXPOSE $PORT 80 443
+#EXPOSE $PORT 80 443
 
 VOLUME /app/cfg /app/srv/library
 
