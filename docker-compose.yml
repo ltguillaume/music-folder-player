@@ -4,7 +4,7 @@ services:
       - ADDRESS=
       - PORT=
     volumes:
-      - source: /YOUR/MUSIC/FOLDER
+      - source: ./library
         target: /app/srv/library
         type: bind
         read_only: true

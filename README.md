@@ -13,4 +13,4 @@ Download and edit `docker-compose.yml` as follows:
 - In bridge network mode, either set `PORT` to 80 (HTTP only), or `ADDRESS` to the container's IP (HTTPS via self-signed certificate).
 
 ## Pointing to the folder with your music
-Replace `/YOUR/MUSIC/FOLDER` with your music folder on the host system.
+Create a folder `library` next to `docker-compose.yml` or replace `./library` with your music folder on the host system.
