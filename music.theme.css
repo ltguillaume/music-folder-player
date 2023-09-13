@@ -125,6 +125,7 @@ html.colortoggle button[onclick^=toggle]:not(#volume), html.colortoggle div[oncl
 	padding: 0 calc(1.25 * var(--space) - 2px);
 	margin: 1px;
 }
+	html.colortoggle button[onclick^=toggle]:empty { width: calc(var(--button-size) - 2px) }
 	html.colortoggle button[onclick^=toggle].on, html.colortoggle div[onclick^=toggle] button.on, html.colortoggle #toast.on { border-color: var(--focus-dim) }
 		html.colortoggle button[onclick^=toggle].on:hover, html.colortoggle div[onclick^=toggle] button.on:hover { border-color: var(--focus) }
 	html.colortoggle div[onclick^=toggle].menu button { margin: 0 }
@@ -141,7 +142,11 @@ html.material ::-webkit-scrollbar-thumb { border-radius: 4px }
 html.material body { font-size: 1.1em }
 html.material input[type=range] { height: 13px }
 html.material li { padding: .1em 0 }
-html.material #cover { border-radius: calc(.5 * var(--radius)) }
+html.material #cover {
+	min-width: 7.5em;
+	min-height: 7.5em;
+	border-radius: calc(.5 * var(--radius));
+}
 html.material .menu { padding: .5em }
 	html.material .menu button { border-radius: var(--radius) }
 html.material #playlist:not(.resize) { max-height: 11em }
