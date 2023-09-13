@@ -125,6 +125,7 @@ html.colortoggle button[onclick^=toggle]:not(#volume), html.colortoggle div[oncl
 	padding: 0 calc(1.25 * var(--space) - 2px);
 	margin: 1px;
 }
+	html.colortoggle button[onclick^=toggle]:empty { width: calc(var(--button-size) - 2px) }
 	html.colortoggle button[onclick^=toggle].on, html.colortoggle div[onclick^=toggle] button.on, html.colortoggle #toast.on { border-color: var(--focus-dim) }
 		html.colortoggle button[onclick^=toggle].on:hover, html.colortoggle div[onclick^=toggle] button.on:hover { border-color: var(--focus) }
 	html.colortoggle div[onclick^=toggle].menu button { margin: 0 }
