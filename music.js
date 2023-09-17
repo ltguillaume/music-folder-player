@@ -358,10 +358,10 @@ function prepAudio(id) {
 		a.log('Error: '+ a.error.code +' '+ a.error.message, true);
 		dom.playlist.childNodes[cfg.index].setAttribute('error', 1);
 		errorCount++;
-		if (errorCount < maxerrors)
-			playNext();
-		else
+		if (errorCount >= maxerrors)
 			errorCount = 0;
+		else if (a == audio[track])
+				playNext();
 	};
 
 	a.onabort = function() {
