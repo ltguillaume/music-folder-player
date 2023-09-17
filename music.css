@@ -490,8 +490,9 @@ body:not(.dim) #player.fix {
 #playlist {
 	min-height: var(--button-size-rel);
 	max-height: 9.25em;
-	overflow-y: auto;
 	list-style: none;
+	overflow-y: auto;
+	overscroll-behavior: contain;
 }
 	#playlist:before, #playlist:after {
 		display: block;
