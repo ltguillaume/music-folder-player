@@ -1,15 +1,17 @@
 services:
   mfp:
     environment:
-      - ADDRESS=
+      - HOST=
       - PORT=
     volumes:
       - source: ./library
         target: /app/srv/library
         type: bind
         read_only: true
+        bind:
+          create_host_path: true
       - source: mfp
-        target: /app/cfg
+        target: /app/data
         type: volume
     build:
       context: https://codeberg.org/ltguillaume/music-folder-player.git#docker
@@ -17,5 +19,6 @@ services:
     image: mfp
     network_mode: bridge
     restart: unless-stopped
+
 volumes:
   mfp:
