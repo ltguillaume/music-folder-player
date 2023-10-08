@@ -1044,7 +1044,8 @@ function share(name) {
 log('Share() triggered');
 	const data = {
 		text: dom.sharemsg.value +' '+ dom.sharenfo.value,
-		url: base +'?play='+ dom.popup.uri };
+		url: base +'?play='+ dom.popup.uri
+	};
 	log(data);
 	dom.sharemsg.uri = null;
 
@@ -1851,7 +1852,7 @@ function prepHotkeys() {
 		const el = document.activeElement;
 		if (e.altKey || e.ctrlKey) return;
 
-		if (el.tagName == 'INPUT') {
+		if (el.tagName == 'INPUT' && e.key != dom.reload.accessKey) {
 			if (el == dom.volumeslider) {
 				if (e.keyCode > 36 && e.keyCode < 41) return;	// Arrow keys
 				if (e.key == 'Escape' || e.key == dom.volume.accessKey) return dom.volume.click();
