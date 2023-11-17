@@ -261,6 +261,7 @@ function prepPlaylistMode() {
 	cfg.after = 'stopplayback';
 	dom.hide(['enqueue', 'playlistload', 'playlistsave', 'playlibrary', 'randomlibrary', 'randomfiltered', 'sharefolder', 'library']);
 	dom.playlist.style.minHeight = dom.playlist.style.maxHeight = 'unset';
+	cls(body, 'mode', ADD);
 	mode = 'playlist';
 }
 
@@ -430,6 +431,7 @@ function prepSongMode() {
 	prepPlaylistMode();
 	add(0);
 	dom.hide(['previous', 'next', 'options', 'playlistdiv']);
+	cls(body, 'mode', ADD);
 	mode = 'song';
 }
 
