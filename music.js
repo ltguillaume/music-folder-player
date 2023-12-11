@@ -384,8 +384,9 @@ function buildLibrary(root, folder, element) {
 		} else {
 			for (f in folder[i]) {
 				ffor(ext_images, function(ext) {
-					if (f.toLowerCase().endsWith('.'+ ext)) {
-						if (!cover || f.toLowerCase().startsWith('cover'))
+					const flc = f.toLowerCase();
+					if (flc.endsWith('.'+ ext)) {
+						if (!cover || flc.startsWith('cover') || flc.startsWith('folder'))
 							cover = f;
 						delete(folder[i][f]);
 						return true;
