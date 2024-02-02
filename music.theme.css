@@ -148,7 +148,7 @@ html.material #cover {
 	border-radius: calc(.5 * var(--radius));
 }
 html.material .menu { padding: .5em }
-	html.material .menu button { border-radius: var(--radius) }
+	html.material body > div, html.material .menu button { border-radius: var(--radius) }
 html.material #playlist:not(.resize) { max-height: 11em }
 
 /* Display songs in tree horizontally

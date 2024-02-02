@@ -43,7 +43,7 @@
 	--button-factor: .95;
 	--button-size: 2.25em;
 	--button-size-rel: calc(var(--button-factor) * var(--button-size));
-	--radius: 4px;
+	--radius: 6px;
 	--space: .5em;
 }
 
@@ -100,7 +100,7 @@ body > div {
 	padding: var(--space);
 	background: var(--bg);
 	border: 1px solid var(--border);
-	border-radius: var(--radius);
+	border-radius: calc(2 * var(--radius));
 	cursor: default;
 }
 	body > div:before {
