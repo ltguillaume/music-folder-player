@@ -99,6 +99,9 @@ html.light #cover { opacity: 1 }
 	--focus-dim: #b30050;
 }
 
+/* Rounded buttons */
+html:not(.material) button { border-radius: 2em }
+
 /* Add decorative top border to main elements */
 html.colorborder body > div, html.colorborder #popup { border-top: 2px solid var(--focus-dim) }
 	html.colorborder.material body > div, html.colorborder.material #popup, html.colorborder.touch #popup { border-top: 3px solid var(--focus-dim) }
