@@ -852,7 +852,7 @@ function prepNext() {
 	}
 }
 
-function getRandom(queue = false) {
+function getRandom(e = false) {
 	var next = null;
 	do {
 		const count = cfg.after == 'randomfiltered' ? songsFiltered.length : songs.length;
@@ -876,10 +876,11 @@ function getRandom(queue = false) {
 			next = null;
 		}
 	} while (next == null);
-	if (queue) {
+	if (e) {	// Enqueue random song
+		e.preventDefault();
 		const nfo = getSongInfo(songs[next].path);
 		if (confirm(getAlbumInfo(nfo) +'\n'+ nfo.title +'\n\n'+ dom.enqueue.textContent +'?'))
-			add(songs[next].id, true);
+			add(songs[next].id);
 	} else return songs[next].id;
 }
 
