@@ -99,18 +99,22 @@ html.light #cover { opacity: 1 }
 	--focus-dim: #b30050;
 }
 
-/* Rounded buttons */
-html:not(.material) button { border-radius: 2em }
+/* Optional styling via classnames */
 
-/* Add decorative top border to main elements */
+/* round: Rounded buttons and panels */
+:root.round { --radius: 6px }
+html.round button { border-radius: 2em }
+html.round body > div { border-radius: 12px }
+
+/* colorborder: Add decorative top border to main elements */
 html.colorborder body > div, html.colorborder #popup { border-top: 2px solid var(--focus-dim) }
 	html.colorborder.material body > div, html.colorborder.material #popup, html.colorborder.touch #popup { border-top: 3px solid var(--focus-dim) }
 
-/* Add decorative bottom border to hovered buttons */
+/* colorborder: Add decorative bottom border to hovered buttons */
 html.colorborder:not(.colorbutton) :not(.menu) > button:hover, html.colorborder:not(.colorbutton) .menu > button:focus { border-bottom-color: var(--focus-dim) !important }
 	html.colorborder.colortoggle button.on:hover {  border-bottom-color: var(--focus) !important }
 
-/* Colorize hovered buttons */
+/* colorbutton: Colorize hovered buttons */
 :root.colorbutton { --bg-button-hv: var(--focus-dim) }
 
 html.colorbutton button, html.colorbutton button b { transition: background .2s, color .2s ease-out, text-decoration .1s, border .2s }
@@ -122,7 +126,7 @@ html.colorbutton button, html.colorbutton button b { transition: background .2s,
 	html.colorbutton button:hover, html.colorbutton .menu button:focus { color: #fff }
 		html.colorbutton.light .menu > button:hover:not(:focus) { color: #000 }
 
-/* Indicate enabled options by colored borders instead of checkmarks */
+/* colortoggle: Indicate enabled options by colored borders instead of checkmarks */
 html.colortoggle button[onclick^=toggle]:not(#volume), html.colortoggle div[onclick^=toggle] button, html.colortoggle #toast {
 	height: calc(var(--button-size) - 2px);
 	padding: 0 calc(1.25 * var(--space) - 2px);
@@ -134,7 +138,7 @@ html.colortoggle button[onclick^=toggle]:not(#volume), html.colortoggle div[oncl
 	html.colortoggle div[onclick^=toggle].menu button { margin: 0 }
 		html.colortoggle:not(.colorbutton) div[onclick^=toggle].menu button { margin: 1px 0 }
 
-/* Material Design 3(ish) rounded corners, use in music.ini as themes = ['material blue', ...] */
+/* material: Material Design 3(ish) rounded corners, use in music.ini as themes = ['material blue', ...] */
 :root.material {
 	--radius: calc(2em + 2px);
 	--button-size: 2.75em;
