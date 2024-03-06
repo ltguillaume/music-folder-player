@@ -23,5 +23,5 @@ Create a folder `library` next to `docker-compose.yml` or replace `./library` wi
 Use `docker compose up -d` to build the image and to create the container.
 
 ## Changing settings
-- A volume called `<something>mfp` will be created, which is usually located in `/var/lib/docker/volumes`. Inside, you'll find the `music.ini`.
+- By default, you can find the file `music.ini` inside the folder `./data` next to `docker-compose.yml`.
 - Either copy `music.defaults.ini` to `music.ini` and change the values, or set only the variables you'd like to change (recommended, but don't forget including the lines [server] and [client] and to correctly position the variables underneath them).

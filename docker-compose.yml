@@ -10,15 +10,14 @@ services:
         read_only: true
         bind:
           create_host_path: true
-      - source: mfp
+      - source: ./data
         target: /app/data
-        type: volume
+        type: bind
+        bind:
+          create_host_path: true
     build:
       context: https://codeberg.org/ltguillaume/music-folder-player.git#docker
     container_name: mfp
     image: mfp
     network_mode: bridge
     restart: unless-stopped
-
-volumes:
-  mfp:
