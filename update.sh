@@ -1,3 +1,4 @@
+echo `date`
 apk -U upgrade --no-cache
 cd /app/srv
 wget https://codeberg.org/ltguillaume/music-folder-player/archive/main.zip
