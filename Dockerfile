@@ -9,7 +9,7 @@ COPY update.sh .
 RUN mkdir data srv;\
  chmod 500 update.sh
 
-RUN apk add --no-cache caddy nss-tools php83-fpm zip;\
+RUN apk add --no-cache caddy jq nss-tools php83-fpm zip;\
  sed -i 's/127.0.0.1:9000/\/var\/run\/php-fpm.sock/g' /etc/php83/php-fpm.d/www.conf;\
  printf "0    5    *    *    1    /app/update.sh >> /app/data/update.log" > /app/crontab.txt;\
  crontab /app/crontab.txt
