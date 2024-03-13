@@ -116,6 +116,8 @@ body.hide > div, body.hide > div:before, body.hide > footer {
 	pointer-events: none;
 }
 
+body.mode #album, body.mode #title { pointer-events: none }
+
 body.touch {
 	font-family: BarlowSC, "Segoe UI", sans-serif;
 	font-size: 1.1em;

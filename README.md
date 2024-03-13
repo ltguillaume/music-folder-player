@@ -67,7 +67,7 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 	- Decorative top border for main elements and bottom border for hovered buttons
 
 #### Translations
-- Currently includes English, Dutch, Portuguese and Spanish
+- Currently includes Chinese, English, Dutch, Portuguese and Spanish
 - Instructions for creating new translations can be found in the [Wiki](https://codeberg.org/ltguillaume/music-folder-player/wiki/Translations)
 
 ## List of hotkeys

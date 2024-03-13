@@ -282,6 +282,7 @@ function prepPlaylistMode() {
 	cfg.after = 'stopplayback';
 	dom.hide(['enqueue', 'playlistload', 'playlistsave', 'playlibrary', 'randomlibrary', 'randomfiltered', 'sharefolder', 'library']);
 	dom.playlist.style.minHeight = dom.playlist.style.maxHeight = 'unset';
+	cls(body, 'mode', ADD);
 	mode = 'playlist';
 }
 
@@ -404,8 +405,9 @@ function buildLibrary(root, folder, element) {
 		} else {
 			for (f in folder[i]) {
 				ffor(ext_images, function(ext) {
-					if (f.toLowerCase().endsWith('.'+ ext)) {
-						if (!cover || f.toLowerCase().startsWith('cover'))
+					const flc = f.toLowerCase();
+					if (flc.endsWith('.'+ ext)) {
+						if (!cover || flc.startsWith('cover') || flc.startsWith('folder'))
 							cover = f;
 						delete(folder[i][f]);
 						return true;
@@ -453,6 +455,7 @@ function prepSongMode() {
 	prepPlaylistMode();
 	add(0);
 	dom.hide(['previous', 'next', 'options', 'playlistdiv']);
+	cls(body, 'mode', ADD);
 	mode = 'song';
 }
 
@@ -891,7 +894,7 @@ function prepNextFavored(f) {
 		log('Playing a favored song from "'+ folder +'"');
 }
 
-function getRandom(queue = false) {
+function getRandom(e = false) {
 	var next = null;
 	do {
 		const count = cfg.after == 'randomfiltered' ? songsFiltered.length : songs.length;
@@ -915,10 +918,11 @@ function getRandom(queue = false) {
 			next = null;
 		}
 	} while (next == null);
-	if (queue) {
+	if (e) {	// Enqueue random song
+		e.preventDefault();
 		const nfo = getSongInfo(songs[next].path);
 		if (confirm(getAlbumInfo(nfo) +'\n'+ nfo.title +'\n\n'+ dom.enqueue.textContent +'?'))
-			add(songs[next].id, true);
+			add(songs[next].id);
 	} else return songs[next].id;
 }
 
