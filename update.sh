@@ -20,10 +20,14 @@ rm $commit.zip
 if [ ! -d /app/data/playlists ]; then
 	mkdir /app/data/playlists
 	chmod 777 /app/data/playlists
-	ln -s /app/data/playlists /app/srv/music.pls
 fi
 if [ ! -f /app/data/music.ini ]; then
 	touch /app/data/music.ini
 	chmod 777 /app/data/music.ini
+fi
+if [ ! -d /app/srv/music.pls ]; then
+	ln -s /app/data/playlists /app/srv/music.pls
+fi
+if [ ! -f /app/srv/music.ini ]; then
 	ln -s /app/data/music.ini /app/srv/music.ini
 fi
