@@ -1512,7 +1512,10 @@ function filter(instant = false) {	// Gets event from oninput
 	});
 
 	if (length) {
-		const termsArray = terms.toLowerCase().split(' ');
+		if (terms.indexOf('"') == -1)
+			var termsArray = terms.toLowerCase().split(' ');
+		else
+			var termsArray = terms.match(/"[^"]+"|[^ ]+/g).map(t => t.replaceAll('"', ''));
 
 		ffor(tree, function(f) {
 			const path = f.path.toLowerCase();

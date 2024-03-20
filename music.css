@@ -643,6 +643,7 @@ body:not(.dim) #player.fix {
 :not(body).hide { display: none !important }
 
 .title {
+	width: fit-content;
 	height: 1.25em;
 	cursor: alias;
 }
