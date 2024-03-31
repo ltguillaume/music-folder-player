@@ -1,4 +1,4 @@
-echo `date`
+echo ==== `date` ====
 
 apk -U upgrade --no-cache
 cd /app/srv
