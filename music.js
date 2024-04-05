@@ -283,7 +283,7 @@ function prepAudio(id) {
 
 	a.onplay = function() {
 		a.log('Play');
-		if (a.src.startsWith('data:')) return;
+		if (a.src.startsWith('data')) return;	// autoplay fix
 		cls(dom.playpause, 'playing', ADD);
 		cls(dom.album, 'dim', REM);
 		cls(dom.title, 'dim', REM);
@@ -312,7 +312,7 @@ function prepAudio(id) {
 	};
 
 	a.ontimeupdate = function() {
-		if (a != audio[track] || a.src.startsWith('data:')) return;	// Already switched to other track (crossfade) || autoplay fix
+		if (a != audio[track] || a.src.startsWith('data')) return;	// Already switched to other track (crossfade) || autoplay fix
 
 		if (a.currentTime >= a.duration - cfg.buffersec) return playNext();
 
@@ -336,6 +336,7 @@ function prepAudio(id) {
 
 	a.onerror = function() {
 		a.log('Error: '+ a.error.code +' '+ a.error.message, true);
+		if (a.src.startsWith('data')) return;	// autoplay fix
 		dom.playlist.childNodes[cfg.index].setAttribute('error', 1);
 		errorCount++;
 		if (errorCount >= maxerrors)
