@@ -202,6 +202,7 @@ button b {
 	border: 1px solid var(--border);
 	border-radius: var(--radius);
 }
+	button b.filtertip { color: var(--focus-dim) }
 
 input, select {
 	width: 25em;

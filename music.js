@@ -471,6 +471,7 @@ function addFolder(e) {
 }
 
 function setFocus (el) {
+	if (el.disabled) return false;
 	el.focus();
 	const { top, bottom } = el.getBoundingClientRect(),
 		offset = cls(dom.player, 'fix') ? dom.player.offsetHeight : 0;
@@ -488,6 +489,7 @@ function setFocus (el) {
 	if (!offset) setTimeout(function() {
 		if (cls(dom.player, 'fix')) setFocus(el);
 	}, 500);
+	return true;
 }
 
 function setToast(el) {
@@ -1304,11 +1306,12 @@ function toggle(e) {
 			dom.hide('afteroptions');
 			menu('after');
 			if (button.id == 'randomfiltered') {
-				const tip = dom.randomfiltered.firstElementChild || dom.randomfiltered.appendChild(document.createElement('b'));
+				const tip = dom.filtertip || dom.randomfiltered.appendChild(dom.filtertip = document.createElement('b'));
+				cls(dom.filtertip, 'filtertip', ADD);
 				tip.textContent = dom.filter.value;
 				buildFilteredLibrary();
-			} else if (dom.randomfiltered.firstElementChild)
-				dom.randomfiltered.firstElementChild.remove();
+			} else if (dom.filtertip)
+				dom.filtertip = dom.filtertip.remove();
 			return;
 		case 'lock':
 			return Popup.lock();
@@ -1387,9 +1390,11 @@ function menu(e) {
 		if (!onlinepls || url.length > 1) return;
 		el = dom.playlists;
 		btn = dom.playlistload;
+		dom.hide('afteroptions');
 	} else if (e == 'after' || dom.afterdiv.contains(e.target)) {
 		el = dom.afteroptions;
 		btn = dom.after;
+		dom.hide('playlists');
 	}
 
 	if (cls(el, 'hide') && e.type !== 'mouseleave') {
@@ -1414,7 +1419,7 @@ function menu(e) {
 				cls(dom.randomlibrary,  'on', cfg.after == 'randomlibrary'  ? ADD : REM);
 				dom.randomfiltered.disabled = dom.filter.value == '';
 				dom.show(el.id);
-				setFocus(dom[cfg.after]);
+				setFocus(dom[cfg.after]) || setFocus(dom.stopplayback);
 		}
 	} else switch (el) {
 			case dom.playlists:
@@ -1806,7 +1811,8 @@ function prepHotkeys() {
 			'PageUp': dom.next
 		}
 	};
-	document.querySelectorAll('[accesskey]' ).forEach(function(el) { dom.keys[el.accessKey] = el });
+	document.querySelectorAll(':not(.menu) > [accesskey]').forEach(function(el) { dom.keys[el.accessKey] = el });
+	document.querySelectorAll('.menu > [accesskey]').forEach(function(el) { if (!dom.keys[el.parentNode.id]) dom.keys[el.parentNode.id] = {}; dom.keys[el.parentNode.id][el.accessKey] = el });
 	document.querySelectorAll('[contextkey]').forEach(function(el) { dom.keys[el.getAttribute('contextkey')] = el });
 
 	dom.filter.addEventListener('keypress', function(e) {
@@ -1855,16 +1861,23 @@ function prepHotkeys() {
 
 		if (el.tagName == 'TEXTAREA') return;
 
-		const keyEl = dom.keys[e.key];
+		const parentEl = el.parentNode;
+		const menu = cls(parentEl, 'menu') ? parentEl.id : false;
+		const menuKey = menu && dom.keys[menu] ? dom.keys[menu][e.key] : false;
+		const keyEl = menuKey || dom.keys[e.key];
 
 		if (keyEl) {
 			e.preventDefault();
-			if (!dom.tree.contains(e.target))
+			if (!menuKey && !dom.tree.contains(e.target))
 				e.target.blur();
 			if (e.key == keyEl.getAttribute('contextkey'))
 				return keyEl.dispatchEvent(new CustomEvent('contextmenu'));
-			else
-				return keyEl.click();
+			else {
+				if (keyEl.disabled) return;
+				keyEl.click();
+				if (menu) document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+				return true;
+			}
 		}
 
 		switch (e.key) {
