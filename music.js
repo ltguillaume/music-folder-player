@@ -638,7 +638,7 @@ function endDrag() {
 function dropItem(e) {
 	e.preventDefault();
 	e.stopPropagation();
-	const to = e.target;
+	let to = e.target;
 	if (to.tagName != 'LI') to = to.parentNode;
 	log('Drag ['+ drag.textContent +'] to place of ['+ to.textContent +']');
 	cls(to, 'over', REM);
