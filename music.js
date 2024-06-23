@@ -497,7 +497,7 @@ function setToast(el) {
 		if (el.className == 'error' || cls(dom.player, 'fix')) {
 			if (el.className == 'error') log(str.error +' '+ el.textContent, true);
 			if (toast) clearTimeout(toast);
-			dom.toast.className = el.className;
+			dom.toast.className = el.id +' '+ el.className;
 			dom.toast.textContent = el.textContent;
 			dom.show('toast');
 			toast = setTimeout(function() { dom.hide('toast') }, 4000);
@@ -606,7 +606,7 @@ function findItem(e) {
 	if (e.target.tagName == 'LI')
 		setFilter(e.target.firstChild.textContent.trim());
 	else if (e.target.tagName == 'SPAN')
-		setFilter(e.target.textContent.replace(/^\(|\)$/g, ''));
+		setFilter(e.target.textContent.replace(/^\(|\)$/g, '').trim());
 }
 
 function prepDrag(e) {
@@ -1037,7 +1037,7 @@ function prepPlaylists(action) {
 		var playlistElements = '';
 		if (playlists.length != []) {
 			for (var p in playlists)
-				playlistElements += action == 'share' ? '<option value="'+ p +'">'+ p +'</option>' : '<button class="add">'+ p +'</button>';
+				playlistElements += action == 'share' ? '<option value="'+ p +'">'+ p +'</option>' : '<button class="enqueue">'+ p +'</button>';
 		} else playlistElements = '<p tabindex="1">'+ str.noplaylists +'</p>';
 		switch (action) {
 			case 'load':

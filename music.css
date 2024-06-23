@@ -731,9 +731,9 @@ body:not(.dim) #player.fix {
 
 #after:before { content: "\f182" }
 #color:before { content: "\f18f" }
-#crossfade:before { content: "\f1b2" }
+#crossfade:before, .crossfade:before { content: "\f1b2" }
 #debug:before { content: "\f156" }
-#enqueue:before, .add:before { content: "\f199" }
+#enqueue:before, .enqueue:before { content: "\f199" }
 #library:before { content: "\f17b" }
 	#library.unfold #unfold:before { content: "\f10d" }
 #lock:before { content: "\f16a" !important }
@@ -756,7 +756,7 @@ body:not(.dim) #player.fix {
 	#popup.sharedlg #popupicon:before { content: "\f12f" }
 	#popup.unlockdlg #popupicon:before { content: "\f20a" }
 #previous:before { content: "\f19c" }
-#random:before, #randomlibrary:before { content: "\f13a" }
+#random:before, .random:before, #randomlibrary:before { content: "\f13a" }
 #randomfiltered:before { content: "\f14b" }
 #reload:before { content: "\f18d" }
 #removesongs:before { content: "\f204" }
@@ -766,7 +766,6 @@ body:not(.dim) #player.fix {
 #splash:before { content: "\f1ed"; width: 1em }
 #stop:before, #stopplayback:before { content: "\f1ef" }
 #theme:before { content: "\f134" }
-#toast:before { content: "\f217" }
 #trash:before { content: "\f204" }
 #unfold:before { content: "\f10e" }
 #volume:before { content: "\f211" }
@@ -777,7 +776,7 @@ body:not(.dim) #player.fix {
 .playing:before { content: "\f198" }
 .playlist:before { content: "\f18e" }
 .song:not(.playing):before { content: "\f17b"; color: var(--text-dim) }
-button#cancel:before, button.clear:before, .close:before { content: "\f217" }
+button#cancel:before, button.clear:before, .close:before, .error:before { content: "\f217" }
 button#ok:before, html:not(.colortoggle) button.on:before, #playlists button.on:before { content: "\f126" !important }
 button.clip:before { content: "\f129" !important }
 button.download:before { content: "\f143" }
