@@ -55,7 +55,7 @@ function init() {
 
 	const lib = document.createElement('script'),
 		lng = new URLSearchParams(window.location.search).get('lng') || false;
-	lib.src = 'music.php?'+ (lng ? 'lng='+ lng : '') + (url.length > 1 ? '&play='+ esc(url[1]) : '');
+	lib.src = 'music.php?'+ (url.length > 1 ? 'play='+ esc(url[1]) : '') + (lng ? '&lng='+ lng : '');
 	lib.onload = function() {
 		if (!library) alert(str.nolibrary);
 		else if (!pathexp) alert(str.nopathexp);
