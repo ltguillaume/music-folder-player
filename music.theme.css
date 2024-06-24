@@ -102,13 +102,13 @@ html.light #cover { opacity: 1 }
 /* Optional styling via classnames */
 
 /* round: Rounded buttons and panels */
-:root.round { --radius: 6px }
+:root.round { --radius: 8px }
 html.round button { border-radius: 2em }
-html.round body > div { border-radius: 12px }
 
 /* colorborder: Add decorative top border to main elements */
 html.colorborder body > div, html.colorborder #popup { border-top: 2px solid var(--focus-dim) }
 	html.colorborder.material body > div, html.colorborder.material #popup, html.colorborder.touch #popup { border-top: 3px solid var(--focus-dim) }
+html.colorborder body > div { border-radius: 12px }
 
 /* colorborder: Add decorative bottom border to hovered buttons */
 html.colorborder:not(.colorbutton) :not(.menu) > button:hover, html.colorborder:not(.colorbutton) .menu > button:focus { border-bottom-color: var(--focus-dim) !important }

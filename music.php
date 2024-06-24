@@ -4,7 +4,6 @@
 	header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 	header('Cache-Control: post-check=0, pre-check=0', false);
 	header('Pragma: no-cache');
-	header('Content-Type: application/javascript; charset=utf-8');
 
 	$ini = parse_ini_file('music.defaults.ini', true, INI_SCANNER_RAW);
 	if (file_exists('music.ini'))
@@ -83,6 +82,8 @@
 		if (file_exists($name)) rename($name, $name .'.'. time());
 		die(file_put_contents($name, json_encode($pl['songs'])));
 	}
+
+	header('Content-Type: application/javascript; charset=utf-8');
 
 	if (!isset($_GET['reload'])) {
 		echo 'const ext_images = '. json_encode($img) .';'. PHP_EOL;
