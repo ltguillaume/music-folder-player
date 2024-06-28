@@ -335,7 +335,7 @@ function prepAudio(id) {
 	a.ontimeupdate = function() {
 		if (a != audio[track] || a.src.startsWith('data')) return;	// Already switched to other track (crossfade) || autoplay fix
 
-		if (a.currentTime >= a.duration - cfg.buffersec) return playNext();
+		if (a.currentTime >= a.duration - cfg.buffersec) return playNext(true);
 
 		if (a.duration > 30 && (a.duration - a.currentTime) < 20) {
 			if (!audio[+!track].prepped) prepNext();
@@ -1238,7 +1238,7 @@ function add(id, next = false) {
 	}
 }
 
-function playNext() {
+function playNext(ended = false) {
 	if (cfg.index != -1) {
 		const li = dom.playlist.childNodes[cfg.index];
 		if (li) {
@@ -1256,7 +1256,7 @@ function playNext() {
 		log('PlayNext: last minute adjustment to playlist detected, prepping next track', true);
 		prepNext();
 	}
-	if (!cfg.crossfade) stop();
+	if (!ended && !cfg.crossfade) stop();
 
 	track ^= 1;
 	const a = audio[track],
