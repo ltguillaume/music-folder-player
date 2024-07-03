@@ -259,7 +259,7 @@ function saveLog() {
 
 function prepPlaylistMode() {
 	cfg.after = 'stopplayback';
-	dom.hide(['enqueue', 'playlistload', 'playlistsave', 'playlibrary', 'randomlibrary', 'randomfiltered', 'sharefolder', 'library']);
+	dom.hide(['enqueue', 'playlistload', 'playlistsave', 'playlibrary', 'randomlibrary', 'randomfiltered', 'sharefolder', 'playlistclear', 'library']);
 	dom.playlist.style.minHeight = dom.playlist.style.maxHeight = 'unset';
 	cls(body, 'mode', ADD);
 	mode = 'playlist';
