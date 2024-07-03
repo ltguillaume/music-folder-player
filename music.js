@@ -280,7 +280,7 @@ function saveLog() {
 
 function prepPlaylistMode() {
 	cfg.after = 'stopplayback';
-	dom.hide(['enqueue', 'playlistload', 'playlistsave', 'playlibrary', 'randomlibrary', 'randomfiltered', 'sharefolder', 'library']);
+	dom.hide(['enqueue', 'playlistload', 'playlistsave', 'playlibrary', 'randomlibrary', 'randomfiltered', 'sharefolder', 'playlistclear', 'library']);
 	dom.playlist.style.minHeight = dom.playlist.style.maxHeight = 'unset';
 	cls(body, 'mode', ADD);
 	mode = 'playlist';
@@ -1475,6 +1475,7 @@ function menu(e) {
 
 function clearPlaylist() {
 	if (cfg.locked || mode || cfg.playlist.length == 0 || !confirm(str.clearplaylist)) return;
+	audio[0].prepped = audio[1].prepped = false;
 	cfg.playlist.length = 0;
 	cfg.index = -1;
 	dom.playlist.innerHTML = '';
