@@ -1433,6 +1433,7 @@ function menu(e) {
 
 function clearPlaylist() {
 	if (cfg.locked || mode || cfg.playlist.length == 0 || !confirm(str.clearplaylist)) return;
+	audio[0].prepped = audio[1].prepped = false;
 	cfg.playlist.length = 0;
 	cfg.index = -1;
 	dom.playlist.innerHTML = '';
