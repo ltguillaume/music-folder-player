@@ -122,7 +122,7 @@ html.colorbutton button, html.colorbutton button b { transition: background .2s,
 		color: #ddd;
 		border-color: var(--focus);
 	}
-	html.colorbutton button:focus u, html.colorbutton button:hover u { text-decoration-color: transparent }
+	html.colorbutton div:not(.menu) > button:hover u, html.colorbutton .menu > button:focus u { text-decoration-color: transparent }
 	html.colorbutton button:hover, html.colorbutton .menu button:focus { color: #fff }
 		html.colorbutton.light .menu > button:hover:not(:focus) { color: #000 }
 

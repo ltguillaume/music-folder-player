@@ -612,7 +612,7 @@ function findItem(e) {
 function prepDrag(e) {
 	if (cfg.locked) return e.preventDefault();
 	e.stopPropagation();
-	cls(dom.trash, 'drag', ADD);
+	cls(dom.playlistdiv, 'drag', ADD);
 	dom.playlist.appendChild(playlistItem({ 'id': 'last' }));
 	setTrashPos();
 	if (cfg.index != -1)
@@ -629,7 +629,7 @@ function allowDrop(e) {
 }
 
 function endDrag() {
-	cls(dom.trash, 'drag', REM);
+	cls(dom.playlistdiv, 'drag', REM);
 	dom.playlist.querySelectorAll('#last').forEach(li => dom.playlist.removeChild(li));
 	setTrashPos();
 	drag = null;

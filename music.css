@@ -482,7 +482,7 @@ body:not(.dim) #player.fix {
 		width: var(--button-size-rel);
 		height: var(--button-size-rel);
 	}
-	#trash.drag {
+	#playlistdiv.drag #trash {
 		height: 100%;
 		padding: .5em;
 		border-left: 1px solid var(--border);
@@ -526,6 +526,7 @@ body:not(.dim) #player.fix {
 	#playlist li:before { margin-left: -1.25em }
 	#playlist li[error="1"] { color: red }
 	#playlist li.over { border-top: 1px dotted var(--focus) }
+	#playlistdiv.drag li span { pointer-events: none }
 
 #filter {
 	min-width: 3em;
@@ -646,6 +647,7 @@ body:not(.dim) #player.fix {
 .title {
 	width: fit-content;
 	height: 1.25em;
+	padding-right: 0.1em;
 	cursor: alias;
 }
 
