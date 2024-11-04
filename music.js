@@ -149,7 +149,7 @@ function prepUI() {
 		});
 	}, { once: true, passive: true });
 
-	if ('ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0)
+	if (window.matchMedia && window.matchMedia('(any-pointer:coarse)').matches || !window.matchMedia && 'ontouchstart' in window)
 		touchUI();
 
 	window.addEventListener('scroll', function() {
@@ -253,7 +253,7 @@ function log(s, force = false) {
 function saveLog() {
 	const l = new Blob([dom.log.value], { type: 'text/plain', endings: 'native' });
 	dom.a.href = window.URL.createObjectURL(l);
-	dom.a.download = pagetitle +"_"+ ~~(new Date()/1000) +'.log';
+	dom.a.download = pagetitle +'_'+ ~~(new Date()/1000) +'.log';
 	dom.a.click();
 }
 
@@ -361,7 +361,7 @@ function prepAudio(id) {
 		a.log('Waiting (need to buffer)');
 	}
 
-	a.src = "data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQIAAACAgA==";
+	a.src = 'data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQIAAACAgA==';
 	a.autoplay = true;
 	a.preload = 'auto';
 	a.load();
@@ -805,7 +805,7 @@ function skipArtist(e) {
 	if (cfg.locked) return;
 	const unskip = e.shiftKey || e.target.id == 'previous';
 	const msg = unskip ? str.unskipartist : str.skipartist;
-	var artist = cfg.playlist[cfg.index] ? getSongInfo(cfg.playlist[cfg.index].path).artist : "";
+	var artist = cfg.playlist[cfg.index] ? getSongInfo(cfg.playlist[cfg.index].path).artist : '';
 	if (artist = prompt(msg, artist)) {
 		if (unskip)
 			cfg.skip = cfg.skip.filter(t => t !== artist.toLowerCase());
@@ -974,7 +974,7 @@ function download(type) {
 	const share = dom[type +'uri'];
 	const shareRoot = type == 'folder' && url.length > 1;
 	if (share.value || shareRoot) {
-		const uri = (type != 'playlist' ? root : "") + share.value;
+		const uri = (type != 'playlist' ? root : '') + share.value;
 		dom.a.href = 'music.php?dl'+ (type == 'playlist' ? 'pl' : '') +'='+ esc(uri);
 		dom.a.click();
 	}
@@ -1831,8 +1831,8 @@ function prepHotkeys() {
 				if (e.key == 'Escape' || e.key == dom.volume.accessKey) return dom.volume.click();
 			} else if (el == dom.filter) {
 				switch(e.key) {
-					case 'ArrowUp': return keyNav(null, "up");
-					case 'ArrowDown': return keyNav(null, "down");
+					case 'ArrowUp': return keyNav(null, 'up');
+					case 'ArrowDown': return keyNav(null, 'down');
 				}
 			} else if (e.key == 'Enter' && !cls(dom.popupdiv, 'hide') && !cls(dom.ok, 'hide'))
 				dom.ok.click();
