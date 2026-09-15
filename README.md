@@ -68,11 +68,11 @@ An elegant HTML5 web folder player for parties and/or private music collections,
 	- Decorative top border for main elements and bottom border for hovered buttons
 
 #### Translations
-- Currently includes Chinese, English, Dutch, Portuguese and Spanish
+- Currently includes Chinese, English, Dutch, Hungarian, Portuguese and Spanish
 - Instructions for creating new translations can be found in the [Wiki](https://codeberg.org/ltguillaume/music-folder-player/wiki/Translations)
 
 ## List of hotkeys
-A list of all the hotkeys can be found in the [Wiki](https://codeberg.org/ltguillaume/music-folder-player/wiki/List-of-hotkeys).
+A list of all hotkeys can be found in the [Wiki](https://codeberg.org/ltguillaume/music-folder-player/wiki/List-of-hotkeys).
 
 ## Installation
 You can have a test setup running within 2 minutes. For all the details, check the [Wiki](https://codeberg.org/ltguillaume/music-folder-player/wiki).
@@ -82,5 +82,3 @@ You can have a test setup running within 2 minutes. For all the details, check t
 - The [Barlow font](https://github.com/jpt/barlow) (Regular and Semi Condensed Regular) is used for text
 - The [Foundation icon font](https://zurb.com/playground/foundation-icon-fonts-3) is used for all icons
 - Album art placeholder is based on a [design by CmdRobot](http://fav.me/d7kpm65)
-
-All credits are due, as well as my sincere thanks!
